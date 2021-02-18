@@ -2,7 +2,7 @@
   "name": "learning-tool",
   "version": "1.0.0",
   "description": "",
-  "main": "intex.ts",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "(cd server && npm install --dev) & (cd client && npm install --dev)",
