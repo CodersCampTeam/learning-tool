@@ -1,0 +1,22 @@
+{
+  "name": "learning-tool",
+  "version": "1.0.0",
+  "description": "",
+  "main": "intex.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "(cd server && npm install --dev) & (cd client && npm install --dev)",
+    "heroku-postbuild": "cd client && npm run build",
+    "start": "cd server && npm run start:prod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mfrydrychowiczTeam/learning-tool.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mfrydrychowiczTeam/learning-tool/issues"
+  },
+  "homepage": "https://github.com/mfrydrychowiczTeam/learning-tool#readme",
+}
