@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "(cd client && npm install --dev) & (cd server && npm install --dev)",
     "heroku-postbuild": "cd client && npm install --only=dev && NODE_ENV=development npm install --no-shrinkwrap && npm run build",
-    "start": "cd server && npm run start:prod"
+    "start": "cd server && npm run start:prod",
+    "lint": "prettier --write"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/mfrydrychowiczTeam/learning-tool/issues"
   },
-  "homepage": "https://github.com/mfrydrychowiczTeam/learning-tool#readme"
+  "homepage": "https://github.com/mfrydrychowiczTeam/learning-tool#readme",
+  "devDependencies": {
+    "eslint": "^7.20.0",
+    "prettier": "2.2.1"
+  }
 }
