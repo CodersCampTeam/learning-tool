@@ -1,6 +1,7 @@
 import express from "express";
 import { appRouter } from "./routes/index";
 import mongoose from "mongoose";
+import { productionSetup } from "./production";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,6 +10,7 @@ let connection_uri =
   process.env.MONGODB_DEV_URI || "mongodb://localhost/learning-tool-database";
 
 if (env === "production") {
+  productionSetup(app);
   connection_uri =
     process.env.MONGODB_PROD_URI ||
     "mongodb://localhost/learning-tool-database";
