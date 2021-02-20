@@ -1,18 +1,18 @@
 import express from "express";
-import { production_setup } from "./production";
+import { productionSetup } from "./production";
 import mongoose from "mongoose"
 
 const app = express();
 const port = process.env.PORT || 3000;
 const env = process.env.NODE_ENV || "development";
-let connection_uri = process.env.MONGODB_DEV_URI || 'mongodb://localhost/learning-tool-database';
+const connectionUri = process.env.MONGODB_DEV_URI || 'mongodb://localhost/learning-tool-database';
 
 if (env === "production") {
-    production_setup(app);
-    connection_uri = process.env.MONGODB_PROD_URI
+    productionSetup(app);
+    connectionUri = process.env.MONGODB_PROD_URI || 'mongodb://localhost/learning-tool-database';
 }
 
-mongoose.connect(connection_uri);
+mongoose.connect(connectionUri);
 
 const mockResponse = {
     foo: "bar",
