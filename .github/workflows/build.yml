@@ -1,0 +1,23 @@
+name: Node.js CI
+
+on:
+  push:
+
+jobs:
+  build:
+    name: "Build Learning tool server application"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Install modules
+        run: npm install
+      - name: Run lint
+        working-directory: ./server
+        run: npm run lint
+      - name: Run tests
+        working-directory: ./server
+        run: npm test
