@@ -34,11 +34,8 @@ const userSchema = new mongoose.Schema({
         required: false
     },
     sessionSettings: {
-        type: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'SessionSettings'
-        },
-        required: false
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SessionSettings'
     }
 });
 
@@ -46,7 +43,7 @@ const User = mongoose.model('User', userSchema);
 
 function validateUser(user: typeof User): Joi.ValidationResult {
     const schema = Joi.object({
-        email: Joi.string().trim().email().required(),
+        email: Joi.string(),
         password: Joi.string().min(8).max(50).required(),
         username: Joi.string().min(2).max(30).required(),
         isActive: Joi.boolean().default(true),

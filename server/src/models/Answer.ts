@@ -5,10 +5,8 @@ const Answer = mongoose.model(
     'Answer',
     new mongoose.Schema({
         flashcard: {
-            type: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Flashcard'
-            },
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Flashcard',
             required: true
         },
         date: {

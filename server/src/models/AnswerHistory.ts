@@ -5,10 +5,8 @@ const AnswerHistory = mongoose.model(
     'AnswerHistory',
     new mongoose.Schema({
         user: {
-            type: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User'
-            },
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
             required: true
         },
         sessionDate: {

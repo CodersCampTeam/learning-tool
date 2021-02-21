@@ -3,10 +3,8 @@ import mongoose from 'mongoose';
 
 const flashcardCollectionSchema = new mongoose.Schema({
     owner: {
-        type: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
     name: {
         type: Date,
