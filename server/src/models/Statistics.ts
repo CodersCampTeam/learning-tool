@@ -31,4 +31,4 @@ function validateStatistics(statistics: typeof Statistics): Joi.ValidationResult
     return schema.validate(statistics);
 }
 
-export { Statistics, validateStatistics, statisticsSchema };
+export { Statistics, validateStatistics };

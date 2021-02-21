@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
+        unique: true,
         required: true
     },
     password: {
@@ -17,6 +18,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         minLength: 2,
         maxLength: 30,
+        unique: true,
         required: true
     },
     isActive: {
@@ -26,7 +28,7 @@ const userSchema = new mongoose.Schema({
     },
     isBlocked: {
         type: Boolean,
-        detault: false,
+        default: false,
         required: false
     },
     avatarImg: {
@@ -55,4 +57,4 @@ function validateUser(user: typeof User): Joi.ValidationResult {
     return schema.validate(user);
 }
 
-export { User, userSchema, validateUser };
+export { User, validateUser };

@@ -7,7 +7,9 @@ const flashcardCollectionSchema = new mongoose.Schema({
         ref: 'User'
     },
     name: {
-        type: Date,
+        type: String,
+        minLength: 1,
+        maxLength: 255,
         required: true
     },
     isPublic: {
@@ -40,7 +42,7 @@ const FlashcardCollection = mongoose.model('FlashcardCollection', flashcardColle
 function validateFlashcardCollection(flashcardCollection: typeof FlashcardCollection): Joi.ValidationResult {
     const schema = Joi.object({
         owner: Joi.string().required(),
-        name: Joi.array().default([]),
+        name: Joi.string().min(1).max(255).required(),
         isPublic: Joi.boolean().default(false),
         tags: Joi.array().default([]),
         flashcards: Joi.array().default([])
@@ -49,4 +51,4 @@ function validateFlashcardCollection(flashcardCollection: typeof FlashcardCollec
     return schema.validate(flashcardCollection);
 }
 
-export { FlashcardCollection, validateFlashcardCollection, flashcardCollectionSchema };
+export { FlashcardCollection, validateFlashcardCollection };

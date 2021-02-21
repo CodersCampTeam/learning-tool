@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 const tokenSchema = new mongoose.Schema({
     token: {
         type: String,
+        unique: true,
         required: true
     }
 });
@@ -18,4 +19,4 @@ function validateToken(token: typeof Token): Joi.ValidationResult {
     return schema.validate(token);
 }
 
-export { Token, validateToken, tokenSchema };
+export { Token, validateToken };

@@ -22,4 +22,4 @@ function validateTag(tag: typeof Tag): Joi.ValidationResult {
     return schema.validate(tag);
 }
 
-export { Tag, validateTag, tagSchema };
+export { Tag, validateTag };

@@ -13,12 +13,18 @@ const AnswerHistory = mongoose.model(
             type: Date,
             required: true
         },
-        flashcardCollectionId: {
-            type: String,
+        flashcardCollection: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'FlashcardCollection',
             required: true
         },
         answers: {
-            type: Array,
+            type: [
+                {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Answer'
+                }
+            ],
             required: true,
             default: []
         }
