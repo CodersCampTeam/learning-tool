@@ -1,24 +1,23 @@
 import Joi from 'joi';
 import mongoose from 'mongoose';
 
-const Answer = mongoose.model(
-    'Answer',
-    new mongoose.Schema({
-        flashcard: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Flashcard',
-            required: true
-        },
-        date: {
-            type: Date,
-            required: true
-        },
-        isCorrect: {
-            type: Boolean,
-            required: true
-        }
-    })
-);
+const answerSchema = new mongoose.Schema({
+    flashcard: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Flashcard',
+        required: true
+    },
+    date: {
+        type: Date,
+        required: true
+    },
+    isCorrect: {
+        type: Boolean,
+        required: true
+    }
+});
+
+const Answer = mongoose.model('Answer', answerSchema);
 
 function validateAnswer(flashcard: typeof Answer): Joi.ValidationResult {
     const schema = Joi.object({

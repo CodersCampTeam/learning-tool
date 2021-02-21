@@ -1,35 +1,34 @@
 import Joi from 'joi';
 import mongoose from 'mongoose';
 
-const AnswerHistory = mongoose.model(
-    'AnswerHistory',
-    new mongoose.Schema({
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
-        },
-        sessionDate: {
-            type: Date,
-            required: true
-        },
-        flashcardCollection: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'FlashcardCollection',
-            required: true
-        },
-        answers: {
-            type: [
-                {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'Answer'
-                }
-            ],
-            required: true,
-            default: []
-        }
-    })
-);
+const answerHistorySchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    sessionDate: {
+        type: Date,
+        required: true
+    },
+    flashcardCollection: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'FlashcardCollection',
+        required: true
+    },
+    answers: {
+        type: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Answer'
+            }
+        ],
+        required: true,
+        default: []
+    }
+});
+
+const AnswerHistory = mongoose.model('AnswerHistory', answerHistorySchema);
 
 function validateAnswerHistory(answerHistory: typeof AnswerHistory): Joi.ValidationResult {
     const schema = Joi.object({
