@@ -26,6 +26,7 @@ mongoose.connect(
     }
 );
 
+app.use(express.json());
 app.use(appRouter);
 
 app.listen(port, function () {
