@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { Flashcard, validateFlashcard } from '../models/Flashcards';
+import { Flashcard, validateFlashcard } from '../models/Flashcard';
 import { FlashcardCollection } from '../models/FlashcardCollection';
 const router = express.Router();
 
