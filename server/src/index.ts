@@ -1,8 +1,10 @@
 import express from 'express';
-import { appRouter } from './routes/index';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import { appRouter } from './routes/index';
 import { productionSetup } from './production';
 
+dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 const env = process.env.NODE_ENV || 'development';
