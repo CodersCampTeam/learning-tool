@@ -3,8 +3,10 @@ import express, { Request, Response } from 'express';
 // TODO: to remove
 import { SessionSettings } from '../models/SessionSettings';
 import { User } from '../models/User';
+import flashcard from './flashcard';
 
 const router = express.Router();
+router.use('/api/flashcard', flashcard);
 
 router.get('/api', async (req: Request, res: Response) => {
     // TODO: to remove

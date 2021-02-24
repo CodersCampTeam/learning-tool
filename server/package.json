@@ -5,9 +5,7 @@
     "main": "dist/index.js",
     "scripts": {
         "start": "ts-node-dev src/index.ts",
-        "start:prod": "ts-node src/index.ts",
-        "start:lila": "nodemon dist/src/index.js",
-        "build:lila": "tsc --watch",
+        "start:prod": "ts-node src/index.ts",        
         "test": "jest",
         "lint": "eslint . --ext .ts",
         "test:watch": "jest --watch",
@@ -25,6 +23,7 @@
         "@typescript-eslint/parser": "^4.15.1",
         "compression": "^1.7.4",
         "eslint": "^7.20.0",
+        "eslint-plugin-prettier": "^3.3.1",
         "helmet": "^4.4.1",
         "jest": "^26.6.3",
         "nodemon": "^2.0.7",
