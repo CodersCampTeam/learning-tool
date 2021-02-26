@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { Flashcard, validateFlashcard } from '../models/Flashcard';
+import { Flashcard, validateFlashcard, validateFlashcardUpdate } from '../models/Flashcard';
 import { FlashcardCollection } from '../models/FlashcardCollection';
 const router = express.Router();
 
@@ -9,7 +9,8 @@ router.get('/:id', async (req: Request, res: Response) => {
         if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');
         res.send(flashcard);
     } catch (error) {
-        res.status(400).send('Invalid ID.');
+        if (error.kind === 'ObjectId') res.status(400).send('Invalid ID.').end();
+        else res.status(500).send('Ooops! Something went wrong.').end();
     }
 });
 
@@ -25,12 +26,13 @@ router.put('/:id', async (req: Request, res: Response) => {
         });
         const { error } = validateFlashcard(req.body);
         if (error) return res.status(400).send(error.details[0].message);
-        await collection['flashcards'].push(flashcard);
+        collection['flashcards'].push(flashcard);
         await collection.save();
         await flashcard.save();
         res.send(flashcard);
     } catch (error) {
-        res.status(500).send('Ooops! Something went wrong.');
+        if (error.kind === 'ObjectId') res.status(400).send('Invalid ID.').end();
+        else res.status(500).send('Ooops! Something went wrong.').end();
     }
 });
 
@@ -38,9 +40,10 @@ router.delete('/:id', async (req: Request, res: Response) => {
     try {
         const flashcard = await Flashcard.findByIdAndRemove(req.params.id);
         if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');
-        res.status(204);
+        res.status(204).end();
     } catch (error) {
-        return res.status(400).send('Invalid ID.');
+        if (error.kind === 'ObjectId') res.status(400).send('Invalid ID.').end();
+        else res.status(500).send('Ooops! Something went wrong.').end();
     }
 });
 
@@ -48,10 +51,13 @@ router.patch('/:id', async (req: Request, res: Response) => {
     try {
         const flashcard = await Flashcard.findById(req.params.id);
         if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');
+        const { error } = validateFlashcardUpdate(req.body);
+        if (error) return res.status(400).send(error.details[0].message);
         await flashcard.updateOne({ $set: req.body });
         res.send(await Flashcard.findById(flashcard.id));
     } catch (error) {
-        res.status(500).send('Ooops! Something went wrong.');
+        if (error.kind === 'ObjectId') res.status(400).send('Invalid ID.').end();
+        else res.status(500).send('Ooops! Something went wrong.').end();
     }
 });
 

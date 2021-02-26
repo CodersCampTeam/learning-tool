@@ -39,4 +39,15 @@ function validateFlashcard(flashcard: typeof Flashcard): Joi.ValidationResult {
     return schema.validate(flashcard);
 }
 
-export { Flashcard, validateFlashcard };
+function validateFlashcardUpdate(flashcard: typeof Flashcard): Joi.ValidationResult {
+    const schema = Joi.object({
+        prompt: Joi.string().min(1).max(4096),
+        imageUrl: Joi.string(),
+        answer: Joi.string().min(1).max(4096),
+        extraInfo: Joi.string().min(1).max(4096)
+    });
+
+    return schema.validate(flashcard);
+}
+
+export { Flashcard, validateFlashcard, validateFlashcardUpdate };

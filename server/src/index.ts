@@ -15,6 +15,10 @@ if (env === 'production') {
     connection_uri = process.env.MONGODB_PROD_URI || 'mongodb://localhost/learning-tool-database';
 }
 
+if (env === 'test') {
+    connection_uri = process.env.MONGODB_TEST_URI || 'mongodb://localhost/learning-tool-database-test';
+}
+
 mongoose.connect(
     connection_uri,
     {
@@ -24,13 +28,15 @@ mongoose.connect(
         useCreateIndex: true
     },
     () => {
-        console.log('connected to db');
+        if (env === 'development') console.log('connected to db');
     }
 );
 
 app.use(express.json());
 app.use(appRouter);
 
-app.listen(port, function () {
-    console.log('App listening on port: ' + port);
+const server = app.listen(port, function () {
+    if (env === 'development') console.log('App listening on port: ' + port);
 });
+
+export { server };
