@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { Flashcard } from '../src/models/Flashcard';
 import { FlashcardCollection } from '../src/models/FlashcardCollection';
 import request from 'supertest';
-import { server } from '../src/index';
+import { server } from '../src/server';
 
 describe('flashcard routes', () => {
     let flashcard;

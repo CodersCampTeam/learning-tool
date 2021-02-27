@@ -3,12 +3,15 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { appRouter } from './routes/index';
 import { productionSetup } from './production';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
+import './middleware/passport';
+
 const app = express();
 const port = process.env.PORT || 3000;
 const env = process.env.NODE_ENV || 'development';
-let connection_uri = process.env.MONGODB_DEV_URI || 'mongodb://localhost/learning-tool-database';
+let connection_uri = process.env.MONGODB_DEV_URI || 'mongodb://localhost/playground';
 
 if (env === 'production') {
     productionSetup(app);
@@ -33,6 +36,7 @@ mongoose.connect(
 );
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(appRouter);
 
 const server = app.listen(port, function () {
