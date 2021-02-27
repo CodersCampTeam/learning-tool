@@ -4,9 +4,13 @@ import express, { Request, Response } from 'express';
 import { SessionSettings } from '../models/SessionSettings';
 import { User } from '../models/User';
 import flashcard from './flashcard';
+import flashcardCollection from './flashcardCollection'
 
 const router = express.Router();
 router.use('/api/flashcard', flashcard);
+
+router.use('/api/flashcardCollection', flashcardCollection);
+
 
 router.get('/api', async (req: Request, res: Response) => {
     // TODO: to remove
