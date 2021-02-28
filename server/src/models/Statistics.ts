@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 interface IStatistics extends mongoose.Document {
     longestSeries: number;
-    flashcardsLearnt:number;
+    flashcardsLearnt: number;
     flashcardsInRepetitions: number;
 }
 
