@@ -21,7 +21,7 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 //przyda się pozniej do powtórek
-function getcourses() {
+function getAnswers() {
     Answer.aggregate([
         { $sort: { finalMaxDate: -1 } },
         {
