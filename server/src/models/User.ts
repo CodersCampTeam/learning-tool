@@ -2,6 +2,16 @@
 import Joi from 'joi';
 import mongoose from 'mongoose';
 
+interface IUser extends mongoose.Document {
+  email: string; 
+  password: string; 
+  username: string; 
+  isActive: boolean; 
+  isBlocked: boolean; 
+  avatarImg: string; 
+  sessionSettings: mongoose.Schema.Types.ObjectId; 
+}
+
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -41,7 +51,7 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model<IUser>('User', userSchema);
 
 function validateUser(user: typeof User): Joi.ValidationResult {
     const schema = Joi.object({

@@ -1,6 +1,13 @@
 import Joi from 'joi';
 import mongoose from 'mongoose';
 
+interface IAnswerHistory extends mongoose.Document {
+    user: mongoose.Schema.Types.ObjectId;
+    sessionDate: string;
+    flashcardCollection: mongoose.Schema.Types.ObjectId;
+    answers: mongoose.Schema.Types.ObjectId[];
+}
+
 const answerHistorySchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -28,7 +35,7 @@ const answerHistorySchema = new mongoose.Schema({
     }
 });
 
-const AnswerHistory = mongoose.model('AnswerHistory', answerHistorySchema);
+const AnswerHistory = mongoose.model<IAnswerHistory>('AnswerHistory', answerHistorySchema);
 
 function validateAnswerHistory(answerHistory: typeof AnswerHistory): Joi.ValidationResult {
     const schema = Joi.object({

@@ -1,6 +1,12 @@
 import Joi from 'joi';
 import mongoose from 'mongoose';
 
+interface IAnswer extends mongoose.Document {
+    flashcard: mongoose.Schema.Types.ObjectId;
+    date: Date;
+    isCorrect: boolean;
+}
+
 const answerSchema = new mongoose.Schema({
     flashcard: {
         type: mongoose.Schema.Types.ObjectId,
@@ -17,7 +23,7 @@ const answerSchema = new mongoose.Schema({
     }
 });
 
-const Answer = mongoose.model('Answer', answerSchema);
+const Answer = mongoose.model<IAnswer>('Answer', answerSchema);
 
 function validateAnswer(flashcard: typeof Answer): Joi.ValidationResult {
     const schema = Joi.object({
