@@ -9,7 +9,7 @@ import flashcardCollection from './flashcardCollection'
 const router = express.Router();
 router.use('/api/flashcard', flashcard);
 
-router.use('/api/flashcardCollection', flashcardCollection);
+router.use('/api/flashcard-collection', flashcardCollection);
 
 
 router.get('/api', async (req: Request, res: Response) => {
