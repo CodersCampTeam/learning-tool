@@ -1,6 +1,12 @@
 import Joi from 'joi';
 import mongoose from 'mongoose';
 
+interface IStatistics extends mongoose.Document {
+    longestSeries: number;
+    flashcardsLearnt:number;
+    flashcardsInRepetitions: number;
+}
+
 const statisticsSchema = new mongoose.Schema({
     longestSeries: {
         type: Number,
@@ -19,7 +25,7 @@ const statisticsSchema = new mongoose.Schema({
     }
 });
 
-const Statistics = mongoose.model('Statistics', statisticsSchema);
+const Statistics = mongoose.model<IStatistics>('Statistics', statisticsSchema);
 
 function validateStatistics(statistics: typeof Statistics): Joi.ValidationResult {
     const schema = Joi.object({

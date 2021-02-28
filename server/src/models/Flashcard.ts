@@ -1,6 +1,13 @@
 import Joi from 'joi';
 import mongoose from 'mongoose';
 
+interface IFlashcard extends mongoose.Document {
+    prompt: string;
+    imageUrl: string;
+    answer: string;
+    extraInfo: string;
+}
+
 const flashcardSchema = new mongoose.Schema({
     prompt: {
         type: String,
@@ -26,7 +33,7 @@ const flashcardSchema = new mongoose.Schema({
     }
 });
 
-const Flashcard = mongoose.model('Flashcard', flashcardSchema);
+const Flashcard = mongoose.model<IFlashcard>('Flashcard', flashcardSchema);
 
 function validateFlashcard(flashcard: typeof Flashcard): Joi.ValidationResult {
     const schema = Joi.object({

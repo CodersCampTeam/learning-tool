@@ -1,6 +1,10 @@
 import Joi from 'joi';
 import mongoose from 'mongoose';
 
+interface ITag extends mongoose.Document {
+    tag: string;
+}
+
 const tagSchema = new mongoose.Schema({
     tag: {
         type: String,
@@ -12,7 +16,7 @@ const tagSchema = new mongoose.Schema({
     }
 });
 
-const Tag = mongoose.model('Tag', tagSchema);
+const Tag = mongoose.model<ITag>('Tag', tagSchema);
 
 function validateTag(tag: typeof Tag): Joi.ValidationResult {
     const schema = Joi.object({

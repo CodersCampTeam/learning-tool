@@ -1,6 +1,14 @@
 import Joi from 'joi';
 import mongoose from 'mongoose';
 
+interface IFlashcardCollection extends mongoose.Document {
+    owner: string;
+    name: string;
+    isPublic: boolean;
+    tags: mongoose.Schema.Types.ObjectId[];
+    flashcards: mongoose.Schema.Types.ObjectId[];
+}
+
 const flashcardCollectionSchema = new mongoose.Schema({
     owner: {
         type: mongoose.Schema.Types.ObjectId,
@@ -37,7 +45,7 @@ const flashcardCollectionSchema = new mongoose.Schema({
     }
 });
 
-const FlashcardCollection = mongoose.model('FlashcardCollection', flashcardCollectionSchema);
+const FlashcardCollection = mongoose.model<IFlashcardCollection>('FlashcardCollection', flashcardCollectionSchema);
 
 function validateFlashcardCollection(flashcardCollection: typeof FlashcardCollection): Joi.ValidationResult {
     const schema = Joi.object({
