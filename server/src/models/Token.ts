@@ -1,6 +1,10 @@
 import Joi from 'joi';
 import mongoose from 'mongoose';
 
+interface IToken extends mongoose.Document {
+    token: string;
+}
+
 const tokenSchema = new mongoose.Schema({
     token: {
         type: String,
@@ -9,7 +13,7 @@ const tokenSchema = new mongoose.Schema({
     }
 });
 
-const Token = mongoose.model('SessionSettings', tokenSchema);
+const Token = mongoose.model<IToken>('SessionSettings', tokenSchema);
 
 function validateToken(token: typeof Token): Joi.ValidationResult {
     const schema = Joi.object({
