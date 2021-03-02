@@ -10,11 +10,12 @@ describe('flashcard routes', () => {
     let id;
     let newPrompt;
     let newAnswer;
+    let isQuizQuestion = false;
 
     beforeEach(async () => {
         newPrompt = 'prompt1';
-        newAnswer = 'answer1';
-        flashcard = new Flashcard({ prompt: newPrompt, answer: newAnswer });
+        newAnswer = ['answer1'];
+        flashcard = new Flashcard({ prompt: newPrompt, answers: newAnswer, isQuizQuestion });
         await flashcard.save();
         id = flashcard._id;
     });
@@ -36,7 +37,7 @@ describe('flashcard routes', () => {
             const res = await exec();
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('prompt', flashcard.prompt);
-            expect(res.body).toHaveProperty('answer', flashcard.answer);
+            expect(res.body).toHaveProperty('answers', flashcard.answers.toObject());
         });
         it('should return 400 if the invalid ID is passed', async () => {
             id = '123';
@@ -80,9 +81,10 @@ describe('flashcard routes', () => {
         const exec = async () => {
             return await request(server)
                 .put('/api/flashcard/' + collectionId)
-                .send({ prompt: newPrompt, answer: newAnswer });
+                .send({ prompt: newPrompt, answers: newAnswer, isQuizQuestion });
         };
         beforeEach(async () => {
+            isQuizQuestion = false;
             flashcardCollection = new FlashcardCollection({ name: '123' });
             await flashcardCollection.save();
             collectionId = flashcardCollection._id;
@@ -125,19 +127,19 @@ describe('flashcard routes', () => {
             newAnswer = null;
             const res = await exec();
             expect(res.status).toBe(400);
-            expect(res.text).toBe('"answer" must be a string');
+            expect(res.text).toBe('"answers" must be an array');
         });
         it('should return 400 if an answer is less than 1 character', async () => {
-            newAnswer = '';
+            newAnswer = [''];
             const res = await exec();
             expect(res.status).toBe(400);
-            expect(res.text).toBe('"answer" is not allowed to be empty');
+            expect(res.text).toBe('"answers[0]" is not allowed to be empty');
         });
         it('should return 400 if an answer is more than 4096 character', async () => {
-            newAnswer = new Array(5000).join('a');
+            newAnswer = [new Array(5000).join('a')];
             const res = await exec();
             expect(res.status).toBe(400);
-            expect(res.text).toBe('"answer" length must be less than or equal to 4096 characters long');
+            expect(res.text).toBe('"answers[0]" length must be less than or equal to 4096 characters long');
         });
         it('should save the flashcard if it is valid', async () => {
             await exec();
@@ -156,21 +158,39 @@ describe('flashcard routes', () => {
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('_id');
             expect(res.body).toHaveProperty('prompt', newPrompt);
-            expect(res.body).toHaveProperty('answer', newAnswer);
+            expect(res.body).toHaveProperty('answers', newAnswer);
+        });
+
+        it('flashcard of quiz question type shall be added', async () => {
+            isQuizQuestion = true;
+            newAnswer = ['ans1', 'ans2', 'ans3', 'ans4'];
+            const res = await exec();
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveProperty('_id');
+            expect(res.body).toHaveProperty('isQuizQuestion', isQuizQuestion);
+            expect(res.body).toHaveProperty('prompt', newPrompt);
+            expect(res.body).toHaveProperty('answers', newAnswer);
+        });
+
+        it('flashcard shall have only one answer', async () => {
+            newAnswer = ['ans1', 'ans2', 'ans3', 'ans4'];
+            const res = await exec();
+            expect(res.status).toBe(400);
+            expect(res.text).toBe('"answers" must contain less than or equal to 1 items');
         });
     });
 
     describe('PATCH /:id', () => {
         let newExtraInfo: string;
-        let newAnswer2: string;
+        let newAnswer: string[];
         const exec = async () => {
             return await request(server)
                 .patch('/api/flashcard/' + id)
-                .send({ prompt: newPrompt, answer: newAnswer2, extraInfo: newExtraInfo });
+                .send({ prompt: newPrompt, answers: newAnswer, extraInfo: newExtraInfo });
         };
         beforeEach(async () => {
             newExtraInfo = 'more';
-            newAnswer2 = 'answer2';
+            newAnswer = ['answer2'];
         });
 
         it('should return 400 if the invalid ID is passed', async () => {
@@ -185,22 +205,22 @@ describe('flashcard routes', () => {
             expect(res.status).toBe(404);
         });
         it('should return 400 if no answer was provided', async () => {
-            newAnswer2 = null;
+            newAnswer = [null];
             const res = await exec();
             expect(res.status).toBe(400);
-            expect(res.text).toBe('"answer" must be a string');
+            expect(res.text).toBe('"answers[0]" must be a string');
         });
         it('should return 400 if an answer is less than 1 character', async () => {
-            newAnswer2 = '';
+            newAnswer = [''];
             const res = await exec();
             expect(res.status).toBe(400);
-            expect(res.text).toBe('"answer" is not allowed to be empty');
+            expect(res.text).toBe('"answers[0]" is not allowed to be empty');
         });
         it('should return 400 if an answer is more than 4096 character', async () => {
-            newAnswer2 = new Array(5000).join('a');
+            newAnswer = [new Array(5000).join('a')];
             const res = await exec();
             expect(res.status).toBe(400);
-            expect(res.text).toBe('"answer" length must be less than or equal to 4096 characters long');
+            expect(res.text).toBe('"answers[0]" length must be less than or equal to 4096 characters long');
         });
         it('should save the flashcard if it is valid', async () => {
             await exec();
@@ -212,7 +232,7 @@ describe('flashcard routes', () => {
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('_id');
             expect(res.body).toHaveProperty('prompt', newPrompt);
-            expect(res.body).toHaveProperty('answer', newAnswer2);
+            expect(res.body).toHaveProperty('answers', newAnswer);
             expect(res.body).toHaveProperty('extraInfo', newExtraInfo);
         });
     });
