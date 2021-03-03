@@ -26,7 +26,7 @@ router.put('/:id', async (req: Request, res: Response) => {
         });
         const { error } = validateFlashcard(req.body);
         if (error) return res.status(400).send(error.details[0].message);
-        collection['flashcards'].push(flashcard.id);
+        collection.get('flashcards').push(flashcard.id);
         await collection.save();
         await flashcard.save();
         res.send(flashcard);
