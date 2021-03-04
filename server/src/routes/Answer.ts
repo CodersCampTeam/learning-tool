@@ -5,7 +5,7 @@ const router = express.Router();
 router.post('/', async (req: Request, res: Response) => {
     try {
         const answer = new Answer({
-            flashcard: req.body.flashcard,
+            flashcard: req.body.flashcardId,
             date: req.body.Date,
             isCorrect: req.body.isCorrect
         });
@@ -19,25 +19,3 @@ router.post('/', async (req: Request, res: Response) => {
         res.status(500).send('Something went wrong').end();
     }
 });
-
-//przyda się pozniej do powtórek
-function getAnswers() {
-    Answer.aggregate([
-        { $sort: { finalMaxDate: -1 } },
-        {
-            $group: {
-                _id: '$flashcard',
-                MaxDate: { $push: '$date' }
-            }
-        },
-        {
-            $project: {
-                finalMaxDate: {
-                    $slice: ['$MaxDate', 3]
-                }
-            }
-        }
-    ]).exec(function (_error, fetchAllRecords) {
-        console.log(fetchAllRecords);
-    });
-}
