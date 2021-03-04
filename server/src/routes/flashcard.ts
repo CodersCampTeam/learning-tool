@@ -22,7 +22,8 @@ router.put('/:id', async (req: Request, res: Response) => {
             prompt: req.body.prompt,
             imageUrl: req.body.imageUrl,
             answer: req.body.answer,
-            extraInfo: req.body.extraInfo
+            extraInfo: req.body.extraInfo,
+            collectionId: req.params.id
         });
         const { error } = validateFlashcard(req.body);
         if (error) return res.status(400).send(error.details[0].message);
@@ -38,8 +39,12 @@ router.put('/:id', async (req: Request, res: Response) => {
 
 router.delete('/:id', async (req: Request, res: Response) => {
     try {
-        const flashcard = await Flashcard.findByIdAndRemove(req.params.id);
+        const flashcard = await Flashcard.findById(req.params.id);
         if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');
+        const collection = await FlashcardCollection.findById(flashcard.collectionId);
+        await collection.update({ $pull: { flashcards: flashcard._id } });
+        await flashcard.deleteOne();
+
         res.status(204).end();
     } catch (error) {
         if (error.kind === 'ObjectId') res.status(400).send('Invalid ID.').end();

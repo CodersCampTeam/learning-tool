@@ -10,17 +10,23 @@ describe('flashcard routes', () => {
     let id;
     let newPrompt;
     let newAnswer;
+    let flashcardCollection;
+    let collectionId;
 
     beforeEach(async () => {
+        flashcardCollection = new FlashcardCollection({ name: '123' });
+        await flashcardCollection.save();
+        collectionId = flashcardCollection._id;
         newPrompt = 'prompt1';
         newAnswer = 'answer1';
-        flashcard = new Flashcard({ prompt: newPrompt, answer: newAnswer });
+        flashcard = new Flashcard({ prompt: newPrompt, answer: newAnswer, collectionId: collectionId });
         await flashcard.save();
         id = flashcard._id;
     });
 
     afterEach(async () => {
-        await Flashcard.remove({});
+        await Flashcard.deleteOne({});
+        await FlashcardCollection.deleteOne({});
         await server.close();
     });
 
@@ -37,6 +43,7 @@ describe('flashcard routes', () => {
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('prompt', flashcard.prompt);
             expect(res.body).toHaveProperty('answer', flashcard.answer);
+            expect(res.body).toHaveProperty('collectionId');
         });
         it('should return 400 if the invalid ID is passed', async () => {
             id = '123';
@@ -71,26 +78,16 @@ describe('flashcard routes', () => {
             const flashcard = await Flashcard.findById(id);
             expect(flashcard).toBeNull();
             expect(res.status).toBe(204);
+            expect(flashcardCollection['flashcards']).not.toHaveProperty('flashcard._id');
         });
     });
 
     describe('PUT /:id', () => {
-        let flashcardCollection;
-        let collectionId;
         const exec = async () => {
             return await request(server)
                 .put('/api/flashcard/' + collectionId)
                 .send({ prompt: newPrompt, answer: newAnswer });
         };
-        beforeEach(async () => {
-            flashcardCollection = new FlashcardCollection({ name: '123' });
-            await flashcardCollection.save();
-            collectionId = flashcardCollection._id;
-        });
-
-        afterEach(async () => {
-            await FlashcardCollection.remove({});
-        });
 
         it('should return 400 if the invalid ID is passed', async () => {
             collectionId = '123';
@@ -145,16 +142,15 @@ describe('flashcard routes', () => {
             expect(flashcard).not.toBeNull();
         });
         it('should save the updated flashcard collection if the flashcard is valid', async () => {
-            let flashcardCollection = await FlashcardCollection.findById(collectionId);
-            expect(flashcardCollection['flashcards'].length).toBe(0);
             await exec();
             flashcardCollection = await FlashcardCollection.findById(collectionId);
-            expect(flashcardCollection['flashcards'].length).toBe(1);
+            expect(flashcardCollection['flashcards']).not.toBeNull();
         });
         it('should return the flashcard if it is valid', async () => {
             const res = await exec();
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('_id');
+            expect(res.body).toHaveProperty('collectionId');
             expect(res.body).toHaveProperty('prompt', newPrompt);
             expect(res.body).toHaveProperty('answer', newAnswer);
         });
@@ -211,6 +207,7 @@ describe('flashcard routes', () => {
             const res = await exec();
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('_id');
+            expect(res.body).toHaveProperty('collectionId');
             expect(res.body).toHaveProperty('prompt', newPrompt);
             expect(res.body).toHaveProperty('answer', newAnswer2);
             expect(res.body).toHaveProperty('extraInfo', newExtraInfo);
