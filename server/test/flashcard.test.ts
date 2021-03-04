@@ -2,8 +2,10 @@ process.env['NODE_ENV'] = 'test';
 import mongoose from 'mongoose';
 import { Flashcard } from '../src/models/Flashcard';
 import { FlashcardCollection } from '../src/models/FlashcardCollection';
+import { User } from '../src/models/User';
 import request from 'supertest';
 import { server } from '../src/server';
+import bcrypt from 'bcryptjs';
 
 describe('flashcard routes', () => {
     let flashcard;
@@ -12,7 +14,19 @@ describe('flashcard routes', () => {
     let newAnswer;
     let flashcardCollection;
     let collectionId;
+    let token;
+    let testUser;
 
+    beforeAll(async () => {
+        const salt = await bcrypt.genSalt(10);
+        await User.deleteOne({});
+        testUser = new User({
+            username: 'testUserName',
+            email: 'test@gmail.com',
+            password: await bcrypt.hash('Password1!', salt)
+        });
+        await testUser.save();
+    });
     beforeEach(async () => {
         flashcardCollection = new FlashcardCollection({ name: '123' });
         await flashcardCollection.save();
@@ -22,6 +36,7 @@ describe('flashcard routes', () => {
         flashcard = new Flashcard({ prompt: newPrompt, answer: newAnswer, collectionId: collectionId });
         await flashcard.save();
         id = flashcard._id;
+        token = testUser.generateAuthToken();
     });
 
     afterEach(async () => {
@@ -31,13 +46,22 @@ describe('flashcard routes', () => {
     });
 
     afterAll(async () => {
+        await User.deleteOne({});
         await mongoose.disconnect();
     });
 
     describe('GET /:id', () => {
         const exec = async () => {
-            return await request(server).get('/api/flashcard/' + id);
+            return await request(server)
+                .get('/api/flashcard/' + id)
+                .set('Cookie', `jwt=${token};`)
+                .send({});
         };
+        it('should return 401 if the user is not logged in', async () => {
+            token = '';
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
         it('should return a flashcard if the valid ID is passed', async () => {
             const res = await exec();
             expect(res.status).toBe(200);
@@ -59,8 +83,16 @@ describe('flashcard routes', () => {
     });
     describe('DELETE /:id', () => {
         const exec = async () => {
-            return await request(server).delete('/api/flashcard/' + id);
+            return await request(server)
+                .delete('/api/flashcard/' + id)
+                .set('Cookie', `jwt=${token};`)
+                .send({});
         };
+        it('should return 401 if the user is not logged in', async () => {
+            token = '';
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
         it('should return 400 if the invalid ID is passed', async () => {
             id = '123';
             const res = await exec();
@@ -86,9 +118,14 @@ describe('flashcard routes', () => {
         const exec = async () => {
             return await request(server)
                 .put('/api/flashcard/' + collectionId)
+                .set('Cookie', `jwt=${token};`)
                 .send({ prompt: newPrompt, answer: newAnswer });
         };
-
+        it('should return 401 if the user is not logged in', async () => {
+            token = '';
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
         it('should return 400 if the invalid ID is passed', async () => {
             collectionId = '123';
             const res = await exec();
@@ -162,13 +199,18 @@ describe('flashcard routes', () => {
         const exec = async () => {
             return await request(server)
                 .patch('/api/flashcard/' + id)
+                .set('Cookie', `jwt=${token};`)
                 .send({ prompt: newPrompt, answer: newAnswer2, extraInfo: newExtraInfo });
         };
         beforeEach(async () => {
             newExtraInfo = 'more';
             newAnswer2 = 'answer2';
         });
-
+        it('should return 401 if the user is not logged in', async () => {
+            token = '';
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
         it('should return 400 if the invalid ID is passed', async () => {
             id = '123';
             const res = await exec();
