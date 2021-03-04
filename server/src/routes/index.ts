@@ -1,16 +1,39 @@
 import express, { Request, Response } from 'express';
-
+import register from './register';
+import login from './login';
+import google from './google';
+import { User, IUser } from '../models/User';
+import passport from 'passport';
 // TODO: to remove
 import { SessionSettings } from '../models/SessionSettings';
-import { User } from '../models/User';
+import flashcard from './flashcard';
+import flashcardCollection from './flashcardCollection';
 
 const router = express.Router();
+
+router.use('/api/register', register);
+
+router.use('/api/login', login);
+
+router.use('/api/google', google);
+
+router.use('/api/flashcard', flashcard);
+
+router.use('/api/flashcard-collection', flashcardCollection);
 
 router.get('/api', async (req: Request, res: Response) => {
     // TODO: to remove
     const obj = await User.find().populate('sessionSettings');
     res.send(obj);
 });
+
+declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace Express {
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        export interface User extends IUser {}
+    }
+}
 
 router.post('/api', async (req: Request, res: Response) => {
     // Todo: to remove
@@ -33,8 +56,9 @@ router.post('/api', async (req: Request, res: Response) => {
     res.send(user);
 });
 
-router.get('/', (req: Request, res: Response) => {
+router.get('/', passport.authenticate('jwt', { session: false }), (req: Request, res: Response) => {
     res.status(200).send(`response`);
+    console.log(req.user?._id);
 });
 
 export { router as appRouter };
