@@ -19,6 +19,11 @@ jobs:
             - name: Run lint
               working-directory: ./server
               run: npm run lint
+            - name: Run ts
+              working-directory: ./server
+              run: |
+                  tsc --build tsconfig.json
+                  rm -rf ./dist
             - name: Run tests
               working-directory: ./server
               run: npm test

@@ -1,6 +1,20 @@
 /* eslint-disable no-useless-escape */
 import Joi from 'joi';
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
+import jwt from 'jsonwebtoken';
+import passwordComplexity from 'joi-password-complexity';
+
+export interface IUser extends Document {
+    id: string;
+    username: string;
+    password: string;
+    email: string;
+    isActive: boolean;
+    isBlocked: boolean;
+    avatarImg: string;
+    sessionSettings: mongoose.Schema.Types.ObjectId;
+    generateAuthToken: () => string;
+}
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -11,8 +25,8 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         minLength: 8,
-        maxLength: 50,
-        required: true
+        maxLength: 1024,
+        required: false
     },
     username: {
         type: String,
@@ -38,19 +52,29 @@ const userSchema = new mongoose.Schema({
     sessionSettings: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'SessionSettings'
+    },
+    googleId: {
+        type: String
+    },
+    id: {
+        type: String
     }
 });
 
-const User = mongoose.model('User', userSchema);
+userSchema.methods.generateAuthToken = function () {
+    return jwt.sign({ _id: this._id }, process.env.JWT_PRIVATE_KEY || 'privateKey');
+};
+
+const User = mongoose.model<IUser>('User', userSchema);
 
 function validateUser(user: typeof User): Joi.ValidationResult {
     const schema = Joi.object({
-        email: Joi.string(),
-        password: Joi.string().min(8).max(50).required(),
+        email: Joi.string().required().email(),
+        password: passwordComplexity().required(),
         username: Joi.string().min(2).max(30).required(),
         isActive: Joi.boolean().default(true),
         isBlocked: Joi.boolean().default(false),
-        avatarImg: Joi.string().required(),
+        avatarImg: Joi.string(),
         sessionSettings: Joi.string()
     });
 
