@@ -35,4 +35,4 @@ function validateAnswer(flashcard: typeof Answer): Joi.ValidationResult {
     return schema.validate(flashcard);
 }
 
-export { Answer, validateAnswer };
+export { Answer, IAnswer, validateAnswer };
