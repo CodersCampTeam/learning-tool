@@ -4,19 +4,49 @@ import { Flashcard } from '../src/models/Flashcard';
 import { FlashcardCollection } from '../src/models/FlashcardCollection';
 import request from 'supertest';
 import { server } from '../src/server';
+import { User } from '../src/models/User';
 
 describe('flashcard routes', () => {
     let flashcard;
     let id;
     let newPrompt;
     let newAnswer;
+    let flashcardCollection;
+    let collectionId;
+    let tokenOwner;
+    let tokenNotOwner;
+    let testUserNotOwner;
+    let testUserOwner;
+    let usedToken;
 
+    beforeAll(async () => {
+        const salt = await bcrypt.genSalt(10);
+        await User.deleteOne({});
+        testUserOwner = new User({
+            username: 'testUserName',
+            email: 'test@gmail.com',
+            password: await bcrypt.hash('Password1!', salt)
+        });
+        await testUserOwner.save();
+        testUserNotOwner = new User({
+            username: 'testUserName2',
+            email: 'test2@gmail.com',
+            password: await bcrypt.hash('Password2!', salt)
+        });
+        await testUserNotOwner.save();
+    });
     beforeEach(async () => {
+        flashcardCollection = new FlashcardCollection({ name: '123', owner: testUserOwner, isPublic: false });
+        await flashcardCollection.save();
+        collectionId = flashcardCollection._id;
         newPrompt = 'prompt1';
         newAnswer = 'answer1';
         flashcard = new Flashcard({ prompt: newPrompt, answer: newAnswer });
         await flashcard.save();
         id = flashcard._id;
+        tokenOwner = testUserOwner.generateAuthToken();
+        tokenNotOwner = testUserNotOwner.generateAuthToken();
+        usedToken = tokenOwner;
     });
 
     afterEach(async () => {
@@ -30,8 +60,31 @@ describe('flashcard routes', () => {
 
     describe('GET /:id', () => {
         const exec = async () => {
-            return await request(server).get('/api/flashcard/' + id);
+            return await request(server)
+                .get('/api/flashcard/' + id)
+                .set('Cookie', `jwt=${usedToken};`)
+                .send({});
         };
+        it('should return 401 if the user is not logged in', async () => {
+            usedToken = '';
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
+        it('should return 403 if the user is not the owner and the collection is private', async () => {
+            usedToken = tokenNotOwner;
+            const res = await exec();
+            expect(res.status).toBe(403);
+        });
+        it('should return a flashcard if not the owner and the collection is public', async () => {
+            usedToken = tokenNotOwner;
+            flashcardCollection.isPublic = true;
+            await flashcardCollection.save();
+            const res = await exec();
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveProperty('prompt', flashcard.prompt);
+            expect(res.body).toHaveProperty('answer', flashcard.answer);
+            expect(res.body).toHaveProperty('collectionId');
+        });
         it('should return a flashcard if the valid ID is passed', async () => {
             const res = await exec();
             expect(res.status).toBe(200);
@@ -52,8 +105,28 @@ describe('flashcard routes', () => {
     });
     describe('DELETE /:id', () => {
         const exec = async () => {
-            return await request(server).delete('/api/flashcard/' + id);
+            return await request(server)
+                .delete('/api/flashcard/' + id)
+                .set('Cookie', `jwt=${usedToken};`)
+                .send({});
         };
+        it('should return 403 if the user is not the owner and the collection is private', async () => {
+            usedToken = tokenNotOwner;
+            const res = await exec();
+            expect(res.status).toBe(403);
+        });
+        it('should return 403 if the user is not the owner and the collection is public', async () => {
+            usedToken = tokenNotOwner;
+            flashcardCollection.isPublic = true;
+            await flashcardCollection.save();
+            const res = await exec();
+            expect(res.status).toBe(403);
+        });
+        it('should return 401 if the user is not logged in', async () => {
+            usedToken = '';
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
         it('should return 400 if the invalid ID is passed', async () => {
             id = '123';
             const res = await exec();
@@ -80,18 +153,26 @@ describe('flashcard routes', () => {
         const exec = async () => {
             return await request(server)
                 .put('/api/flashcard/' + collectionId)
+                .set('Cookie', `jwt=${usedToken};`)
                 .send({ prompt: newPrompt, answer: newAnswer });
         };
-        beforeEach(async () => {
-            flashcardCollection = new FlashcardCollection({ name: '123' });
+        it('should return 401 if the user is not logged in', async () => {
+            usedToken = '';
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
+        it('should return 403 if the user is not the owner and the collection is private', async () => {
+            usedToken = tokenNotOwner;
+            const res = await exec();
+            expect(res.status).toBe(403);
+        });
+        it('should return 403 if the user is not the owner and the collection is public', async () => {
+            usedToken = tokenNotOwner;
+            flashcardCollection.isPublic = true;
             await flashcardCollection.save();
-            collectionId = flashcardCollection._id;
+            const res = await exec();
+            expect(res.status).toBe(403);
         });
-
-        afterEach(async () => {
-            await FlashcardCollection.remove({});
-        });
-
         it('should return 400 if the invalid ID is passed', async () => {
             collectionId = '123';
             const res = await exec();
@@ -166,13 +247,30 @@ describe('flashcard routes', () => {
         const exec = async () => {
             return await request(server)
                 .patch('/api/flashcard/' + id)
+                .set('Cookie', `jwt=${usedToken};`)
                 .send({ prompt: newPrompt, answer: newAnswer2, extraInfo: newExtraInfo });
         };
         beforeEach(async () => {
             newExtraInfo = 'more';
             newAnswer2 = 'answer2';
         });
-
+        it('should return 401 if the user is not logged in', async () => {
+            usedToken = '';
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
+        it('should return 403 if the user is not the owner and the collection is private', async () => {
+            usedToken = tokenNotOwner;
+            const res = await exec();
+            expect(res.status).toBe(403);
+        });
+        it('should return 403 if the user is not the owner and the collection is public', async () => {
+            usedToken = tokenNotOwner;
+            flashcardCollection.isPublic = true;
+            await flashcardCollection.save();
+            const res = await exec();
+            expect(res.status).toBe(403);
+        });
         it('should return 400 if the invalid ID is passed', async () => {
             id = '123';
             const res = await exec();

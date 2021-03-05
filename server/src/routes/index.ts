@@ -8,6 +8,7 @@ import passport from 'passport';
 import { SessionSettings } from '../models/SessionSettings';
 import flashcard from './flashcard';
 import flashcardCollection from './flashcardCollection';
+import { defaultHandler } from '../middleware/errorHandlers';
 
 const router = express.Router();
 
@@ -60,5 +61,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req: Request,
     res.status(200).send(`response`);
     console.log(req.user?._id);
 });
+
+router.use(defaultHandler);
 
 export { router as appRouter };
