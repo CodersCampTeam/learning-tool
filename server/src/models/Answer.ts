@@ -2,13 +2,13 @@ import Joi from 'joi';
 import mongoose from 'mongoose';
 
 interface IAnswer extends mongoose.Document {
-    flashcard: mongoose.Schema.Types.ObjectId;
+    flashcardId: mongoose.Schema.Types.ObjectId;
     date: Date;
     isCorrect: boolean;
 }
 
 const answerSchema = new mongoose.Schema({
-    flashcard: {
+    flashcardId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Flashcard',
         required: true
