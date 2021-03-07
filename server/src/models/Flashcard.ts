@@ -61,7 +61,7 @@ function validateFlashcard(flashcard: typeof Flashcard): Joi.ValidationResult {
     const schema = Joi.object({
         prompt: Joi.string().min(1).max(4096).required(),
         imageUrl: Joi.string(),
-        collectionID: Joi.string(),
+        collectionId: Joi.string(),
         answers: Joi.array()
             .items(Joi.string().min(1).max(4096))
             .when('isQuizQuestion', { is: true, then: Joi.array().min(1).required() })
@@ -79,7 +79,7 @@ function validateFlashcardUpdate(flashcard: typeof Flashcard): Joi.ValidationRes
     const schema = Joi.object({
         prompt: Joi.string().min(1).max(4096),
         imageUrl: Joi.string(),
-        collectionID: Joi.string(),
+        collectionId: Joi.string(),
         answers: Joi.array()
             .items(Joi.string().min(1).max(4096))
             .when('isQuizQuestion', { is: true, then: Joi.array().min(1).required() })

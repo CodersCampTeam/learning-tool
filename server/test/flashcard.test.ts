@@ -32,9 +32,14 @@ describe('flashcard routes', () => {
         flashcardCollection = new FlashcardCollection({ name: '123' });
         await flashcardCollection.save();
         collectionId = flashcardCollection._id;
-        newPrompt = 'prompt1';     
+        newPrompt = 'prompt1';
         newAnswer = ['answer1'];
-        flashcard = new Flashcard({ prompt: newPrompt, answers: newAnswer, collectionId: collectionId, isQuizQuestion });
+        flashcard = new Flashcard({
+            prompt: newPrompt,
+            answers: newAnswer,
+            collectionId: collectionId,
+            isQuizQuestion
+        });
         await flashcard.save();
         id = flashcard._id;
         token = testUser.generateAuthToken();
@@ -122,7 +127,7 @@ describe('flashcard routes', () => {
                 .set('Cookie', `jwt=${token};`)
                 .send({ prompt: newPrompt, answers: newAnswer, isQuizQuestion });
         };
-      
+
         beforeEach(async () => {
             isQuizQuestion = false;
             flashcardCollection = new FlashcardCollection({ name: '123' });
@@ -133,11 +138,12 @@ describe('flashcard routes', () => {
         afterEach(async () => {
             await FlashcardCollection.remove({});
         });
-          it('should return 401 if the user is not logged in', async () => {
+        it('should return 401 if the user is not logged in', async () => {
             token = '';
             const res = await exec();
             expect(res.status).toBe(401);
-        };
+        });
+
         it('should return 400 if the invalid ID is passed', async () => {
             collectionId = '123';
             const res = await exec();
@@ -229,7 +235,7 @@ describe('flashcard routes', () => {
         const exec = async () => {
             return await request(server)
                 .patch('/api/flashcard/' + id)
-                .set('Cookie', `jwt=${token};`)                
+                .set('Cookie', `jwt=${token};`)
                 .send({ prompt: newPrompt, answers: newAnswer, extraInfo: newExtraInfo });
         };
         beforeEach(async () => {
