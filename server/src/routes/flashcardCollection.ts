@@ -2,10 +2,12 @@ import express, { Request, Response } from 'express';
 import { Tag } from '../models/Tag';
 import { FlashcardCollection, validateFlashcardCollection } from '../models/FlashcardCollection';
 import { Flashcard } from '../models/Flashcard';
+import passport from 'passport';
+import { checkCollectionPermissions } from '../services/checkCollectionPermissions';
 
 const router = express.Router();
 
-router.post('/', (req: Request, res: Response) => {
+router.post('/', passport.authenticate('jwt', { session: false }), (req: Request, res: Response, next) => {
     try {
         const flashcardCollection = new FlashcardCollection({
             owner: req.body.owner,
@@ -19,13 +21,15 @@ router.post('/', (req: Request, res: Response) => {
         flashcardCollection.save();
         res.send(flashcardCollection);
     } catch (error) {
-        res.status(500).send('Something went wrong').end();
+        next(error);
     }
 });
 
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response, next) => {
     try {
-        const flashcardCollection = await FlashcardCollection.findById(req.params.id)
+        const flashcardCollection = await FlashcardCollection.findById(req.params.id);
+        await checkCollectionPermissions(req, flashcardCollection._id);
+        await flashcardCollection
             .populate({
                 path: 'tags',
                 model: Tag
@@ -34,24 +38,21 @@ router.get('/:id', async (req: Request, res: Response) => {
                 path: 'flashcards',
                 model: Flashcard
             });
-
-        if (flashcardCollection.isPublic) {
-            res.send(flashcardCollection);
-        } else {
-            res.status(403).send('You do not have access to this flashcard collection').end();
-        }
+        res.send(flashcardCollection);
     } catch (error) {
-        res.status(500).send('Something went wrong').end();
+        next(error);
     }
 });
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response, next) => {
     try {
-        const flashcardCollection = await FlashcardCollection.findByIdAndRemove(req.params.id);
+        const flashcardCollection = await FlashcardCollection.findById(req.params.id);
         if (!flashcardCollection) return res.status(404).send('The flashcardCollection does not exist');
+        await checkCollectionPermissions(req, flashcardCollection._id);
+        await flashcardCollection.deleteOne();
         res.status(204).send();
     } catch (error) {
-        res.status(500).send('Something went wrong').end();
+        next(error);
     }
 });
 
