@@ -21,8 +21,10 @@ router.put('/:id', async (req: Request, res: Response) => {
         const flashcard = new Flashcard({
             prompt: req.body.prompt,
             imageUrl: req.body.imageUrl,
-            answer: req.body.answer,
-            extraInfo: req.body.extraInfo
+            answers: req.body.answers,
+            extraInfo: req.body.extraInfo,
+            isQuizQuestion: req.body.isQuizQuestion,
+            correctAnswer: req.body.correctAnswer
         });
         const { error } = validateFlashcard(req.body);
         if (error) return res.status(400).send(error.details[0].message);
