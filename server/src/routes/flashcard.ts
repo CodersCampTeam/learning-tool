@@ -22,9 +22,11 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), async (req:
         const flashcard = new Flashcard({
             prompt: req.body.prompt,
             imageUrl: req.body.imageUrl,
-            answer: req.body.answer,
+            collectionId: req.params.id,
+            answers: req.body.answers,
             extraInfo: req.body.extraInfo,
-            collectionId: req.params.id
+            isQuizQuestion: req.body.isQuizQuestion,
+            correctAnswer: req.body.correctAnswer
         });
         const { error } = validateFlashcard(req.body);
         if (error) return res.status(400).send(error.details[0].message);

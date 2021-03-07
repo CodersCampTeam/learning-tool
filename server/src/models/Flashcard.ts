@@ -4,9 +4,11 @@ import mongoose from 'mongoose';
 interface IFlashcard extends mongoose.Document {
     prompt: string;
     imageUrl: string;
-    answer: string;
+    answers: string[];
     extraInfo: string;
     collectionId: mongoose.Schema.Types.ObjectId;
+    isQuizQuestion: boolean;
+    correctAnswer: number;
 }
 
 const flashcardSchema = new mongoose.Schema({
@@ -20,11 +22,17 @@ const flashcardSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    answer: {
-        type: String,
-        minLength: 1,
-        maxLength: 4096,
-        required: true
+    answers: {
+        type: [
+            {
+                type: String,
+                minLength: 1,
+                maxLength: 4096,
+                required: true
+            }
+        ],
+        required: true,
+        default: []
     },
     extraInfo: {
         type: String,
@@ -35,6 +43,15 @@ const flashcardSchema = new mongoose.Schema({
     collectionId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'FlashcardCollection'
+    },
+    isQuizQuestion: {
+        type: Boolean,
+        required: true
+    },
+    correctAnswer: {
+        type: Number,
+        required: false,
+        default: 0
     }
 });
 
@@ -44,9 +61,15 @@ function validateFlashcard(flashcard: typeof Flashcard): Joi.ValidationResult {
     const schema = Joi.object({
         prompt: Joi.string().min(1).max(4096).required(),
         imageUrl: Joi.string(),
-        answer: Joi.string().min(1).max(4096).required(),
+        collectionID: Joi.string(),
+        answers: Joi.array()
+            .items(Joi.string().min(1).max(4096))
+            .when('isQuizQuestion', { is: true, then: Joi.array().min(1).required() })
+            .when('isQuizQuestion', { is: false, then: Joi.array().min(1).max(1).required() })
+            .required(),
         extraInfo: Joi.string().min(1).max(4096),
-        collectionID: Joi.string()
+        isQuizQuestion: Joi.boolean().default(false).required(),
+        correctAnswer: Joi.number().default(0)
     });
 
     return schema.validate(flashcard);
@@ -56,9 +79,14 @@ function validateFlashcardUpdate(flashcard: typeof Flashcard): Joi.ValidationRes
     const schema = Joi.object({
         prompt: Joi.string().min(1).max(4096),
         imageUrl: Joi.string(),
-        answer: Joi.string().min(1).max(4096),
+        collectionID: Joi.string(),
+        answers: Joi.array()
+            .items(Joi.string().min(1).max(4096))
+            .when('isQuizQuestion', { is: true, then: Joi.array().min(1).required() })
+            .when('isQuizQuestion', { is: false, then: Joi.array().min(1).max(1).required() }),
         extraInfo: Joi.string().min(1).max(4096),
-        collectionID: Joi.string()
+        isQuizQuestion: Joi.boolean(),
+        correctAnswer: Joi.number()
     });
 
     return schema.validate(flashcard);
