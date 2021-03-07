@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express';
+import passport from 'passport';
 import { Flashcard, validateFlashcard, validateFlashcardUpdate } from '../models/Flashcard';
 import { FlashcardCollection } from '../models/FlashcardCollection';
 const router = express.Router();
 
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response) => {
     try {
         const flashcard = await Flashcard.findById(req.params.id);
         if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');
@@ -14,13 +15,14 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
 });
 
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response) => {
     try {
         const collection = await FlashcardCollection.findById(req.params.id);
         if (!collection) return res.status(404).send('The flashcard collection with the given ID was not found.');
         const flashcard = new Flashcard({
             prompt: req.body.prompt,
             imageUrl: req.body.imageUrl,
+            collectionId: req.params.id,
             answers: req.body.answers,
             extraInfo: req.body.extraInfo,
             isQuizQuestion: req.body.isQuizQuestion,
@@ -38,10 +40,14 @@ router.put('/:id', async (req: Request, res: Response) => {
     }
 });
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response) => {
     try {
-        const flashcard = await Flashcard.findByIdAndRemove(req.params.id);
+        const flashcard = await Flashcard.findById(req.params.id);
         if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');
+        const collection = await FlashcardCollection.findById(flashcard.collectionId);
+        await collection.update({ $pull: { flashcards: flashcard._id } });
+        await flashcard.deleteOne();
+
         res.status(204).end();
     } catch (error) {
         if (error.kind === 'ObjectId') res.status(400).send('Invalid ID.').end();
@@ -49,7 +55,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
     }
 });
 
-router.patch('/:id', async (req: Request, res: Response) => {
+router.patch('/:id', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response) => {
     try {
         const flashcard = await Flashcard.findById(req.params.id);
         if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');

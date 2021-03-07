@@ -6,6 +6,7 @@ interface IFlashcard extends mongoose.Document {
     imageUrl: string;
     answers: string[];
     extraInfo: string;
+    collectionId: mongoose.Schema.Types.ObjectId;
     isQuizQuestion: boolean;
     correctAnswer: number;
 }
@@ -39,6 +40,10 @@ const flashcardSchema = new mongoose.Schema({
         maxLength: 4096,
         required: false
     },
+    collectionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'FlashcardCollection'
+    },
     isQuizQuestion: {
         type: Boolean,
         required: true
@@ -56,6 +61,7 @@ function validateFlashcard(flashcard: typeof Flashcard): Joi.ValidationResult {
     const schema = Joi.object({
         prompt: Joi.string().min(1).max(4096).required(),
         imageUrl: Joi.string(),
+        collectionId: Joi.string(),
         answers: Joi.array()
             .items(Joi.string().min(1).max(4096))
             .when('isQuizQuestion', { is: true, then: Joi.array().min(1).required() })
@@ -73,6 +79,7 @@ function validateFlashcardUpdate(flashcard: typeof Flashcard): Joi.ValidationRes
     const schema = Joi.object({
         prompt: Joi.string().min(1).max(4096),
         imageUrl: Joi.string(),
+        collectionId: Joi.string(),
         answers: Joi.array()
             .items(Joi.string().min(1).max(4096))
             .when('isQuizQuestion', { is: true, then: Joi.array().min(1).required() })
