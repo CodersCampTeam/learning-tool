@@ -7,7 +7,7 @@ import { checkCollectionPermissions } from '../services/checkCollectionPermissio
 
 const router = express.Router();
 
-router.post('/', passport.authenticate('jwt', { session: false }), (req: Request, res: Response, next) => {
+router.post('/', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response, next) => {
     try {
         const flashcardCollection = new FlashcardCollection({
             owner: req.body.owner,
@@ -18,7 +18,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req: Request
         });
         const { error } = validateFlashcardCollection(req.body);
         if (error) return res.status(400).send(error.details[0].message);
-        flashcardCollection.save();
+        await flashcardCollection.save();
         res.send(flashcardCollection);
     } catch (error) {
         next(error);
@@ -28,6 +28,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req: Request
 router.get('/:id', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response, next) => {
     try {
         const flashcardCollection = await FlashcardCollection.findById(req.params.id);
+        if (!flashcardCollection) return res.status(404).send('The flashcard with the given ID was not found.');
         await checkCollectionPermissions(req, flashcardCollection._id);
         await flashcardCollection
             .populate({

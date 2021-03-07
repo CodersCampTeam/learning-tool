@@ -38,7 +38,12 @@ describe('flashcard routes', () => {
         await testUserNotOwner.save();
     });
     beforeEach(async () => {
-        flashcardCollection = new FlashcardCollection({ name: '123', owner: testUserOwner, isPublic: false });
+        flashcardCollection = new FlashcardCollection({
+            name: '123',
+            owner: testUserOwner,
+            isPublic: false,
+            isQuizQuestion: false
+        });
         await flashcardCollection.save();
         collectionId = flashcardCollection._id;
         newPrompt = 'prompt1';
@@ -84,7 +89,7 @@ describe('flashcard routes', () => {
             const res = await exec();
             expect(res.status).toBe(403);
         });
-        it('should return a flashcard if not the owner and the collection is public', async () => {
+        it('should return a flashcard if the user is not the owner and the collection is public', async () => {
             usedToken = tokenNotOwner;
             flashcardCollection.isPublic = true;
             await flashcardCollection.save();
@@ -131,9 +136,6 @@ describe('flashcard routes', () => {
             await flashcardCollection.save();
             const res = await exec();
             expect(res.status).toBe(403);
-        });
-        it('should return 401 if the user is not logged in', async () => {
-            usedToken = '';
         });
         it('should return 401 if the user is not logged in', async () => {
             usedToken = '';
