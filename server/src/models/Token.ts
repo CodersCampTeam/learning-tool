@@ -13,7 +13,7 @@ const tokenSchema = new mongoose.Schema({
     }
 });
 
-const Token = mongoose.model<IToken>('SessionSettings', tokenSchema);
+const Token = mongoose.model<IToken>('Token', tokenSchema);
 
 function validateToken(token: typeof Token): Joi.ValidationResult {
     const schema = Joi.object({
