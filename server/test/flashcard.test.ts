@@ -2,41 +2,77 @@ process.env['NODE_ENV'] = 'test';
 import mongoose from 'mongoose';
 import { Flashcard } from '../src/models/Flashcard';
 import { FlashcardCollection } from '../src/models/FlashcardCollection';
+import { User } from '../src/models/User';
 import request from 'supertest';
 import { server } from '../src/server';
+import bcrypt from 'bcryptjs';
 
 describe('flashcard routes', () => {
     let flashcard;
     let id;
     let newPrompt;
     let newAnswer;
+    let flashcardCollection;
+    let collectionId;
+    let token;
+    let testUser;
     let isQuizQuestion = false;
 
+    beforeAll(async () => {
+        const salt = await bcrypt.genSalt(10);
+        await User.deleteOne({});
+        testUser = new User({
+            username: 'testUserName',
+            email: 'test@gmail.com',
+            password: await bcrypt.hash('Password1!', salt)
+        });
+        await testUser.save();
+    });
     beforeEach(async () => {
+        flashcardCollection = new FlashcardCollection({ name: '123' });
+        await flashcardCollection.save();
+        collectionId = flashcardCollection._id;
         newPrompt = 'prompt1';
         newAnswer = ['answer1'];
-        flashcard = new Flashcard({ prompt: newPrompt, answers: newAnswer, isQuizQuestion });
+        flashcard = new Flashcard({
+            prompt: newPrompt,
+            answers: newAnswer,
+            collectionId: collectionId,
+            isQuizQuestion
+        });
         await flashcard.save();
         id = flashcard._id;
+        token = testUser.generateAuthToken();
     });
 
     afterEach(async () => {
-        await Flashcard.remove({});
+        await Flashcard.deleteOne({});
+        await FlashcardCollection.deleteOne({});
         await server.close();
     });
 
     afterAll(async () => {
+        await User.deleteOne({});
         await mongoose.disconnect();
     });
 
     describe('GET /:id', () => {
         const exec = async () => {
-            return await request(server).get('/api/flashcard/' + id);
+            return await request(server)
+                .get('/api/flashcard/' + id)
+                .set('Cookie', `jwt=${token};`)
+                .send({});
         };
+        it('should return 401 if the user is not logged in', async () => {
+            token = '';
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
         it('should return a flashcard if the valid ID is passed', async () => {
             const res = await exec();
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('prompt', flashcard.prompt);
+            expect(res.body).toHaveProperty('collectionId');
             expect(res.body).toHaveProperty('answers', flashcard.answers.toObject());
         });
         it('should return 400 if the invalid ID is passed', async () => {
@@ -53,8 +89,16 @@ describe('flashcard routes', () => {
     });
     describe('DELETE /:id', () => {
         const exec = async () => {
-            return await request(server).delete('/api/flashcard/' + id);
+            return await request(server)
+                .delete('/api/flashcard/' + id)
+                .set('Cookie', `jwt=${token};`)
+                .send({});
         };
+        it('should return 401 if the user is not logged in', async () => {
+            token = '';
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
         it('should return 400 if the invalid ID is passed', async () => {
             id = '123';
             const res = await exec();
@@ -72,17 +116,18 @@ describe('flashcard routes', () => {
             const flashcard = await Flashcard.findById(id);
             expect(flashcard).toBeNull();
             expect(res.status).toBe(204);
+            expect(flashcardCollection['flashcards']).not.toHaveProperty('flashcard._id');
         });
     });
 
     describe('PUT /:id', () => {
-        let flashcardCollection;
-        let collectionId;
         const exec = async () => {
             return await request(server)
                 .put('/api/flashcard/' + collectionId)
+                .set('Cookie', `jwt=${token};`)
                 .send({ prompt: newPrompt, answers: newAnswer, isQuizQuestion });
         };
+
         beforeEach(async () => {
             isQuizQuestion = false;
             flashcardCollection = new FlashcardCollection({ name: '123' });
@@ -92,6 +137,11 @@ describe('flashcard routes', () => {
 
         afterEach(async () => {
             await FlashcardCollection.remove({});
+        });
+        it('should return 401 if the user is not logged in', async () => {
+            token = '';
+            const res = await exec();
+            expect(res.status).toBe(401);
         });
 
         it('should return 400 if the invalid ID is passed', async () => {
@@ -147,16 +197,15 @@ describe('flashcard routes', () => {
             expect(flashcard).not.toBeNull();
         });
         it('should save the updated flashcard collection if the flashcard is valid', async () => {
-            let flashcardCollection = await FlashcardCollection.findById(collectionId);
-            expect(flashcardCollection['flashcards'].length).toBe(0);
             await exec();
             flashcardCollection = await FlashcardCollection.findById(collectionId);
-            expect(flashcardCollection['flashcards'].length).toBe(1);
+            expect(flashcardCollection['flashcards']).not.toBeNull();
         });
         it('should return the flashcard if it is valid', async () => {
             const res = await exec();
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('_id');
+            expect(res.body).toHaveProperty('collectionId');
             expect(res.body).toHaveProperty('prompt', newPrompt);
             expect(res.body).toHaveProperty('answers', newAnswer);
         });
@@ -186,13 +235,18 @@ describe('flashcard routes', () => {
         const exec = async () => {
             return await request(server)
                 .patch('/api/flashcard/' + id)
+                .set('Cookie', `jwt=${token};`)
                 .send({ prompt: newPrompt, answers: newAnswer, extraInfo: newExtraInfo });
         };
         beforeEach(async () => {
             newExtraInfo = 'more';
             newAnswer = ['answer2'];
         });
-
+        it('should return 401 if the user is not logged in', async () => {
+            token = '';
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
         it('should return 400 if the invalid ID is passed', async () => {
             id = '123';
             const res = await exec();
@@ -231,6 +285,7 @@ describe('flashcard routes', () => {
             const res = await exec();
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('_id');
+            expect(res.body).toHaveProperty('collectionId');
             expect(res.body).toHaveProperty('prompt', newPrompt);
             expect(res.body).toHaveProperty('answers', newAnswer);
             expect(res.body).toHaveProperty('extraInfo', newExtraInfo);
