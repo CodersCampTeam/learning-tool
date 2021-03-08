@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import passport from 'passport';
+import { Answer } from '../models/Answer';
 import { Flashcard, validateFlashcard, validateFlashcardUpdate } from '../models/Flashcard';
 import { FlashcardCollection } from '../models/FlashcardCollection';
 import { checkCollectionPermissions } from '../services/checkCollectionPermissions';
@@ -49,6 +50,8 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), async (r
         const collection = await FlashcardCollection.findById(flashcard.collectionId);
         await collection.update({ $pull: { flashcards: flashcard._id } });
         await flashcard.deleteOne();
+
+        await Answer.deleteMany({ flashcardId: req.params.id });
 
         res.status(204).end();
     } catch (error) {

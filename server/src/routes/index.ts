@@ -7,6 +7,7 @@ import passport from 'passport';
 // TODO: to remove
 import { SessionSettings } from '../models/SessionSettings';
 import flashcard from './flashcard';
+import answer from './Answer';
 import flashcardCollection from './flashcardCollection';
 import { defaultHandler } from '../middleware/errorHandlers';
 
@@ -19,6 +20,8 @@ router.use('/api/login', login);
 router.use('/api/google', google);
 
 router.use('/api/flashcard', flashcard);
+
+router.use('/api/answer', answer);
 
 router.use('/api/flashcard-collection', flashcardCollection);
 
