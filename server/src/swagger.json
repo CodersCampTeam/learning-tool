@@ -1,0 +1,309 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Learning app",
+        "description": "Free & modern app to learn and widen your horizonts, as well as social circles. All of this with surprisingly powerful flashcards",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": "Local dev"
+        },
+        {
+            "url": "https://github.com/mfrydrychowiczTeam/learning-tool.git",
+            "description": "Production"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "cookieAuth": {
+                "type": "apiKey",
+                "in": "cookie",
+                "name": "JSESSIONID"
+            }
+        },
+        "schemas": {
+            "Flashcard": {
+                "required": ["isQuizQuestion", "prompt", "answers"],
+                "type": "object",
+                "properties": {
+                    "prompt": {
+                        "type": "string"
+                    },
+                    "imageUrl": {
+                        "type": "string"
+                    },
+                    "answers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "extraInfo": {
+                        "type": "string"
+                    },
+                    "correctAnswer": {
+                        "type": "number"
+                    },
+                    "isQuizQuestion": {
+                        "type": "boolean"
+                    },
+                    "collectionId": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "paths": {
+        "/api/login": {
+            "post": {
+                "summary": "Logs in and returns the authentication  cookie",
+                "requestBody": {
+                    "required": true,
+                    "description": "A JSON object containing the login and password.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["username", "password"],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "Default"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Default_pwd"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [],
+                "responses": {
+                    "200": {
+                        "description": "Successfully authenticated.",
+                        "headers": {
+                            "Set-Cookie": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": ["JSESSIONID", "Path=/", "HttpOnly"]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/flashcard/{flashcardId}": {
+            "get": {
+                "summary": "Get a flashcard",
+                "tags": ["flashcard"],
+                "description": "Returns a single flashcard",
+                "operationId": "getFlashcardById",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "flashcardId",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the flashcard that we want to match",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Flashcard"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "User not logged in",
+                        "content": {}
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "The flashcard with a given ID was not found",
+                        "content": {}
+                    },
+
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a flashcard",
+                "tags": ["flashcard"],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content",
+                        "content": {}
+                    },
+                    "400": {
+                        "description": "Invalid ID",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "User not logged in",
+                        "content": {}
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "The flashcard with a given ID was not found",
+                        "content": {}
+                    },
+
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Modify a flashcard",
+                "tags": ["flashcard"],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Flashcard"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "User not logged in",
+                        "content": {}
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "The flashcard with a given ID was not found",
+                        "content": {}
+                    },
+
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/flashcard/{collectionId}": {
+            "put": {
+                "summary": "Create a flashcard in a given collection",
+                "tags": ["flashcard"],
+                "parameters": [
+                    {
+                        "name": "collectionId",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the collection where we want to post a flashcard",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "operationId": "getCollectionById",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+
+                "requestBody": {
+                    "description": "Creates a single flashcard",
+                    "content": {
+                        "*/*": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Flashcard"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Flashcard"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "User not logged in",
+                        "content": {}
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "The flashcard with a given ID was not found",
+                        "content": {}
+                    },
+
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            }
+        }
+    }
+}

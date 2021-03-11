@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import { appRouter } from './routes/index';
 import { productionSetup } from './production';
 import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
+import * as swaggerDocument from './swagger.json';
 
 dotenv.config();
 import './middleware/passport';
@@ -38,6 +40,7 @@ mongoose.connect(
 app.use(express.json());
 app.use(cookieParser());
 app.use(appRouter);
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const server = app.listen(port, function () {
     if (env === 'development') console.log('App listening on port: ' + port);
