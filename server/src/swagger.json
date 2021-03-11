@@ -64,6 +64,7 @@
         "/api/login": {
             "post": {
                 "summary": "Logs in and returns the authentication  cookie",
+                "tags": ["user"],
                 "requestBody": {
                     "required": true,
                     "description": "A JSON object containing the login and password.",
