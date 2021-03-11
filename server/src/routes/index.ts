@@ -20,6 +20,8 @@ router.use('/api/google', google);
 
 router.use('/api/flashcard', flashcard);
 
+router.use('/api/statistics', statistics);
+
 router.use('/api/answer', answer);
 
 router.use('/api/flashcard-collection', flashcardCollection);
