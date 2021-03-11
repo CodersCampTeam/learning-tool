@@ -9,6 +9,7 @@ import { SessionSettings } from '../models/SessionSettings';
 import flashcard from './flashcard';
 import answer from './Answer';
 import flashcardCollection from './flashcardCollection';
+import statistics from './statistics';
 
 const router = express.Router();
 
