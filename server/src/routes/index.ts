@@ -10,6 +10,7 @@ import flashcardCollection from './flashcardCollection';
 import statistics from './statistics';
 import { defaultHandler } from '../middleware/errorHandlers';
 import passport from 'passport';
+import { runNotificationService } from '../services/NotificationService';
 
 const isAuthenticated = passport.authenticate('jwt', { session: false });
 
@@ -31,7 +32,7 @@ router.use('/api/flashcard-collection', isAuthenticated, flashcardCollection);
 
 router.get('/api', async (req: Request, res: Response) => {
     // TODO: to remove
-    const obj = await User.find().populate('sessionSettings');
+    const obj = await User.find();
     res.send(obj);
 });
 
@@ -57,7 +58,7 @@ router.post('/api', async (req: Request, res: Response) => {
         isActive: req.body.isActive,
         isBlocked: req.body.isBlocked,
         avatarImg: req.body.avatarImg,
-        sessionSettings: sessionSettings._id.toString()
+        sessionSettings: Date.now.toString()
     });
 
     user = await user.save();
@@ -70,5 +71,6 @@ router.get('/', isAuthenticated, (req: Request, res: Response) => {
 });
 
 router.use(defaultHandler);
+runNotificationService();
 
 export { router as appRouter };

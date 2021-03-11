@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { appRouter } from './routes/index';
 import { productionSetup } from './production';
 import cookieParser from 'cookie-parser';
+import { runNotificationService } from './services/NotificationService';
 
 dotenv.config();
 import './middleware/passport';
@@ -42,5 +43,7 @@ app.use(appRouter);
 const server = app.listen(port, function () {
     if (env === 'development') console.log('App listening on port: ' + port);
 });
+
+runNotificationService();
 
 export { server };

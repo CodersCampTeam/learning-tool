@@ -22,4 +22,4 @@ function validateSessionSettings(sessionSettings: typeof SessionSettings): Joi.V
     return schema.validate(sessionSettings);
 }
 
-export { SessionSettings, validateSessionSettings };
+export { SessionSettings, sessionSettingsSchema, validateSessionSettings };
