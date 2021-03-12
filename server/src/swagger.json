@@ -32,6 +32,10 @@
                 "required": ["isQuizQuestion", "prompt", "answers"],
                 "type": "object",
                 "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "mongoose.Schema.Types.ObjectId"
+                    },
                     "prompt": {
                         "type": "string"
                     },
@@ -48,20 +52,193 @@
                         "type": "string"
                     },
                     "correctAnswer": {
-                        "type": "number"
+                        "type": "number",
+                        "default": 0
                     },
                     "isQuizQuestion": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "default": false
                     },
                     "collectionId": {
+                        "type": "string",
+                        "description": "Ref to collection's ID"
+                    }
+                }
+            },
+            "FlashcardCollection": {
+                "required": ["name", "owner"],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "mongoose.Schema.Types.ObjectId"
+                    },
+                    "owner": {
+                        "type": "string",
+                        "description": "Ref to user's ID"
+                    },
+                    "name": {
                         "type": "string"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "flashcards": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "description": "Ref to flashcard's ID or flashcards' IDs"
+                        }
+                    },
+                    "isPublic": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                }
+            },
+            "User": {
+                "required": ["username", "email", "password"],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "mongoose.Schema.Types.ObjectId"
+                    },
+                    "googleId": {
+                        "type": "string"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "isActive": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "isBlocked": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "avatarImg": {
+                        "type": "string"
+                    },
+                    "sessionSettings": {
+                        "type": "string",
+                        "description": "Ref to ID of sessions settings"
+                    }
+                }
+            },
+            "Answer": {
+                "required": ["flashcardId", "date", "isCorrect"],
+                "type": "object",
+                "properties": {
+                    "flashcardId": {
+                        "type": "string",
+                        "description": "Ref to flashcard's ID"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "isCorrect": {
+                        "type": "boolean"
                     }
                 }
             }
         }
     },
     "paths": {
+        "/api/register": {
+            "post": {
+                "summary": "Register a user",
+                "tags": ["user"],
+                "requestBody": {
+                    "required": true,
+                    "description": "Register the user and save their data in the database ",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["username", "email", "password"],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "Your name"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "Your email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Your password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {}
+                    },
+                    "400": {
+                        "description": "User already registered or username already used.",
+                        "content": {}
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            }
+        },
         "/api/login": {
+            "get": {
+                "summary": "Return logging page",
+                "tags": ["user"],
+                "security": [],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": ["email", "password"],
+                                    "properties": {
+                                        "email": {
+                                            "type": "string",
+                                            "format": "email",
+                                            "example": "Your email"
+                                        },
+                                        "password": {
+                                            "type": "string",
+                                            "example": "Your password"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            },
             "post": {
                 "summary": "Logs in and returns the authentication  cookie",
                 "tags": ["user"],
@@ -72,15 +249,15 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "required": ["username", "password"],
+                                "required": ["email", "password"],
                                 "properties": {
                                     "email": {
                                         "type": "string",
-                                        "example": "Default"
+                                        "example": "Your email"
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "Default_pwd"
+                                        "example": "Your password"
                                     }
                                 }
                             }
@@ -90,7 +267,7 @@
                 "security": [],
                 "responses": {
                     "200": {
-                        "description": "Successfully authenticated.",
+                        "description": "OK",
                         "headers": {
                             "Set-Cookie": {
                                 "schema": {
@@ -99,6 +276,14 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
                     }
                 }
             }
@@ -109,25 +294,25 @@
                 "tags": ["flashcard"],
                 "description": "Returns a single flashcard",
                 "operationId": "getFlashcardById",
-                "security": [
-                    {
-                        "cookieAuth": []
-                    }
-                ],
                 "parameters": [
                     {
                         "name": "flashcardId",
                         "in": "path",
                         "required": true,
-                        "description": "ID of the flashcard that we want to match",
+                        "description": "ID of the flashcard that we want to find",
                         "schema": {
                             "type": "string"
                         }
                     }
                 ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -137,7 +322,7 @@
                         }
                     },
                     "400": {
-                        "description": "Invalid ID",
+                        "description": "Invalid ID or bad request",
                         "content": {}
                     },
                     "401": {
@@ -152,7 +337,6 @@
                         "description": "The flashcard with a given ID was not found",
                         "content": {}
                     },
-
                     "500": {
                         "description": "Ooops! Something went wrong.",
                         "content": {}
@@ -162,6 +346,18 @@
             "delete": {
                 "summary": "Delete a flashcard",
                 "tags": ["flashcard"],
+                "parameters": [
+                    {
+                        "name": "flashcardId",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the flashcard that we want to find",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "operationId": "getFlashcardById",
                 "security": [
                     {
                         "cookieAuth": []
@@ -173,7 +369,7 @@
                         "content": {}
                     },
                     "400": {
-                        "description": "Invalid ID",
+                        "description": "Invalid ID or bad request",
                         "content": {}
                     },
                     "401": {
@@ -198,6 +394,18 @@
             "patch": {
                 "summary": "Modify a flashcard",
                 "tags": ["flashcard"],
+                "parameters": [
+                    {
+                        "name": "flashcardId",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the flashcard that we want to find",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "operationId": "getFlashcardById",
                 "security": [
                     {
                         "cookieAuth": []
@@ -205,7 +413,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -215,7 +423,7 @@
                         }
                     },
                     "400": {
-                        "description": "Invalid ID",
+                        "description": "Invalid ID or bad request",
                         "content": {}
                     },
                     "401": {
@@ -259,7 +467,6 @@
                         "cookieAuth": []
                     }
                 ],
-
                 "requestBody": {
                     "description": "Creates a single flashcard",
                     "content": {
@@ -273,7 +480,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -283,7 +490,7 @@
                         }
                     },
                     "400": {
-                        "description": "Invalid ID",
+                        "description": "Invalid ID or bad request",
                         "content": {}
                     },
                     "401": {
@@ -299,6 +506,202 @@
                         "content": {}
                     },
 
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/flashcard-collection/": {
+            "post": {
+                "summary": "Create a flashcard collection",
+                "tags": ["flashcard collection"],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Creates a single flashcard collection",
+                    "content": {
+                        "*/*": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FlashcardCollection"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FlashcardCollection"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or bad request",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "User not logged in",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "The flashcard collection with a given ID was not found",
+                        "content": {}
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/flashcard-collection/{collectionId}": {
+            "get": {
+                "summary": "Get a flashcard collection",
+                "tags": ["flashcard collection"],
+                "description": "Returns a single flashcard collection",
+                "operationId": "getCollectiondById",
+                "parameters": [
+                    {
+                        "name": "collectionId",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the flashcard collection ",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Flashcard"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or bad request",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "User not logged in",
+                        "content": {}
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "The flashcard with a given ID was not found",
+                        "content": {}
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a flashcard collection",
+                "tags": ["flashcard collection"],
+                "operationId": "getCollectiondById",
+                "parameters": [
+                    {
+                        "name": "collectionId",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the flashcard collection ",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content",
+                        "content": {}
+                    },
+                    "400": {
+                        "description": "Invalid ID or bad request",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "User not logged in",
+                        "content": {}
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "The flashcard collection with a given ID was not found",
+                        "content": {}
+                    },
+
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/answer": {
+            "post": {
+                "summary": "Post an answer",
+                "tags": ["answer"],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Post an answer to a flashcard prompt",
+                    "content": {
+                        "*/*": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Answer"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Answer"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {}
+                    },
                     "500": {
                         "description": "Ooops! Something went wrong.",
                         "content": {}
