@@ -19,11 +19,11 @@ router.use('/api/login', login);
 
 router.use('/api/google', google);
 
-router.use('/api/flashcard', flashcard);
+router.use('/api/flashcard', passport.authenticate('jwt', { session: false }), flashcard);
 
-router.use('/api/answer', answer);
+router.use('/api/answer', passport.authenticate('jwt', { session: false }), answer);
 
-router.use('/api/flashcard-collection', flashcardCollection);
+router.use('/api/flashcard-collection', passport.authenticate('jwt', { session: false }), flashcardCollection);
 
 router.get('/api', async (req: Request, res: Response) => {
     // TODO: to remove

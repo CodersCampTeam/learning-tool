@@ -1,12 +1,11 @@
 import express, { Request, Response } from 'express';
-import passport from 'passport';
 import { Answer } from '../models/Answer';
 import { Flashcard, validateFlashcard, validateFlashcardUpdate } from '../models/Flashcard';
 import { FlashcardCollection } from '../models/FlashcardCollection';
 import { checkCollectionPermissions } from '../services/checkCollectionPermissions';
 const router = express.Router();
 
-router.get('/:id', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response, next) => {
+router.get('/:id', async (req: Request, res: Response, next) => {
     try {
         const flashcard = await Flashcard.findById(req.params.id);
         if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');
@@ -17,7 +16,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), async (req:
     }
 });
 
-router.put('/:id', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response, next) => {
+router.put('/:id', async (req: Request, res: Response, next) => {
     try {
         const collection = await FlashcardCollection.findById(req.params.id);
         if (!collection) return res.status(404).send('The flashcard collection with the given ID was not found.');
@@ -42,7 +41,7 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), async (req:
     }
 });
 
-router.delete('/:id', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response, next) => {
+router.delete('/:id', async (req: Request, res: Response, next) => {
     try {
         const flashcard = await Flashcard.findById(req.params.id);
         if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');
@@ -59,7 +58,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), async (r
     }
 });
 
-router.patch('/:id', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response, next) => {
+router.patch('/:id', async (req: Request, res: Response, next) => {
     try {
         const flashcard = await Flashcard.findById(req.params.id);
         if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');

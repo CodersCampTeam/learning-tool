@@ -2,12 +2,11 @@ import express, { Request, Response } from 'express';
 import { Tag } from '../models/Tag';
 import { FlashcardCollection, validateFlashcardCollection } from '../models/FlashcardCollection';
 import { Flashcard } from '../models/Flashcard';
-import passport from 'passport';
 import { checkCollectionPermissions } from '../services/checkCollectionPermissions';
 
 const router = express.Router();
 
-router.post('/', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response, next) => {
+router.post('/', async (req: Request, res: Response, next) => {
     try {
         const flashcardCollection = new FlashcardCollection({
             owner: req.body.owner,
@@ -25,7 +24,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), async (req: R
     }
 });
 
-router.get('/:id', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response, next) => {
+router.get('/:id', async (req: Request, res: Response, next) => {
     try {
         const flashcardCollection = await FlashcardCollection.findById(req.params.id);
         if (!flashcardCollection) return res.status(404).send('The flashcard with the given ID was not found.');
@@ -45,7 +44,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), async (req:
     }
 });
 
-router.delete('/:id', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response, next) => {
+router.delete('/:id', async (req: Request, res: Response, next) => {
     try {
         const flashcardCollection = await FlashcardCollection.findById(req.params.id);
         if (!flashcardCollection) return res.status(404).send('The flashcardCollection does not exist');
