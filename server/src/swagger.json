@@ -74,7 +74,7 @@
                                 "type": "object",
                                 "required": ["username", "password"],
                                 "properties": {
-                                    "username": {
+                                    "email": {
                                         "type": "string",
                                         "example": "Default"
                                     },
@@ -95,7 +95,7 @@
                             "Set-Cookie": {
                                 "schema": {
                                     "type": "string",
-                                    "example": ["jwt", "Path=/", "HttpOnly"]
+                                    "example": ["jwt=123", "Path=/", "HttpOnly"]
                                 }
                             }
                         }
