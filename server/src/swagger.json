@@ -11,12 +11,12 @@
     },
     "servers": [
         {
-            "url": "http://localhost:3000",
+            "url": "http://localhost:8080",
             "description": "Local dev"
         },
         {
-            "url": "https://github.com/mfrydrychowiczTeam/learning-tool.git",
-            "description": "Production"
+            "url": "https://learning-tool-prod-app.herokuapp.com/",
+            "description": "Staging"
         }
     ],
     "components": {
@@ -24,7 +24,7 @@
             "cookieAuth": {
                 "type": "apiKey",
                 "in": "cookie",
-                "name": "JSESSIONID"
+                "name": "jwt"
             }
         },
         "schemas": {
@@ -95,7 +95,7 @@
                             "Set-Cookie": {
                                 "schema": {
                                     "type": "string",
-                                    "example": ["JSESSIONID", "Path=/", "HttpOnly"]
+                                    "example": ["jwt", "Path=/", "HttpOnly"]
                                 }
                             }
                         }
