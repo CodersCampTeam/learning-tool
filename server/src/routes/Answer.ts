@@ -5,7 +5,7 @@ const router = express.Router();
 router.post('/', async (req: Request, res: Response) => {
     try {
         const answer = new Answer({
-            flashcard: req.body.flashcardId,
+            flashcardId: req.body.flashcardId,
             date: req.body.Date,
             isCorrect: req.body.isCorrect
         });
@@ -13,9 +13,10 @@ router.post('/', async (req: Request, res: Response) => {
         if (error) {
             return res.status(400).send(error.details[0].message);
         } else await answer.save();
-        res.status(201).send('Session data successfully saved');
-        res.send(answer);
+        res.status(201).send(answer);
     } catch (error) {
-        res.status(500).send('Something went wrong').end();
+        res.status(500).send(error).end();
     }
 });
+
+export default router;
