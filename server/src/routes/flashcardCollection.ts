@@ -1,18 +1,19 @@
 import express, { Request, Response } from 'express';
-import { Tag } from '../models/Tag';
+import { Tag, assignUniqueTagsAndReturn } from '../models/Tag';
 import { FlashcardCollection, validateFlashcardCollection } from '../models/FlashcardCollection';
 import { Flashcard } from '../models/Flashcard';
 import { checkCollectionPermissions } from '../services/checkCollectionPermissions';
-
+import { User } from '../models/User';
 const router = express.Router();
 
 router.post('/', async (req: Request, res: Response, next) => {
     try {
+        const owner = await User.findOne({ username: req.body.owner });
         const flashcardCollection = new FlashcardCollection({
-            owner: req.body.owner,
+            owner: owner._id,
             name: req.body.name,
             isPublic: req.body.isPublic,
-            tags: req.body.tags,
+            tags: await assignUniqueTagsAndReturn(req.body.tags),
             flashcards: req.body.flashcards
         });
         const { error } = validateFlashcardCollection(req.body);
