@@ -3,17 +3,17 @@ import { Tag, assignUniqueTagsAndReturn } from '../models/Tag';
 import { FlashcardCollection, validateFlashcardCollection } from '../models/FlashcardCollection';
 import { Flashcard } from '../models/Flashcard';
 import { checkCollectionPermissions } from '../services/checkCollectionPermissions';
-import { User } from '../models/User';
 const router = express.Router();
 
 router.post('/', async (req: Request, res: Response, next) => {
     try {
-        const owner = await User.findOne({ username: req.body.owner });
+        req.body.owner = `${req['user']._id}`;
+        req.body.tags = await assignUniqueTagsAndReturn(req.body.tags);
         const flashcardCollection = new FlashcardCollection({
-            owner: owner._id,
+            owner: req.body.owner,
             name: req.body.name,
             isPublic: req.body.isPublic,
-            tags: await assignUniqueTagsAndReturn(req.body.tags),
+            tags: req.body.tags,
             flashcards: req.body.flashcards
         });
         const { error } = validateFlashcardCollection(req.body);
@@ -48,7 +48,7 @@ router.get('/:id', async (req: Request, res: Response, next) => {
 router.delete('/:id', async (req: Request, res: Response, next) => {
     try {
         const flashcardCollection = await FlashcardCollection.findById(req.params.id);
-        if (!flashcardCollection) return res.status(404).send('The flashcardCollection does not exist');
+        if (!flashcardCollection) return res.status(404).send('The flashcard collection with a given ID was not found');
         await checkCollectionPermissions(req, flashcardCollection._id);
         await flashcardCollection.deleteOne();
         res.status(204).send();

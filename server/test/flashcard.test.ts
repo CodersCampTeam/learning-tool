@@ -1,4 +1,3 @@
-process.env['NODE_ENV'] = 'test';
 import mongoose from 'mongoose';
 import { Flashcard } from '../src/models/Flashcard';
 import { FlashcardCollection } from '../src/models/FlashcardCollection';

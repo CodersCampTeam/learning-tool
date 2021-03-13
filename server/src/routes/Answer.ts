@@ -2,11 +2,11 @@ import express, { Request, Response } from 'express';
 import { Answer, validateAnswer } from '../models/Answer';
 const router = express.Router();
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response, next) => {
     try {
         const answer = new Answer({
             flashcardId: req.body.flashcardId,
-            date: req.body.Date,
+            date: req.body.date,
             isCorrect: req.body.isCorrect
         });
         const { error } = validateAnswer(req.body);
@@ -15,7 +15,7 @@ router.post('/', async (req: Request, res: Response) => {
         } else await answer.save();
         res.status(201).send(answer);
     } catch (error) {
-        res.status(500).send(error).end();
+        next(error);
     }
 });
 

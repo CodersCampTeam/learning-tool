@@ -66,5 +66,3 @@ passport.use(
         }
     )
 );
-
-export const isAuthenticated = passport.authenticate('jwt', { session: false });

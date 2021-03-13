@@ -1,10 +1,10 @@
-process.env['NODE_ENV'] = 'test';
 import mongoose from 'mongoose';
 import { FlashcardCollection } from '../src/models/FlashcardCollection';
 import { User } from '../src/models/User';
 import request from 'supertest';
 import { server } from '../src/server';
 import bcrypt from 'bcryptjs';
+import { assignUniqueTagsAndReturn } from '../src/models/Tag';
 
 describe('flashcard collection routes', () => {
     let id;
@@ -15,7 +15,7 @@ describe('flashcard collection routes', () => {
     let testUserOwner;
     let usedToken;
     let name;
-    let owner;
+    let tags;
 
     beforeAll(async () => {
         const salt = await bcrypt.genSalt(10);
@@ -38,13 +38,16 @@ describe('flashcard collection routes', () => {
             name: 'collection',
             owner: testUserOwner._id,
             isPublic: false,
-            flashcards: [mongoose.Types.ObjectId()]
+            flashcards: [mongoose.Types.ObjectId()],
+            tags: await assignUniqueTagsAndReturn(['typescript', 'express'])
         });
         await flashcardCollection.save();
         id = flashcardCollection._id;
         tokenOwner = testUserOwner.generateAuthToken();
         tokenNotOwner = testUserNotOwner.generateAuthToken();
         usedToken = tokenOwner;
+        name = 'collection';
+        tags = ['typescript', 'express'];
     });
 
     afterEach(async () => {
@@ -89,6 +92,7 @@ describe('flashcard collection routes', () => {
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('name', flashcardCollection.name);
             expect(res.body).toHaveProperty('owner');
+            expect(flashcardCollection['tags']).not.toBeNull();
             expect(res.body).toHaveProperty('_id');
             expect(flashcardCollection['flashcards']).not.toBeNull();
         });
@@ -153,61 +157,46 @@ describe('flashcard collection routes', () => {
         const exec = async () => {
             return await request(server).post('/api/flashcard-collection').set('Cookie', `jwt=${usedToken};`).send({
                 name,
-                owner
+                tags
             });
         };
 
         it('should return 401 if the user is not logged in', async () => {
             usedToken = '';
-            owner = testUserOwner._id;
-            name = 'flashcards';
             const res = await exec();
             expect(res.status).toBe(401);
         });
 
         it('should return 400 if no name was provided', async () => {
             name = null;
-            owner = testUserOwner._id;
             const res = await exec();
             expect(res.status).toBe(400);
             expect(res.text).toBe('"name" must be a string');
         });
         it('should return 400 if a name is less than 1 character', async () => {
             name = '';
-            owner = testUserOwner._id;
             const res = await exec();
             expect(res.status).toBe(400);
             expect(res.text).toBe('"name" is not allowed to be empty');
         });
         it('should return 400 if a name is more than 255 character', async () => {
             name = new Array(300).join('a');
-            owner = testUserOwner._id;
             const res = await exec();
             expect(res.status).toBe(400);
             expect(res.text).toBe('"name" length must be less than or equal to 255 characters long');
         });
-        it('should return 400 if no owner was provided', async () => {
-            owner = null;
-            name = 'flashcards';
-            const res = await exec();
-            expect(res.status).toBe(400);
-            expect(res.text).toBe('"owner" must be a string');
-        });
         it('should save the flashcard collection if it is valid', async () => {
-            owner = testUserOwner._id;
-            name = 'flashcards';
             await exec();
-            const flashcardCollection = await FlashcardCollection.find({ name: 'flashcards' });
+            const flashcardCollection = await FlashcardCollection.find({ name: 'collection' });
             expect(flashcardCollection).not.toBeNull();
-            expect(flashcardCollection['flashcards']).not.toBeNull();
+            expect(flashcardCollection['collection']).not.toBeNull();
         });
         it('should return the flashcard collection if it is valid', async () => {
-            owner = testUserOwner._id;
-            name = 'flashcards';
             const res = await exec();
             expect(res.status).toBe(200);
-            expect(res.body).toHaveProperty('name', 'flashcards');
+            expect(res.body).toHaveProperty('name');
             expect(res.body).toHaveProperty('owner');
+            expect(flashcardCollection['tags']).not.toBeNull();
             expect(res.body).toHaveProperty('_id');
         });
     });
