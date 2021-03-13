@@ -3,14 +3,15 @@ import register from './register';
 import login from './login';
 import google from './google';
 import { User, IUser } from '../models/User';
-import { isAuthenticated } from '../middleware/passport';
 // TODO: to remove
 import { SessionSettings } from '../models/SessionSettings';
 import flashcard from './flashcard';
 import answer from './Answer';
 import flashcardCollection from './flashcardCollection';
 import { defaultHandler } from '../middleware/errorHandlers';
+import passport from 'passport';
 
+const isAuthenticated = passport.authenticate('jwt', { session: false });
 const router = express.Router();
 
 router.use('/api/register', register);
