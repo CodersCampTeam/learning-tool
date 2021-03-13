@@ -2,12 +2,12 @@ import Joi from 'joi';
 import mongoose from 'mongoose';
 
 interface ISessionSettings extends mongoose.Document {
-    sessionHarmonogram: string;
+    sessionHarmonogram: Date;
 }
 
 const sessionSettingsSchema = new mongoose.Schema({
     sessionHarmonogram: {
-        type: String,
+        type: Date,
         required: false
     }
 });
@@ -16,7 +16,7 @@ const SessionSettings = mongoose.model<ISessionSettings>('SessionSettings', sess
 
 function validateSessionSettings(sessionSettings: typeof SessionSettings): Joi.ValidationResult {
     const schema = Joi.object({
-        sessionHarmonogram: Joi.string()
+        sessionHarmonogram: Joi.date()
     });
 
     return schema.validate(sessionSettings);
