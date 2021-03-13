@@ -2,17 +2,18 @@ import express, { Request, Response } from 'express';
 import { Tag, assignUniqueTagsAndReturn } from '../models/Tag';
 import { FlashcardCollection, validateFlashcardCollection } from '../models/FlashcardCollection';
 import { Flashcard } from '../models/Flashcard';
-import { User } from '../models/User';
+import { checkCollectionPermissions } from '../services/checkCollectionPermissions';
 const router = express.Router();
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response, next) => {
     try {
-        const owner = await User.findOne({ username: req.body.owner });
+        req.body.owner = `${req['user']._id}`;
+        req.body.tags = await assignUniqueTagsAndReturn(req.body.tags);
         const flashcardCollection = new FlashcardCollection({
-            owner: owner._id,
+            owner: req.body.owner,
             name: req.body.name,
             isPublic: req.body.isPublic,
-            tags: await assignUniqueTagsAndReturn(req.body.tags),
+            tags: req.body.tags,
             flashcards: req.body.flashcards
         });
         const { error } = validateFlashcardCollection(req.body);
@@ -20,13 +21,16 @@ router.post('/', async (req: Request, res: Response) => {
         await flashcardCollection.save();
         res.send(flashcardCollection);
     } catch (error) {
-        res.status(500).send('Something went wrong').end();
+        next(error);
     }
 });
 
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', async (req: Request, res: Response, next) => {
     try {
-        const flashcardCollection = await FlashcardCollection.findById(req.params.id)
+        const flashcardCollection = await FlashcardCollection.findById(req.params.id);
+        if (!flashcardCollection) return res.status(404).send('The flashcard with the given ID was not found.');
+        await checkCollectionPermissions(req, flashcardCollection._id);
+        await flashcardCollection
             .populate({
                 path: 'tags',
                 model: Tag
@@ -35,24 +39,21 @@ router.get('/:id', async (req: Request, res: Response) => {
                 path: 'flashcards',
                 model: Flashcard
             });
-
-        if (flashcardCollection.isPublic) {
-            res.send(flashcardCollection);
-        } else {
-            res.status(403).send('You do not have access to this flashcard collection').end();
-        }
+        res.send(flashcardCollection);
     } catch (error) {
-        res.status(500).send('Something went wrong').end();
+        next(error);
     }
 });
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', async (req: Request, res: Response, next) => {
     try {
-        const flashcardCollection = await FlashcardCollection.findByIdAndRemove(req.params.id);
-        if (!flashcardCollection) return res.status(404).send('The flashcardCollection does not exist');
+        const flashcardCollection = await FlashcardCollection.findById(req.params.id);
+        if (!flashcardCollection) return res.status(404).send('The flashcard collection with a given ID was not found');
+        await checkCollectionPermissions(req, flashcardCollection._id);
+        await flashcardCollection.deleteOne();
         res.status(204).send();
     } catch (error) {
-        res.status(500).send('Something went wrong').end();
+        next(error);
     }
 });
 

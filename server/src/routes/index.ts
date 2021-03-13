@@ -3,13 +3,15 @@ import register from './register';
 import login from './login';
 import google from './google';
 import { User, IUser } from '../models/User';
-import passport from 'passport';
 // TODO: to remove
 import { SessionSettings } from '../models/SessionSettings';
 import flashcard from './flashcard';
 import answer from './Answer';
 import flashcardCollection from './flashcardCollection';
+import { defaultHandler } from '../middleware/errorHandlers';
+import passport from 'passport';
 
+const isAuthenticated = passport.authenticate('jwt', { session: false });
 const router = express.Router();
 
 router.use('/api/register', register);
@@ -18,11 +20,11 @@ router.use('/api/login', login);
 
 router.use('/api/google', google);
 
-router.use('/api/flashcard', flashcard);
+router.use('/api/flashcard', isAuthenticated, flashcard);
 
-router.use('/api/answer', answer);
+router.use('/api/answer', isAuthenticated, answer);
 
-router.use('/api/flashcard-collection', flashcardCollection);
+router.use('/api/flashcard-collection', isAuthenticated, flashcardCollection);
 
 router.get('/api', async (req: Request, res: Response) => {
     // TODO: to remove
@@ -59,9 +61,11 @@ router.post('/api', async (req: Request, res: Response) => {
     res.send(user);
 });
 
-router.get('/', passport.authenticate('jwt', { session: false }), (req: Request, res: Response) => {
+router.get('/', isAuthenticated, (req: Request, res: Response) => {
     res.status(200).send(`response`);
     console.log(req.user?._id);
 });
+
+router.use(defaultHandler);
 
 export { router as appRouter };
