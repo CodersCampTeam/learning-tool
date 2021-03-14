@@ -1,11 +1,10 @@
 import express, { Request, Response } from 'express';
-import passport from 'passport';
 import { Answer } from '../models/Answer';
 import Mongo from 'mongodb';
 
 const router = express.Router();
 
-router.get('/', async (req: Request, res: Response, next)  => {
+router.get('/', async (req: Request, res: Response, next) => {
     const user = new Mongo.ObjectID(req.user?._id);
     try {
         Answer.aggregate(
