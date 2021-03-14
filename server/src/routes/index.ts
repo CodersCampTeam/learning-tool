@@ -3,15 +3,16 @@ import register from './register';
 import login from './login';
 import google from './google';
 import { User, IUser } from '../models/User';
-// TODO: to remove
 import { SessionSettings } from '../models/SessionSettings';
 import flashcard from './flashcard';
 import answer from './Answer';
 import flashcardCollection from './flashcardCollection';
+import statistics from './statistics';
 import { defaultHandler } from '../middleware/errorHandlers';
 import passport from 'passport';
 
 const isAuthenticated = passport.authenticate('jwt', { session: false });
+
 const router = express.Router();
 
 router.use('/api/register', register);
@@ -21,6 +22,8 @@ router.use('/api/login', login);
 router.use('/api/google', google);
 
 router.use('/api/flashcard', isAuthenticated, flashcard);
+
+router.use('/api/statistics', statistics);
 
 router.use('/api/answer', isAuthenticated, answer);
 
