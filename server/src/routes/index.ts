@@ -8,6 +8,7 @@ import flashcard from './flashcard';
 import answer from './Answer';
 import flashcardCollection from './flashcardCollection';
 import statistics from './statistics';
+import settings from './settings';
 import { defaultHandler } from '../middleware/errorHandlers';
 import passport from 'passport';
 import { runNotificationService } from '../services/NotificationService';
@@ -27,6 +28,8 @@ router.use('/api/flashcard', isAuthenticated, flashcard);
 router.use('/api/statistics', statistics);
 
 router.use('/api/answer', isAuthenticated, answer);
+
+router.use('/api/settings', isAuthenticated, settings);
 
 router.use('/api/flashcard-collection', isAuthenticated, flashcardCollection);
 
