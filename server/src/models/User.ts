@@ -3,6 +3,7 @@ import Joi from 'joi';
 import mongoose, { Document } from 'mongoose';
 import jwt from 'jsonwebtoken';
 import passwordComplexity from 'joi-password-complexity';
+import { sessionSettingsSchema } from './SessionSettings';
 
 export interface IUser extends Document {
     id: string;
@@ -50,8 +51,7 @@ const userSchema = new mongoose.Schema({
         required: false
     },
     sessionSettings: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'SessionSettings'
+        type: sessionSettingsSchema
     },
     googleId: {
         type: String

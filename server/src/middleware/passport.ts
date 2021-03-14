@@ -51,12 +51,12 @@ passport.use(
             clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'google_secret',
             callbackURL: '/api/google/redirect'
         },
-        async (accessToken: any, refreshToken: any, profile: any, done: any) => {
+        async (accessToken, refreshToken, profile, done) => {
             const userGoogle = await User.findOne({ googleId: profile.id });
             if (userGoogle) {
                 done(null, userGoogle);
             } else {
-                const newUser = new User({
+                const newUser = await new User({
                     username: profile.displayName,
                     email: profile.emails[0].value,
                     googleId: profile.id

@@ -6,6 +6,7 @@ import { productionSetup } from './production';
 import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 import * as swaggerDocument from './swagger.json';
+import { runNotificationService } from './services/NotificationService';
 
 dotenv.config();
 import './middleware/passport';
@@ -45,5 +46,7 @@ app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 const server = app.listen(port, function () {
     if (env === 'development') console.log('App listening on port: ' + port);
 });
+
+runNotificationService();
 
 export { server };

@@ -26,4 +26,25 @@ function validateTag(tag: typeof Tag): Joi.ValidationResult {
     return schema.validate(tag);
 }
 
-export { Tag, validateTag };
+async function assignUniqueTagsAndReturn(tags: string[]): Promise<string[]> {
+    try {
+        const allTags = [];
+        for (const element of tags) {
+            const tagPresent = await Tag.findOne({ tag: element });
+            if (tagPresent) {
+                allTags.push(tagPresent.id);
+            } else {
+                const tag = new Tag({
+                    tag: element
+                });
+                tag.save();
+                allTags.push(tag.id);
+            }
+        }
+        return allTags;
+    } catch (error) {
+        console.log('Assigning tags failed.');
+    }
+}
+
+export { Tag, validateTag, assignUniqueTagsAndReturn };
