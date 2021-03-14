@@ -1,3 +1,4 @@
 module.exports = {
-    testEnvironment: 'node'
+    testEnvironment: 'node',
+    setupFiles: ['./tests_env.ts']
 };
