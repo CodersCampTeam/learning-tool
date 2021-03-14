@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { AnswerHistory, validateAnswerHistory } from '../models/AnswerHistory';
 const router = express.Router();
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response, next) => {
     try {
         const answerHistory = new AnswerHistory({
             user: req.body.user,
@@ -17,6 +17,8 @@ router.post('/', async (req: Request, res: Response) => {
         res.status(201).send('Session data successfully saved');
         res.send(answerHistory);
     } catch (error) {
-        res.status(500).send('Something went wrong').end();
+        next(error);
     }
 });
+
+export default router;
