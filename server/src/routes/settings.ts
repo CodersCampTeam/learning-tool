@@ -3,13 +3,14 @@ import { SessionSettings, validateSessionSettings } from '../models/SessionSetti
 import { User } from '../models/User';
 const router = express.Router();
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response, next) => {
     try {
         const userId = req.user._id;
         const user = await User.findById(userId);
 
         const settings = new SessionSettings({
-            sessionHarmonogram: req.body.sessionHarmonogram
+            sessionHarmonogram: new Date(),
+            notificationsType: req.body.notificationsType
         });
         const { error } = validateSessionSettings(req.body);
 
@@ -19,9 +20,9 @@ router.post('/', async (req: Request, res: Response) => {
 
         user.sessionSettings = settings.id;
 
-        res.send(user);
+        res.send(settings);
     } catch (error) {
-        res.status(500).send('Something went wrong').end();
+        next(error);
     }
 });
 
