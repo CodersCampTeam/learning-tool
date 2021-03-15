@@ -6,11 +6,14 @@ import { User, IUser } from '../models/User';
 import { SessionSettings } from '../models/SessionSettings';
 import flashcard from './flashcard';
 import answer from './Answer';
+import answerHistory from './AnswerHistory';
 import flashcardCollection from './flashcardCollection';
 import statistics from './statistics';
+import settings from './settings';
 import { defaultHandler } from '../middleware/errorHandlers';
 import passport from 'passport';
 import { runNotificationService } from '../services/NotificationService';
+import search from './search';
 
 const isAuthenticated = passport.authenticate('jwt', { session: false });
 
@@ -24,11 +27,17 @@ router.use('/api/google', google);
 
 router.use('/api/flashcard', isAuthenticated, flashcard);
 
-router.use('/api/statistics', statistics);
+router.use('/api/statistics', isAuthenticated, statistics);
 
 router.use('/api/answer', isAuthenticated, answer);
 
+router.use('/api/answer-history', isAuthenticated, answerHistory);
+
+router.use('/api/settings', isAuthenticated, settings);
+
 router.use('/api/flashcard-collection', isAuthenticated, flashcardCollection);
+
+router.use('/api/search', isAuthenticated, search);
 
 router.get('/api', async (req: Request, res: Response) => {
     // TODO: to remove

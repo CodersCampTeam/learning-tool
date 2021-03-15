@@ -1,11 +1,10 @@
 import express, { Request, Response } from 'express';
-import passport from 'passport';
 import { Answer } from '../models/Answer';
 import Mongo from 'mongodb';
 
 const router = express.Router();
 
-router.get('/', passport.authenticate('jwt', { session: false }), async (req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response, next) => {
     const user = new Mongo.ObjectID(req.user?._id);
     try {
         Answer.aggregate(
@@ -45,8 +44,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req: Re
                 {
                     $group: {
                         _id: '$answershist._id',
-                        user: { $first: req.user?._id.toString() },
-                        users: { $first: '$answershist.user' },
+                        user: { $first: '$answershist.user' },
                         sessionDate: { $first: '$answershist.sessionDate' },
                         owner: { $first: '$flashcardcollection.owner' },
                         collectionName: { $first: '$flashcardcollection.name' },
@@ -64,7 +62,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req: Re
                 },
                 {
                     $match: {
-                        users: user
+                        user: user
                     }
                 }
             ],
@@ -73,7 +71,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req: Re
             }
         );
     } catch (error) {
-        res.status(500).send('Something went wrong').end();
+        next(error);
     }
 });
 
