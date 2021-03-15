@@ -2,7 +2,7 @@ import Joi from 'joi';
 import mongoose from 'mongoose';
 
 interface IFlashcardCollection extends mongoose.Document {
-    owner: string;
+    owner: mongoose.Schema.Types.ObjectId;
     name: string;
     isPublic: boolean;
     tags: mongoose.Schema.Types.ObjectId[];
@@ -59,4 +59,4 @@ function validateFlashcardCollection(flashcardCollection: typeof FlashcardCollec
     return schema.validate(flashcardCollection);
 }
 
-export { FlashcardCollection, validateFlashcardCollection };
+export { FlashcardCollection, IFlashcardCollection, validateFlashcardCollection };
