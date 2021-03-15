@@ -18,18 +18,10 @@ async function sendEmail(): Promise<void> {
     dateMax.setSeconds(59);
 
     const users = await User.find({
-        $and: [
-            {
-                'sessionSettings.sessionHarmonogram': {
-                    $lte: dateMax
-                }
-            },
-            {
-                'sessionSettings.sessionHarmonogram': {
-                    $gte: dateMin
-                }
-            }
-        ]
+        'sessionSettings.sessionHarmonogram': {
+            $lte: dateMax,
+            $gte: dateMin
+        }
     });
 
     const transporter = nodemailer.createTransport({

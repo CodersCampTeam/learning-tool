@@ -3,7 +3,7 @@ import Joi from 'joi';
 import mongoose, { Document } from 'mongoose';
 import jwt from 'jsonwebtoken';
 import passwordComplexity from 'joi-password-complexity';
-import { sessionSettingsSchema } from './SessionSettings';
+import { ISessionSettings, sessionSettingsSchema } from './SessionSettings';
 
 export interface IUser extends Document {
     id: string;
@@ -13,7 +13,7 @@ export interface IUser extends Document {
     isActive: boolean;
     isBlocked: boolean;
     avatarImg: string;
-    sessionSettings: mongoose.Schema.Types.ObjectId;
+    sessionSettings: ISessionSettings;
     generateAuthToken: () => string;
 }
 
