@@ -14,6 +14,7 @@ import { defaultHandler } from '../middleware/errorHandlers';
 import passport from 'passport';
 import { runNotificationService } from '../services/NotificationService';
 import search from './search';
+import session from '../routes/Session';
 
 const isAuthenticated = passport.authenticate('jwt', { session: false });
 
@@ -36,6 +37,7 @@ router.use('/api/answer-history', isAuthenticated, answerHistory);
 router.use('/api/settings', isAuthenticated, settings);
 
 router.use('/api/flashcard-collection', isAuthenticated, flashcardCollection);
+router.use('/api/session', isAuthenticated, session);
 
 router.use('/api/search', isAuthenticated, search);
 
