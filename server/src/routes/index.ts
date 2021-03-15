@@ -35,7 +35,6 @@ router.use('/api/answer-history', isAuthenticated, answerHistory);
 
 router.use('/api/settings', isAuthenticated, settings);
 
-
 router.use('/api/flashcard-collection', isAuthenticated, flashcardCollection);
 
 router.use('/api/search', isAuthenticated, search);
