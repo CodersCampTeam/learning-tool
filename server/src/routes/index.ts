@@ -6,6 +6,7 @@ import { User, IUser } from '../models/User';
 import { SessionSettings } from '../models/SessionSettings';
 import flashcard from './flashcard';
 import answer from './Answer';
+import answerHistory from './AnswerHistory';
 import flashcardCollection from './flashcardCollection';
 import statistics from './statistics';
 import settings from './settings';
@@ -26,9 +27,11 @@ router.use('/api/google', google);
 
 router.use('/api/flashcard', isAuthenticated, flashcard);
 
-router.use('/api/statistics', statistics);
+router.use('/api/statistics', isAuthenticated, statistics);
 
 router.use('/api/answer', isAuthenticated, answer);
+
+router.use('/api/answer-history', isAuthenticated, answerHistory);
 
 router.use('/api/settings', isAuthenticated, settings);
 
