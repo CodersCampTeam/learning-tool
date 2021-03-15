@@ -17,10 +17,9 @@ Check the endpoints here: [Click](https://learning-tool-prod-app.herokuapp.com/)
 ## Features
 
 - Login/registration also using Google
-- Adding flashcards, and flashcards collection
-- Searching flashcards collection by tags
+- Creating, sharing and benefitting from public collections of flashcards in line with #openknowledge approach
+- Email reminders about repetitions according to the schedule of user's choice
 - Statistics
-- reminders about repetitions
 
 ### The following technologies were used :
 
@@ -31,3 +30,4 @@ Check the endpoints here: [Click](https://learning-tool-prod-app.herokuapp.com/)
 - Passport.js
 - Nodemailer
 - node-cron
+- Documentation with Swagger
