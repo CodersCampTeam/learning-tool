@@ -153,10 +153,80 @@
                         "type": "boolean"
                     }
                 }
+            },
+            "AnswerHistory": {
+                "required": ["user", "sessionDate", "flashcardCollection", "answers"],
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "type": "string",
+                        "description": "Ref to user's ID"
+                    },
+                    "sessionDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "flashcardCollection": {
+                        "type": "string",
+                        "description": "Ref to flashcard's ID"
+                    },
+                    "answers": {
+                        "type": "array",
+                        "description": "Ref to IDs of answers"
+                    }
+                }
             }
         }
     },
     "paths": {
+        "/api/google": {
+            "get": {
+                "summary": "Register via Google account",
+                "tags": ["user"],
+                "requestBody": {
+                    "required": true,
+                    "description": "Register the user and save their data in the database ",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["username", "email", "password"],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "Your name"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "Your email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Your password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {}
+                    },
+                    "400": {
+                        "description": "User already registered or username already used.",
+                        "content": {}
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            }
+        },
         "/api/register": {
             "post": {
                 "summary": "Register a user",
@@ -470,7 +540,7 @@
                 "requestBody": {
                     "description": "Creates a single flashcard",
                     "content": {
-                        "*/*": {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/Flashcard"
                             }
@@ -525,7 +595,7 @@
                 "requestBody": {
                     "description": "Creates a single flashcard collection",
                     "content": {
-                        "*/*": {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/FlashcardCollection"
                             }
@@ -669,6 +739,90 @@
         },
         "/api/answer": {
             "post": {
+                "summary": "Post an answer",
+                "tags": ["answer"],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Post an answer to a flashcard prompt",
+                    "content": {
+                        "*/*": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Answer"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Answer"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {}
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/answer-history": {
+            "post": {
+                "summary": "Document history of user's answer",
+                "tags": ["answer history"],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Save date and answers to a given flashcardcollection for the purpose of answer history",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AnswerHistory"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "'Session data successfully saved'",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AnswerHistory"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {}
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/statistics": {
+            "get": {
                 "summary": "Post an answer",
                 "tags": ["answer"],
                 "security": [
