@@ -92,4 +92,4 @@ function validateFlashcardUpdate(flashcard: typeof Flashcard): Joi.ValidationRes
     return schema.validate(flashcard);
 }
 
-export { Flashcard, validateFlashcard, validateFlashcardUpdate };
+export { Flashcard, IFlashcard, validateFlashcard, validateFlashcardUpdate };
