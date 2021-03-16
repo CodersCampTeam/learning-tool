@@ -50,7 +50,7 @@ declare global {
 }
 
 router.get('/', isAuthenticated, (req: Request, res: Response) => {
-    res.status(200).send(`response`);
+    res.status(200).send(`Access granted`);
 });
 
 router.use(defaultHandler);
