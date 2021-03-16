@@ -14,6 +14,7 @@ import { defaultHandler } from '../middleware/errorHandlers';
 import passport from 'passport';
 import { runNotificationService } from '../services/NotificationService';
 import search from './search';
+import session from '../routes/Session';
 
 const isAuthenticated = passport.authenticate('jwt', { session: false });
 
@@ -36,14 +37,9 @@ router.use('/api/answer-history', isAuthenticated, answerHistory);
 router.use('/api/settings', isAuthenticated, settings);
 
 router.use('/api/flashcard-collection', isAuthenticated, flashcardCollection);
+router.use('/api/session', isAuthenticated, session);
 
 router.use('/api/search', isAuthenticated, search);
-
-router.get('/api', async (req: Request, res: Response) => {
-    // TODO: to remove
-    const obj = await User.find();
-    res.send(obj);
-});
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -53,30 +49,8 @@ declare global {
     }
 }
 
-router.post('/api', async (req: Request, res: Response) => {
-    // Todo: to remove
-    let sessionSettings = new SessionSettings({
-        sessionHarmonogram: req.body.sessionHarmonogram
-    });
-    sessionSettings = await sessionSettings.save();
-
-    let user = new User({
-        email: req.body.email,
-        password: req.body.password,
-        username: req.body.username,
-        isActive: req.body.isActive,
-        isBlocked: req.body.isBlocked,
-        avatarImg: req.body.avatarImg,
-        sessionSettings: Date.now.toString()
-    });
-
-    user = await user.save();
-    res.send(user);
-});
-
 router.get('/', isAuthenticated, (req: Request, res: Response) => {
     res.status(200).send(`response`);
-    console.log(req.user?._id);
 });
 
 router.use(defaultHandler);
