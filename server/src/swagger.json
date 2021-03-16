@@ -15,7 +15,7 @@
             "description": "Local dev"
         },
         {
-            "url": "https://learning-tool-prod-app.herokuapp.com/",
+            "url": "https://damp-river-86373.herokuapp.com/",
             "description": "Staging"
         }
     ],
@@ -78,6 +78,35 @@
                     }
                 }
             },
+            "NewFlashcard": {
+                "required": ["isQuizQuestion", "prompt", "answers"],
+                "type": "object",
+                "properties": {
+                    "prompt": {
+                        "type": "string"
+                    },
+                    "imageUrl": {
+                        "type": "string"
+                    },
+                    "answers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "extraInfo": {
+                        "type": "string"
+                    },
+                    "correctAnswer": {
+                        "type": "number",
+                        "default": 0
+                    },
+                    "isQuizQuestion": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                }
+            },
             "FlashcardCollection": {
                 "required": ["name", "owner"],
                 "type": "object",
@@ -104,6 +133,25 @@
                         "items": {
                             "type": "string",
                             "description": "Ref to flashcard's ID or flashcards' IDs"
+                        }
+                    },
+                    "isPublic": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                }
+            },
+            "NewFlashcardCollection": {
+                "required": ["name"],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
                         }
                     },
                     "isPublic": {
@@ -185,7 +233,10 @@
                     },
                     "answers": {
                         "type": "array",
-                        "description": "Ref to IDs of answers"
+                        "items": {
+                            "type": "string",
+                            "description": "Ref to answer's ID"
+                        }
                     }
                 }
             },
@@ -199,62 +250,68 @@
                     },
                     "notificationsType": {
                         "type": "string",
-                        "default": "EMAIL",
-                        "enum": ["EMAIL", "WEBPUSH"]
+                        "default": "Email",
+                        "enum": ["Email"]
                     }
                 }
             },
             "Statistics": {
                 "type": "array",
-                "properties": {
-                    "_id": {
-                        "type": "string",
-                        "description": "Ref to the ID of answer history"
-                    },
-                    "user": {
-                        "type": "string",
-                        "description": "Ref to the user's ID"
-                    },
-                    "sessionDate": {
-                        "type": "string",
-                        "format": "date",
-                        "description": "Session date from the answer history"
-                    },
-                    "owner": {
-                        "type": "string",
-                        "description": "Ref to the ID of flashcard collection's owner"
-                    },
-                    "collectionName": {
-                        "type": "string",
-                        "description": "Ref to the ID of flashcard collection's name"
-                    },
-                    "isPublic": {
-                        "type": "boolean",
-                        "description": "Flashcard collection's status (public or private)"
-                    },
-                    "answersTotal": {
-                        "type": "integer",
-                        "minimum": 0
-                    },
-                    "correctAnswers": {
-                        "type": "integer"
-                    },
-                    "wrongAnswers": {
-                        "type": "integer",
-                        "minimum": 0
-                    },
-                    "details": {
-                        "type": "array",
-                        "properties": {
-                            "date": {
-                                "type": "string",
-                                "format": "date",
-                                "description": "Date when an answer was provided"
-                            },
-                            "isCorrect": {
-                                "type": "boolean",
-                                "format": "date",
-                                "description": "Answer's status (correct or incorrect)"
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "_id": {
+                            "type": "string",
+                            "description": "Ref to the ID of answer history"
+                        },
+                        "user": {
+                            "type": "string",
+                            "description": "Ref to the user's ID"
+                        },
+                        "sessionDate": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "Session date from the answer history"
+                        },
+                        "owner": {
+                            "type": "string",
+                            "description": "Ref to the ID of flashcard collection's owner"
+                        },
+                        "collectionName": {
+                            "type": "string",
+                            "description": "Ref to the ID of flashcard collection's name"
+                        },
+                        "isPublic": {
+                            "type": "boolean",
+                            "description": "Flashcard collection's status (public or private)"
+                        },
+                        "answersTotal": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "correctAnswers": {
+                            "type": "integer"
+                        },
+                        "wrongAnswers": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "details": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "Date when an answer was provided"
+                                    },
+                                    "isCorrect": {
+                                        "type": "boolean",
+                                        "format": "date",
+                                        "description": "Answer's status (correct or incorrect)"
+                                    }
+                                }
                             }
                         }
                     }
@@ -262,25 +319,22 @@
             },
             "Tag": {
                 "required": ["tag"],
-                "type": "object",
-                "properties": {
-                    "tag": {
-                        "type": "string",
-                        "minLength": 1,
-                        "maxLength": 30,
-                        "pattern": "[a-z]"
+                "type": "array",
+                "items": {
+                    "properties": {
+                        "tag": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 30,
+                            "pattern": "[a-z]"
+                        }
                     }
                 }
             },
             "Token": {
                 "required": ["token"],
-                "type": "object",
-                "properties": {
-                    "token": {
-                        "type": "string",
-                        "uniqueItems": true
-                    }
-                }
+                "type": "string",
+                "uniqueItems": true
             }
         }
     },
@@ -404,6 +458,21 @@
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "$ref": "#/components/schemas/Token"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         "headers": {
                             "Set-Cookie": {
                                 "schema": {
@@ -456,7 +525,7 @@
                         }
                     },
                     "400": {
-                        "description": "Invalid ID or bad request"
+                        "description": "Invalid ID"
                     },
                     "401": {
                         "description": "User not logged in"
@@ -465,7 +534,7 @@
                         "description": "You do not have permission to access this resource"
                     },
                     "404": {
-                        "description": "The flashcard with a given ID was not found"
+                        "description": "The flashcard with the given ID was not found"
                     },
                     "500": {
                         "description": "Ooops! Something went wrong."
@@ -566,7 +635,7 @@
         },
         "/api/flashcard/{collectionId}": {
             "put": {
-                "summary": "Create a flashcard in a given collection",
+                "summary": "Create a flashcard in the given flashcard collection",
                 "tags": ["flashcard"],
                 "parameters": [
                     {
@@ -586,11 +655,11 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Creates a single flashcard",
+                    "description": "Create a single flashcard in the given flashcard collection",
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Flashcard"
+                                "$ref": "#/components/schemas/NewFlashcard"
                             }
                         }
                     },
@@ -640,7 +709,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/FlashcardCollection"
+                                "$ref": "#/components/schemas/NewFlashcardCollection"
                             }
                         }
                     },
@@ -715,7 +784,7 @@
                         "description": "You do not have permission to access this resource"
                     },
                     "404": {
-                        "description": "The flashcard with a given ID was not found"
+                        "description": "The flashcard collection with a given ID was not found"
                     },
                     "500": {
                         "description": "Ooops! Something went wrong."
@@ -915,7 +984,7 @@
                 }
             }
         },
-        "/api/search/findByTags": {
+        "/api/search/": {
             "get": {
                 "tags": ["tags"],
                 "summary": "Find a flashcard collection by tags",
@@ -923,7 +992,7 @@
                 "operationId": "findCollectionsByTags",
                 "parameters": [
                     {
-                        "name": "tags",
+                        "name": "search",
                         "in": "query",
                         "description": "Tags to filter by",
                         "required": false,
