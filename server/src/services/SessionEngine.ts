@@ -24,7 +24,6 @@ const getRevisionList = async (collectionId: moongose.Schema.Types.ObjectId) => 
         .sort({
             sessionDate: DESC_ORDER
         });
-
     const allAnswers = [];
     answersArrays.map((ah) => ah.answers).forEach((answer) => answer.forEach((subEntry) => allAnswers.push(subEntry)));
     const groupedAnswersByFlashcard = groupByFlashcard(allAnswers);
