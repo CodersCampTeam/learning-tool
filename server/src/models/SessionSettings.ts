@@ -14,7 +14,8 @@ const sessionSettingsSchema = new mongoose.Schema({
     },
     notificationsType: {
         type: NotificationsTypes,
-        default: NotificationsTypes.EMAIL
+        default: NotificationsTypes.EMAIL,
+        required: true
     }
 });
 
