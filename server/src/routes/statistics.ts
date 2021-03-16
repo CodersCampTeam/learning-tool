@@ -20,7 +20,7 @@ router.get('/', async (req: Request, res: Response, next) => {
                 {
                     $lookup: {
                         from: 'flashcards',
-                        localField: 'flashcard',
+                        localField: 'flashcardId',
                         foreignField: '_id',
                         as: 'flashcards'
                     }

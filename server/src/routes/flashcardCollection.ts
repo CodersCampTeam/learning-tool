@@ -28,7 +28,8 @@ router.post('/', async (req: Request, res: Response, next) => {
 router.get('/:id', async (req: Request, res: Response, next) => {
     try {
         const flashcardCollection = await FlashcardCollection.findById(req.params.id);
-        if (!flashcardCollection) return res.status(404).send('The flashcard with the given ID was not found.');
+        if (!flashcardCollection)
+            return res.status(404).send('The flashcard collection with the given ID was not found.');
         await checkCollectionPermissions(req, flashcardCollection._id);
         await flashcardCollection
             .populate({
