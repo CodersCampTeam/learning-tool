@@ -3,7 +3,7 @@ import cron from 'node-cron';
 import { User } from '../models/User';
 
 const runNotificationService = (): void => {
-    if (process.env.EMAIL_ADDRESS && process.env.EMAIL_PSWD) {
+    if (process.env.EMAIL_ADDRESS && process.env.EMAIL_PSWD && process.env.JEST_WORKER_ID === undefined) {
         // Schedule checks every minute. Mail will be sent to user which
         // session time DD:MM:YYYY HH:MM:-- match current time
         cron.schedule('* * * * *', sendEmail);
@@ -18,18 +18,10 @@ async function sendEmail(): Promise<void> {
     dateMax.setSeconds(59);
 
     const users = await User.find({
-        $and: [
-            {
-                'sessionSettings.sessionHarmonogram': {
-                    $lte: dateMax
-                }
-            },
-            {
-                'sessionSettings.sessionHarmonogram': {
-                    $gte: dateMin
-                }
-            }
-        ]
+        'sessionSettings.sessionHarmonogram': {
+            $lte: dateMax,
+            $gte: dateMin
+        }
     });
 
     const transporter = nodemailer.createTransport({

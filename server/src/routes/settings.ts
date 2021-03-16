@@ -16,9 +16,10 @@ router.post('/', async (req: Request, res: Response, next) => {
 
         if (error) {
             return res.status(400).send(error.details[0].message);
-        } else await settings.save();
+        }
 
-        user.sessionSettings = settings.id;
+        user.sessionSettings = settings;
+        await user.save();
 
         res.send(settings);
     } catch (error) {

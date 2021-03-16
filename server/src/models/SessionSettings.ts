@@ -3,17 +3,19 @@ import mongoose from 'mongoose';
 import { NotificationsTypes } from './Enums';
 
 interface ISessionSettings extends mongoose.Document {
-    sessionHarmonogram: Date;
+    sessionHarmonogram: string;
+    notificationsType: NotificationsTypes;
 }
 
 const sessionSettingsSchema = new mongoose.Schema({
     sessionHarmonogram: {
-        type: Date,
+        type: String,
         required: true
     },
     notificationsType: {
         type: NotificationsTypes,
-        default: NotificationsTypes.EMAIL
+        default: NotificationsTypes.EMAIL,
+        required: true
     }
 });
 
@@ -21,11 +23,11 @@ const SessionSettings = mongoose.model<ISessionSettings>('SessionSettings', sess
 
 function validateSessionSettings(sessionSettings: typeof SessionSettings): Joi.ValidationResult {
     const schema = Joi.object({
-        sessionHarmonogram: Joi.date(),
+        sessionHarmonogram: Joi.string(),
         notificationsType: Joi.string().valid(...Object.values(NotificationsTypes))
     });
 
     return schema.validate(sessionSettings);
 }
 
-export { SessionSettings, sessionSettingsSchema, validateSessionSettings };
+export { ISessionSettings, SessionSettings, sessionSettingsSchema, validateSessionSettings };
