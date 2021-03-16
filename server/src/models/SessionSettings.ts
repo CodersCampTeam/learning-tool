@@ -4,7 +4,7 @@ import { NotificationsTypes } from './Enums';
 
 interface ISessionSettings extends mongoose.Document {
     sessionHarmonogram: string;
-    notificationsType: string;
+    notificationsType: NotificationsTypes;
 }
 
 const sessionSettingsSchema = new mongoose.Schema({
