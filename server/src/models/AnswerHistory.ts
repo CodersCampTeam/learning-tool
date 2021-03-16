@@ -41,7 +41,7 @@ function validateAnswerHistory(answerHistory: typeof AnswerHistory): Joi.Validat
     const schema = Joi.object({
         user: Joi.string().required(),
         sessionDate: Joi.date().required(),
-        flashcardCollectionId: Joi.string().required(),
+        flashcardCollection: Joi.string().required(),
         answers: Joi.array().default([]).required()
     });
 

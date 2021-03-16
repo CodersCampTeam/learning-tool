@@ -1,0 +1,1144 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Learning app",
+        "description": "Free & modern app to learn and widen your horizonts, as well as social circles. All of this with surprisingly powerful flashcards",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "servers": [],
+    "components": {
+        "securitySchemes": {
+            "cookieAuth": {
+                "type": "apiKey",
+                "in": "cookie",
+                "name": "jwt"
+            },
+            "oAuth2AuthCode": {
+                "type": "oauth2",
+                "flows": {
+                    "authorizationCode": {
+                        "authorizationUrl": "https://accounts.google.com/o/auth2/v2/auth",
+                        "tokenUrl": "https://accounts.google.com/o/auth2/v4/token",
+                        "scopes": {
+                            "profile:read": "Access to your profile",
+                            "email:read": "Access to your email"
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "Flashcard": {
+                "required": ["isQuizQuestion", "prompt", "answers"],
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "mongoose.Schema.Types.ObjectId"
+                    },
+                    "prompt": {
+                        "type": "string"
+                    },
+                    "imageUrl": {
+                        "type": "string"
+                    },
+                    "answers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "extraInfo": {
+                        "type": "string"
+                    },
+                    "correctAnswer": {
+                        "type": "number",
+                        "default": 0
+                    },
+                    "isQuizQuestion": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "collectionId": {
+                        "type": "string",
+                        "description": "Ref to collection's ID"
+                    }
+                }
+            },
+            "NewFlashcard": {
+                "required": ["isQuizQuestion", "prompt", "answers"],
+                "type": "object",
+                "properties": {
+                    "prompt": {
+                        "type": "string"
+                    },
+                    "imageUrl": {
+                        "type": "string"
+                    },
+                    "answers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "extraInfo": {
+                        "type": "string"
+                    },
+                    "correctAnswer": {
+                        "type": "number",
+                        "default": 0
+                    },
+                    "isQuizQuestion": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                }
+            },
+            "FlashcardsArray": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/Flashcard"
+                }
+            },
+            "FlashcardsSearch": {
+                "type": "array",
+                "items": {
+                    "properties": {
+                        "flashcards": {
+                            "type": "string",
+                            "description": "Ref to flashcard's ID"
+                        }
+                    }
+                }
+            },
+            "FlashcardCollection": {
+                "required": ["name", "owner"],
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "mongoose.Schema.Types.ObjectId"
+                    },
+                    "owner": {
+                        "type": "string",
+                        "description": "Ref to user's ID"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "flashcards": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "description": "Ref to flashcard's ID or flashcards' IDs"
+                        }
+                    },
+                    "isPublic": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                }
+            },
+            "NewFlashcardCollection": {
+                "required": ["name"],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "isPublic": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                }
+            },
+            "User": {
+                "required": ["username", "email", "password"],
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "mongoose.Schema.Types.ObjectId"
+                    },
+                    "googleId": {
+                        "type": "string"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "isActive": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "isBlocked": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "avatarImg": {
+                        "type": "string"
+                    },
+                    "sessionSettings": {
+                        "type": "string",
+                        "description": "Ref to ID of sessions settings"
+                    }
+                }
+            },
+            "Answer": {
+                "required": ["flashcardId", "date", "isCorrect"],
+                "type": "object",
+                "properties": {
+                    "flashcardId": {
+                        "type": "string",
+                        "description": "Ref to flashcard's ID"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "isCorrect": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "AnswerHistory": {
+                "required": ["user", "sessionDate", "flashcardCollection", "answers"],
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "type": "string",
+                        "description": "Ref to user's ID"
+                    },
+                    "sessionDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "flashcardCollection": {
+                        "type": "string",
+                        "description": "Ref to flashcard's ID"
+                    },
+                    "answers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "description": "Ref to answer's ID"
+                        }
+                    }
+                }
+            },
+            "SessionSettings": {
+                "required": ["sessionHarmonogram"],
+                "type": "object",
+                "properties": {
+                    "sessionHarmonogram": {
+                        "type": "string"
+                    },
+                    "notificationsType": {
+                        "type": "string",
+                        "default": "Email",
+                        "enum": ["Email"]
+                    }
+                }
+            },
+            "Statistics": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "_id": {
+                            "type": "string",
+                            "description": "Ref to the ID of answer history"
+                        },
+                        "user": {
+                            "type": "string",
+                            "description": "Ref to the user's ID"
+                        },
+                        "sessionDate": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "Session date from the answer history"
+                        },
+                        "owner": {
+                            "type": "string",
+                            "description": "Ref to the ID of flashcard collection's owner"
+                        },
+                        "collectionName": {
+                            "type": "string",
+                            "description": "Ref to the ID of flashcard collection's name"
+                        },
+                        "isPublic": {
+                            "type": "boolean",
+                            "description": "Flashcard collection's status (public or private)"
+                        },
+                        "answersTotal": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "correctAnswers": {
+                            "type": "integer"
+                        },
+                        "wrongAnswers": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "details": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "Date when an answer was provided"
+                                    },
+                                    "isCorrect": {
+                                        "type": "boolean",
+                                        "format": "date",
+                                        "description": "Answer's status (correct or incorrect)"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Tag": {
+                "required": ["tag"],
+                "type": "array",
+                "items": {
+                    "properties": {
+                        "tag": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 30,
+                            "pattern": "[a-z]"
+                        }
+                    }
+                }
+            },
+            "Token": {
+                "required": ["token"],
+                "type": "string",
+                "uniqueItems": true
+            }
+        }
+    },
+    "paths": {
+        "/api/google": {
+            "get": {
+                "summary": "Register/login via Google account",
+                "description": "Click here [/api/google](/api/google) for Google Authentication",
+                "tags": ["user"],
+                "security": [],
+                "responses": {
+                    "302": {
+                        "description": "Redirect to google auth"
+                    }
+                }
+            }
+        },
+        "/api/google/redirect": {
+            "get": {
+                "summary": "Exchange google auth for jwt-cookie",
+                "tags": ["user"],
+                "security": [
+                    {
+                        "oAuth2AuthCode": ["profile:read", "email:read"]
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirect to main page",
+                        "headers": {
+                            "Set-Cookie": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": ["jwt=123", "Path=/", "HttpOnly"]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "summary": "Register a user",
+                "tags": ["user"],
+                "requestBody": {
+                    "required": true,
+                    "description": "Register the user and save their data in the database ",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["username", "email", "password"],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "Your name"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "Your email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Your password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "User already registered or username already used."
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "summary": "Sign in and return an authentication cookie",
+                "tags": ["user"],
+                "requestBody": {
+                    "required": true,
+                    "description": "Provide email and password to sign in",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["email", "password"],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "Your email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Your password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "$ref": "#/components/schemas/Token"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "headers": {
+                            "Set-Cookie": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": ["jwt=123", "Path=/", "HttpOnly"]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid email or password"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/flashcard/{flashcardId}": {
+            "get": {
+                "summary": "Display a flashcard",
+                "tags": ["flashcard"],
+                "description": "Find a single flashcard by ID and display its content",
+                "operationId": "getFlashcardById",
+                "parameters": [
+                    {
+                        "name": "flashcardId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Please provide the ID of the flashcard you wish to display",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Flashcard"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID"
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
+                    },
+                    "404": {
+                        "description": "The flashcard with the given ID was not found"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a flashcard",
+                "tags": ["flashcard"],
+                "parameters": [
+                    {
+                        "name": "flashcardId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Please provide the ID of the flashcard you wish to delete",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "operationId": "getFlashcardById",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    },
+                    "400": {
+                        "description": "Invalid ID or bad request"
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
+                    },
+                    "404": {
+                        "description": "The flashcard with the given ID was not found"
+                    },
+
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Modify a flashcard",
+                "tags": ["flashcard"],
+                "parameters": [
+                    {
+                        "name": "flashcardId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Please provide the ID of the flashcard you wish to modify",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "operationId": "getFlashcardById",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Flashcard"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or bad request"
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
+                    },
+                    "404": {
+                        "description": "The flashcard with the given ID was not found"
+                    },
+
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/flashcard/{collectionId}": {
+            "put": {
+                "summary": "Create a flashcard in the given flashcard collection",
+                "tags": ["flashcard"],
+                "parameters": [
+                    {
+                        "name": "collectionId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Please provide the ID of the flashcard collection",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "operationId": "getCollectionById",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Create a single flashcard in the given flashcard collection",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewFlashcard"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Flashcard"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or bad request"
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
+                    },
+                    "404": {
+                        "description": "The flashcard with the given ID was not found"
+                    },
+
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/flashcard-collection/": {
+            "post": {
+                "summary": "Create a flashcard collection",
+                "tags": ["flashcard collection"],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Create a single flashcard collection",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewFlashcardCollection"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FlashcardCollection"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or bad request"
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "404": {
+                        "description": "The flashcard collection with the given ID was not found"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/flashcard-collection/{collectionId}": {
+            "get": {
+                "summary": "Display a flashcard collection",
+                "tags": ["flashcard collection"],
+                "description": "Display the content of a chosen flashcard collection",
+                "operationId": "getCollectiondById",
+                "parameters": [
+                    {
+                        "name": "collectionId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Please provide the ID of the flashcard collection you wish to display",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Flashcard"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or bad request"
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
+                    },
+                    "404": {
+                        "description": "The flashcard collection with the given ID was not found"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a flashcard collection",
+                "tags": ["flashcard collection"],
+                "operationId": "getCollectiondById",
+                "parameters": [
+                    {
+                        "name": "collectionId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Please provide the ID of the flashcard collection you wish to delete",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    },
+                    "400": {
+                        "description": "Invalid ID or bad request"
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
+                    },
+                    "404": {
+                        "description": "The flashcard collection with the given ID was not found"
+                    },
+
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/answer": {
+            "post": {
+                "summary": "Post an answer",
+                "tags": ["answer"],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Post an answer to a flashcard prompt",
+                    "content": {
+                        "*/*": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Answer"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Answer",
+                                    "_id": {
+                                        "type": "string",
+                                        "description": "mongoose.Schema.Types.ObjectId"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/answer-history": {
+            "post": {
+                "summary": "Document a history of user's answers",
+                "tags": ["answer"],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Save date and answers to a given flashcard collection for the purpose of answer history",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AnswerHistory"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Session data successfully saved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AnswerHistory"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/session/revision/{collectionId}": {
+            "get": {
+                "summary": "Display a list of a chosen collection for revision",
+                "tags": ["session"],
+                "description": "For a logged user display a list of flashcards from a chosen collection for the puropse of repetition",
+                "operationId": "getCollectiondById",
+                "parameters": [
+                    {
+                        "name": "collectionId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Please provide the ID of the flashcard collection you wish to revise",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FlashcardsArray"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or bad request"
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
+                    },
+                    "404": {
+                        "description": "The flashcard collection with the given ID was not found"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/session/learning/{collectionId}": {
+            "get": {
+                "summary": "Display a list of flashcards that have not been revised for the purpose ",
+                "tags": ["session"],
+                "description": "For a logged user display a list of flashcards that have not been revised",
+                "operationId": "getCollectiondById",
+                "parameters": [
+                    {
+                        "name": "collectionId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Please provide the ID of the flashcard collection you wish to learn",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FlashcardsArray"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or bad request"
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
+                    },
+                    "404": {
+                        "description": "The flashcard collection with the given ID was not found"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/settings": {
+            "post": {
+                "summary": "Provide settings for adjusting session's harmonogram and preferred notifications",
+                "tags": ["settings"],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Set preferred notification type and session's harmonogram",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SessionSettings"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SessionSettings"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/statistics": {
+            "get": {
+                "summary": "Agrregate data from the database to get statistics concerning user's performance",
+                "tags": ["statistics"],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Statistics"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/search/": {
+            "get": {
+                "tags": ["tags"],
+                "summary": "Find a flashcard collection by tags",
+                "description": "Search for a flashcard collection using tags. If no tags were provided, the response will display all public flashcard collections.",
+                "operationId": "findCollectionsByTags",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Tags to filter by",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "items": {
+                                "$ref": "#/components/schemas/Tag"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/FlashcardsSearch"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No flashcards matching query."
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        }
+    }
+}
