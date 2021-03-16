@@ -855,7 +855,7 @@
                 "requestBody": {
                     "description": "Post an answer to a flashcard prompt",
                     "content": {
-                        "*/*": {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/Answer"
                             }
