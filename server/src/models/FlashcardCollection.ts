@@ -59,4 +59,16 @@ function validateFlashcardCollection(flashcardCollection: typeof FlashcardCollec
     return schema.validate(flashcardCollection);
 }
 
-export { FlashcardCollection, IFlashcardCollection, validateFlashcardCollection };
+function validateFlashcardCollectionUpdate(flashcardCollection: typeof FlashcardCollection): Joi.ValidationResult {
+    const schema = Joi.object({
+        owner: Joi.string(),
+        name: Joi.string().min(1).max(255),
+        isPublic: Joi.boolean().default(false),
+        tags: Joi.array().default([]),
+        flashcards: Joi.array().default([])
+    });
+
+    return schema.validate(flashcardCollection);
+}
+
+export { FlashcardCollection, IFlashcardCollection, validateFlashcardCollection, validateFlashcardCollectionUpdate };

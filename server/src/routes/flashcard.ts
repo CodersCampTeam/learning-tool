@@ -10,7 +10,7 @@ router.get('/:id', async (req: Request, res: Response, next) => {
         const flashcard = await Flashcard.findById(req.params.id);
         if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');
         await checkCollectionPermissions(req, flashcard.collectionId);
-        res.send(flashcard);
+        res.status(200).send(flashcard);
     } catch (error) {
         next(error);
     }
@@ -35,7 +35,7 @@ router.put('/:id', async (req: Request, res: Response, next) => {
         collection.get('flashcards').push(flashcard.id);
         await collection.save();
         await flashcard.save();
-        res.send(flashcard);
+        res.status(201).send(flashcard);
     } catch (error) {
         next(error);
     }
@@ -52,7 +52,7 @@ router.delete('/:id', async (req: Request, res: Response, next) => {
 
         await Answer.deleteMany({ flashcardId: req.params.id });
 
-        res.status(204).end();
+        res.status(204).send();
     } catch (error) {
         next(error);
     }
@@ -66,7 +66,7 @@ router.patch('/:id', async (req: Request, res: Response, next) => {
         const { error } = validateFlashcardUpdate(req.body);
         if (error) return res.status(400).send(error.details[0].message);
         await flashcard.updateOne({ $set: req.body });
-        res.send(await Flashcard.findById(flashcard.id));
+        res.status(200).send(await Flashcard.findById(flashcard.id));
     } catch (error) {
         next(error);
     }

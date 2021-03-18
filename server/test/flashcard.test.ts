@@ -247,7 +247,7 @@ describe('flashcard routes', () => {
         });
         it('should return the flashcard if it is valid', async () => {
             const res = await exec();
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(201);
             expect(res.body).toHaveProperty('_id');
             expect(res.body).toHaveProperty('collectionId');
             expect(res.body).toHaveProperty('prompt', newPrompt);
@@ -258,7 +258,7 @@ describe('flashcard routes', () => {
             isQuizQuestion = true;
             newAnswer = ['ans1', 'ans2', 'ans3', 'ans4'];
             const res = await exec();
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(201);
             expect(res.body).toHaveProperty('_id');
             expect(res.body).toHaveProperty('isQuizQuestion', isQuizQuestion);
             expect(res.body).toHaveProperty('prompt', newPrompt);
@@ -286,11 +286,6 @@ describe('flashcard routes', () => {
         beforeEach(async () => {
             newExtraInfo = 'more';
             newAnswer = ['answer2'];
-        });
-        it('should return 401 if the user is not logged in', async () => {
-            usedToken = '';
-            const res = await exec();
-            expect(res.status).toBe(401);
         });
         it('should return 401 if the user is not logged in', async () => {
             usedToken = '';
