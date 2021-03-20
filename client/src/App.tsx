@@ -7,6 +7,25 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import styled from '@emotion/styled';
+import { css, jsx } from '@emotion/react'
+
+const Button = styled.button`
+  padding: 32px;
+  background-color: hotpink;
+  font-size: 24px;
+  border-radius: 4px;
+  color: black;
+  font-weight: bold;
+  &:hover {
+    color: white;
+  }
+`
+const titleStyle = css({
+  boxSizing: 'border-box',
+  width: 300,
+  height: 200
+})
 
 const useStyles = makeStyles({
   table: {
@@ -30,6 +49,8 @@ export default function BasicTable() {
   const classes = useStyles();
 
   return (
+    <React.Fragment>
+      <Button>Jakiś guziol z użyciem emotion styled</Button>
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
@@ -56,5 +77,6 @@ export default function BasicTable() {
         </TableBody>
       </Table>
     </TableContainer>
+    </React.Fragment>
   );
 }
