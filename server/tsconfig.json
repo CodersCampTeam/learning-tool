@@ -8,7 +8,9 @@
         "outDir": "dist",
         "types": ["jest", "node"],
         "resolveJsonModule": true,
-        "lib": ["es2019"]
+        "lib": ["es2019"],
+        "jsx": "react-jsx",
+        "skipLibCheck": true
     },
     "lib": ["es2019.array"]
 }

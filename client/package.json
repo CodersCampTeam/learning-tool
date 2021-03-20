@@ -47,6 +47,8 @@
   },
   "devDependencies": {
     "customize-cra": "^1.0.0",
-    "react-app-rewired": "^2.1.8"
+    "react-app-rewired": "^2.1.8",
+    "@types/react-router-dom": "^5.1.7",
+    "react-router-dom": "^5.2.0"
   }
 }
