@@ -1,21 +1,27 @@
-import {Switch, Route} from 'react-router-dom'
+import React, { FC } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import './App.css';
+import { About } from './components/About';
+import { Home } from './components/Home';
+import { NavBar } from './components/NavBar';
 import NotFound from './components/NotFound';
 
-function Hello() {
+export const App: FC = () => {
   return (
-      <div>
-        <h1>Hello world! (This is to be removed)</h1>
-      </div>
+    <div>
+      <header>
+        <BrowserRouter>
+          <FancyComponent/>
+          
+          <NavBar />
+          
+          <Switch>
+            <Route exact path='/about' component={ About } />
+            <Route exact path='/' component={ Home } />
+            <Route component={ NotFound } />
+          </Switch>
+        </BrowserRouter>
+      </header>
+    </div>
   );
 }
-
-function App() {
-  return (
-    <Switch>
-      <Route path="/home" component={Hello} />
-      <Route component={NotFound} />
-    </Switch>
-  );
-}
-
-export default App;

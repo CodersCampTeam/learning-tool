@@ -17,3 +17,4 @@ ReactDOM.render(
     	</MuiThemeProvider>
 	</React.StrictMode>,
 	document.getElementById('root')
+);
