@@ -1,3 +1,5 @@
+import { jsx, css } from '@emotion/react';
+import styled from '@emotion/styled';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -7,8 +9,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import styled from '@emotion/styled';
-import { css, jsx } from '@emotion/react'
+import { Global } from '@emotion/react';
+import GlobalStyles from './styles/GlobalStyles';
 
 const Button = styled.button`
   padding: 32px;
@@ -50,11 +52,22 @@ export default function BasicTable() {
 
   return (
     <React.Fragment>
+      <Global styles={GlobalStyles} />
       <Button>Jakiś guziol z użyciem emotion styled</Button>
+        <div
+    css={{
+      backgroundColor: 'hotpink',
+      '&:hover': {
+        color: 'lightgreen'
+      }
+    }}
+  >
+    This has a hotpink background.
+  </div>
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
-          <TableRow>
+          <TableRow css={titleStyle}>
             <TableCell>Dessert (100g serving)</TableCell>
             <TableCell align="right">Calories</TableCell>
             <TableCell align="right">Fat&nbsp;(g)</TableCell>
