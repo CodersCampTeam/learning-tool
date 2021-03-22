@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 
+//TO UPDATE WITH FINAL GLOBAL STYLES
 const GlobalStyles = css`
   @import url("https://fonts.googleapis.com/css?family=Dancing+Script&display=swap");
 
