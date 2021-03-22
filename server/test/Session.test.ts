@@ -1,4 +1,3 @@
-process.env['NODE_ENV'] = 'test';
 import mongoose from 'mongoose';
 import { Flashcard } from '../src/models/Flashcard';
 import { FlashcardCollection } from '../src/models/FlashcardCollection';
@@ -204,7 +203,6 @@ describe('session', () => {
 
         it('should return flashcard Ids that had any incorrect answers in last 3 sessions ', async () => {
             const res = await exec();
-            console.log('body: ', res.body);
             expect(res.body.length).toBe(2);
             // expect(res.body).toEqual(expectedFlashcardsForRevision);
         });

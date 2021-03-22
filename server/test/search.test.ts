@@ -4,7 +4,7 @@ import { User } from '../src/models/User';
 import request from 'supertest';
 import { server } from '../src/server';
 import bcrypt from 'bcryptjs';
-import { assignUniqueTagsAndReturn } from '../src/models/Tag';
+import { assignUniqueTagsAndReturn, Tag } from '../src/models/Tag';
 import { Flashcard } from '../src/models/Flashcard';
 
 describe('search route', () => {
@@ -79,6 +79,7 @@ describe('search route', () => {
 
     afterAll(async () => {
         await User.deleteOne({});
+        await Tag.deleteOne({});
         await mongoose.disconnect();
     });
 
@@ -136,11 +137,11 @@ describe('search route', () => {
                 ])
             );
         });
-        it('should return flashcard when part of the tag is typed in', async () => {
+        it('should return 404 if there is no tag matching query', async () => {
             token = testUser.generateAuthToken();
             searchTag = 'react';
             const res = await exec();
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(404);
             expect(res.text).toBe('No tags matching query');
         });
     });

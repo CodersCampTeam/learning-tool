@@ -1,12 +1,11 @@
 import { AnswerHistory } from '../models/AnswerHistory';
-import _ from 'lodash';
 import moongose from 'mongoose';
 import { Flashcard, IFlashcard } from '../models/Flashcard';
 import { Answer, IAnswer } from '../models/Answer';
 
 const DESC_ORDER = -1;
 
-const getRevisionList = async (collectionId: moongose.Schema.Types.ObjectId) => {
+const getRevisionList = async (collectionId: moongose.Schema.Types.ObjectId): Promise<IFlashcard[]> => {
     // take all flashcards from answerHistory objects,
     // group it by flashcard, keep a list of true/false as values (isCorrect)
     // if there are more than 3 values, limit it to LAST 3
@@ -44,7 +43,7 @@ const groupByFlashcard = (allAnswers: IAnswer[]) => {
     return result;
 };
 
-const getLearningList = async (collectionId: moongose.Schema.Types.ObjectId) => {
+const getLearningList = async (collectionId: moongose.Schema.Types.ObjectId): Promise<IFlashcard[]> => {
     //part 2: learning new cards after revision
     // pick cards for learning that are not in revision
 
@@ -86,7 +85,7 @@ const getUsedFlashcards = (allAnswers: IAnswer[]) => {
     return result;
 };
 
-const createRevisionList = async (flashcardIdWithAnswers) => {
+const createRevisionList = (flashcardIdWithAnswers): IFlashcard[] => {
     const flashcardForRevision = [];
     for (const [key, value] of flashcardIdWithAnswers) {
         const wrongAnswers = value.filter((val) => !val);

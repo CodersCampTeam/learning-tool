@@ -57,7 +57,7 @@ const flashcardSchema = new mongoose.Schema({
 
 const Flashcard = mongoose.model<IFlashcard>('Flashcard', flashcardSchema);
 
-function validateFlashcard(flashcard: typeof Flashcard): Joi.ValidationResult {
+function validateFlashcard(flashcard: IFlashcard): Joi.ValidationResult {
     const schema = Joi.object({
         prompt: Joi.string().min(1).max(4096).required(),
         imageUrl: Joi.string(),
@@ -75,7 +75,7 @@ function validateFlashcard(flashcard: typeof Flashcard): Joi.ValidationResult {
     return schema.validate(flashcard);
 }
 
-function validateFlashcardUpdate(flashcard: typeof Flashcard): Joi.ValidationResult {
+function validateFlashcardUpdate(flashcard: IFlashcard): Joi.ValidationResult {
     const schema = Joi.object({
         prompt: Joi.string().min(1).max(4096),
         imageUrl: Joi.string(),
