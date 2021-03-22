@@ -1,18 +1,18 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
-
+import StyledButton from './CustomButton/styles';
  
 
 const App = () => {
  return (
    <React.Fragment>
  
-      <Button color="primary">
+      <StyledButton test color="primary">
         Click me!
-      </Button>
-            <Button color="secondary">
+      </StyledButton>
+            <StyledButton color="secondary">
         Click me!
-      </Button>
+      </StyledButton>
  
       </React.Fragment>
   );
