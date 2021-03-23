@@ -1,7 +1,7 @@
-import FancyComponent from '../../components/FancyComponent/FancyComponent';
+import WelcomeScreen from '../../components/WelcomeScreen/WelcomeScreen';
 
 const App = () => {
-	return <FancyComponent/>
+    return <WelcomeScreen />;
 };
 
 export default App;
