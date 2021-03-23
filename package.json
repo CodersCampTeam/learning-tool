@@ -1,28 +1,28 @@
 {
-  "name": "learning-tool",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "(cd client && npm install --dev) & (cd server && npm install --dev)",
-    "heroku-postbuild": "cd client && npm install --only=dev && NODE_ENV=development npm install --no-shrinkwrap && npm run build",
-    "start": "cd server && npm run start:prod",
-    "lint": "prettier --write"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mfrydrychowiczTeam/learning-tool.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/mfrydrychowiczTeam/learning-tool/issues"
-  },
-  "homepage": "https://github.com/mfrydrychowiczTeam/learning-tool#readme",
-  "devDependencies": {
-    "eslint": "^7.20.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "prettier": "2.2.1"
-  }
+    "name": "learning-tool",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "install": "(cd client && npm install --dev) & (cd server && npm install --dev)",
+        "heroku-postbuild": "cd client && npm install --only=dev && NODE_ENV=development npm install --no-shrinkwrap && npm run build",
+        "start": "cd server && npm run start:prod",
+        "lint": "prettier --write"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mfrydrychowiczTeam/learning-tool.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/mfrydrychowiczTeam/learning-tool/issues"
+    },
+    "homepage": "https://github.com/mfrydrychowiczTeam/learning-tool#readme",
+    "devDependencies": {
+        "eslint": "^7.20.0",
+        "eslint-plugin-prettier": "^3.3.1",
+        "prettier": "2.2.1"
+    }
 }

@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, static as serveStatic } from 'express';
 import register from './register';
 import login from './login';
 import google from './google';
@@ -14,10 +14,13 @@ import passport from 'passport';
 import { runNotificationService } from '../services/NotificationService';
 import search from './search';
 import session from '../routes/Session';
+import * as path from 'path';
 
 const isAuthenticated = passport.authenticate('jwt', { session: false });
 
 const router = express.Router();
+
+const publicPath = path.join(__dirname, '../../client', '../../client/build', '../');
 
 router.use('/api/register', register);
 
@@ -40,6 +43,13 @@ router.use('/api/flashcard-collection', isAuthenticated, flashcardCollection);
 router.use('/api/session', isAuthenticated, session);
 
 router.use('/api/search', isAuthenticated, search);
+
+// for any other requests, send `index.html` as a response
+router.use(serveStatic(publicPath));
+router.use('*', (req, res) => {
+    // send `index.html` file from ./client
+    return res.sendFile(path.join(publicPath, '../../build/index.html'));
+});
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
