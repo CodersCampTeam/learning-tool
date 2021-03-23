@@ -36,43 +36,6 @@
                 "required": ["isQuizQuestion", "prompt", "answers"],
                 "type": "object",
                 "properties": {
-                    "_id": {
-                        "type": "string",
-                        "description": "mongoose.Schema.Types.ObjectId"
-                    },
-                    "prompt": {
-                        "type": "string"
-                    },
-                    "imageUrl": {
-                        "type": "string"
-                    },
-                    "answers": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "extraInfo": {
-                        "type": "string"
-                    },
-                    "correctAnswer": {
-                        "type": "number",
-                        "default": 0
-                    },
-                    "isQuizQuestion": {
-                        "type": "boolean",
-                        "default": false
-                    },
-                    "collectionId": {
-                        "type": "string",
-                        "description": "Ref to collection's ID"
-                    }
-                }
-            },
-            "NewFlashcard": {
-                "required": ["isQuizQuestion", "prompt", "answers"],
-                "type": "object",
-                "properties": {
                     "prompt": {
                         "type": "string"
                     },
@@ -250,7 +213,7 @@
                 }
             },
             "SessionSettings": {
-                "required": ["sessionHarmonogram"],
+                "required": ["sessionHarmonogram", "notificationsType"],
                 "type": "object",
                 "properties": {
                     "sessionHarmonogram": {
@@ -527,7 +490,15 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Flashcard"
+                                    "$ref": "#/components/schemas/Flashcard",
+                                    "_id": {
+                                        "type": "string",
+                                        "description": "mongoose.Schema.Types.ObjectId"
+                                    },
+                                    "collectionId": {
+                                        "type": "string",
+                                        "description": "Ref to collection's ID"
+                                    }
                                 }
                             }
                         }
@@ -611,13 +582,31 @@
                         "cookieAuth": []
                     }
                 ],
+                "requestBody": {
+                    "description": "Modify a single flashcard in the given flashcard collection",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Flashcard"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Flashcard"
+                                    "$ref": "#/components/schemas/Flashcard",
+                                    "_id": {
+                                        "type": "string",
+                                        "description": "Ref to flashcard's ID"
+                                    },
+                                    "collectionId": {
+                                        "type": "string",
+                                        "description": "Ref to collection's ID"
+                                    }
                                 }
                             }
                         }
@@ -667,19 +656,27 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/NewFlashcard"
+                                "$ref": "#/components/schemas/Flashcard"
                             }
                         }
                     },
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Flashcard"
+                                    "$ref": "#/components/schemas/Flashcard",
+                                    "_id": {
+                                        "type": "string",
+                                        "description": "mongoose.Schema.Types.ObjectId"
+                                    },
+                                    "collectionId": {
+                                        "type": "string",
+                                        "description": "Ref to collection's ID"
+                                    }
                                 }
                             }
                         }
@@ -724,8 +721,8 @@
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -777,7 +774,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Flashcard"
+                                    "$ref": "#/components/schemas/FlashcardCollection"
                                 }
                             }
                         }
@@ -839,6 +836,50 @@
                     "500": {
                         "description": "Ooops! Something went wrong.",
                         "content": {}
+                    }
+                }
+            },
+            "put": {
+                "summary": "Modify a flashcard collection",
+                "tags": ["flashcard collection"],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Modify a single flashcard collection",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewFlashcardCollection"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FlashcardCollection"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or bad request"
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "404": {
+                        "description": "The flashcard collection with the given ID was not found"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
                     }
                 }
             }
@@ -913,7 +954,56 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/AnswerHistory"
+                                    "$ref": "#/components/schemas/AnswerHistory",
+                                    "_id": {
+                                        "type": "string",
+                                        "description": "mongoose.Schema.Types.ObjectId"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/answer-history/{id}": {
+            "get": {
+                "summary": "Display a history of user's answers",
+                "tags": ["answer"],
+                "operationId": "getAnswerHistoryById",
+                "parameters": [
+                    {
+                        "name": "answerHistoryId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Please provide the ID of the answer history you wish to display",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AnswerHistory",
+                                    "_id": {
+                                        "type": "string",
+                                        "description": "Ref to the ID of the answer history"
+                                    }
                                 }
                             }
                         }

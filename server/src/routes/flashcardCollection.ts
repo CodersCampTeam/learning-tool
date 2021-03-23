@@ -1,6 +1,10 @@
 import express, { Request, Response } from 'express';
 import { Tag, assignUniqueTagsAndReturn } from '../models/Tag';
-import { FlashcardCollection, validateFlashcardCollection } from '../models/FlashcardCollection';
+import {
+    FlashcardCollection,
+    validateFlashcardCollection,
+    validateFlashcardCollectionUpdate
+} from '../models/FlashcardCollection';
 import { Flashcard } from '../models/Flashcard';
 import { checkCollectionPermissions } from '../services/checkCollectionPermissions';
 const router = express.Router();
@@ -19,7 +23,7 @@ router.post('/', async (req: Request, res: Response, next) => {
         const { error } = validateFlashcardCollection(req.body);
         if (error) return res.status(400).send(error.details[0].message);
         await flashcardCollection.save();
-        res.send(flashcardCollection);
+        res.status(201).send(flashcardCollection);
     } catch (error) {
         next(error);
     }
@@ -53,6 +57,22 @@ router.delete('/:id', async (req: Request, res: Response, next) => {
         await checkCollectionPermissions(req, flashcardCollection._id);
         await flashcardCollection.deleteOne();
         res.status(204).send();
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.put('/:id', async (req: Request, res: Response, next) => {
+    try {
+        const flashcardCollection = await FlashcardCollection.findById(req.params.id);
+        if (!flashcardCollection)
+            return res.status(404).send('The flashcard collection with the given ID was not found.');
+        await checkCollectionPermissions(req, flashcardCollection.id);
+        if (req.body.tags) req.body.tags = await assignUniqueTagsAndReturn(req.body.tags);
+        const { error } = validateFlashcardCollectionUpdate(req.body);
+        if (error) return res.status(400).send(error.details[0].message);
+        await flashcardCollection.updateOne({ $set: req.body });
+        res.status(200).send(await FlashcardCollection.findById(flashcardCollection.id));
     } catch (error) {
         next(error);
     }

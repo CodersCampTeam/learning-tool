@@ -67,7 +67,7 @@ router.get('/', async (req: Request, res: Response, next) => {
                 }
             ],
             (err, results) => {
-                res.send(JSON.stringify(results, null, 2));
+                res.status(200).send(JSON.stringify(results, null, 2));
             }
         );
     } catch (error) {

@@ -47,7 +47,7 @@ const flashcardCollectionSchema = new mongoose.Schema({
 
 const FlashcardCollection = mongoose.model<IFlashcardCollection>('FlashcardCollection', flashcardCollectionSchema);
 
-function validateFlashcardCollection(flashcardCollection: typeof FlashcardCollection): Joi.ValidationResult {
+function validateFlashcardCollection(flashcardCollection: IFlashcardCollection): Joi.ValidationResult {
     const schema = Joi.object({
         owner: Joi.string().required(),
         name: Joi.string().min(1).max(255).required(),
@@ -59,4 +59,16 @@ function validateFlashcardCollection(flashcardCollection: typeof FlashcardCollec
     return schema.validate(flashcardCollection);
 }
 
-export { FlashcardCollection, IFlashcardCollection, validateFlashcardCollection };
+function validateFlashcardCollectionUpdate(flashcardCollection: IFlashcardCollection): Joi.ValidationResult {
+    const schema = Joi.object({
+        owner: Joi.string(),
+        name: Joi.string().min(1).max(255),
+        isPublic: Joi.boolean().default(false),
+        tags: Joi.array().default([]),
+        flashcards: Joi.array().default([])
+    });
+
+    return schema.validate(flashcardCollection);
+}
+
+export { FlashcardCollection, IFlashcardCollection, validateFlashcardCollection, validateFlashcardCollectionUpdate };

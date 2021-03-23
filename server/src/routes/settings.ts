@@ -1,15 +1,13 @@
 import express, { Request, Response } from 'express';
 import { SessionSettings, validateSessionSettings } from '../models/SessionSettings';
-import { User } from '../models/User';
 const router = express.Router();
 
 router.post('/', async (req: Request, res: Response, next) => {
     try {
-        const userId = req.user._id;
-        const user = await User.findById(userId);
+        const user = req['user'];
 
         const settings = new SessionSettings({
-            sessionHarmonogram: new Date(),
+            sessionHarmonogram: new Date(req.body.sessionHarmonogram),
             notificationsType: req.body.notificationsType
         });
         const { error } = validateSessionSettings(req.body);
@@ -21,7 +19,7 @@ router.post('/', async (req: Request, res: Response, next) => {
         user.sessionSettings = settings;
         await user.save();
 
-        res.send(settings);
+        res.status(200).send(settings);
     } catch (error) {
         next(error);
     }

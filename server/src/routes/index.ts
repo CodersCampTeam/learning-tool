@@ -2,8 +2,7 @@ import express, { Request, Response } from 'express';
 import register from './register';
 import login from './login';
 import google from './google';
-import { User, IUser } from '../models/User';
-import { SessionSettings } from '../models/SessionSettings';
+import { IUser } from '../models/User';
 import flashcard from './flashcard';
 import answer from './Answer';
 import answerHistory from './AnswerHistory';
@@ -37,6 +36,7 @@ router.use('/api/answer-history', isAuthenticated, answerHistory);
 router.use('/api/settings', isAuthenticated, settings);
 
 router.use('/api/flashcard-collection', isAuthenticated, flashcardCollection);
+
 router.use('/api/session', isAuthenticated, session);
 
 router.use('/api/search', isAuthenticated, search);

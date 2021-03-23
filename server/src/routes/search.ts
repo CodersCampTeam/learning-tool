@@ -11,7 +11,7 @@ router.get('/', async function (req: Request, res: Response, next) {
             const regex = new RegExp(escapeRegex(req.query.search), 'gi');
             const tag = await Tag.findOne({ tag: regex });
             if (tag === null) {
-                res.send('No tags matching query');
+                res.status(404).send('No tags matching query');
             } else {
                 FlashcardCollection.aggregate(
                     [
@@ -26,9 +26,9 @@ router.get('/', async function (req: Request, res: Response, next) {
                     ],
                     (err, results) => {
                         if (results.length < 1) {
-                            res.send('No flashcards matching query');
+                            res.status(404).send('No flashcards matching query');
                         } else {
-                            res.send(results);
+                            res.status(200).send(results);
                         }
                     }
                 );
@@ -41,9 +41,9 @@ router.get('/', async function (req: Request, res: Response, next) {
                 ],
                 (err, results) => {
                     if (results.length < 1) {
-                        res.send('No flashcards matching query');
+                        res.status(404).send('No flashcards matching query');
                     } else {
-                        res.send(results);
+                        res.status(200).send(results);
                     }
                 }
             );
