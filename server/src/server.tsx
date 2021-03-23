@@ -8,8 +8,10 @@ import swaggerUi from 'swagger-ui-express';
 import { runNotificationService } from './services/NotificationService';
 
 dotenv.config();
+
 import './middleware/passport';
 import swaggerDocument from './swaggerWrap';
+
 const app = express();
 const port = process.env.PORT || 3000;
 const env = process.env.NODE_ENV || 'development';
