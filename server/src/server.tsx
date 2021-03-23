@@ -6,14 +6,9 @@ import { productionSetup } from './production';
 import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 import { runNotificationService } from './services/NotificationService';
-import fs from 'fs';
-import path from 'path';
-import { App } from '../../client/src/App';
-
-import ReactDOMServer from 'react-dom/server';
-import { StaticRouter } from 'react-router';
 
 dotenv.config();
+
 import './middleware/passport';
 import swaggerDocument from './swaggerWrap';
 

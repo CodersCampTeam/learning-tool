@@ -1,4 +1,4 @@
-import express, { Request, Response, Router, static as serveStatic } from 'express';
+import express, { Request, Response, static as serveStatic } from 'express';
 import register from './register';
 import login from './login';
 import google from './google';

@@ -7,14 +7,14 @@ import theme from './themes/theme';
 import { ThemeProvider } from '@emotion/react';
 
 ReactDOM.render(
-	<React.StrictMode>
-		<MuiThemeProvider theme={theme}>
-    		<ThemeProvider theme={theme}>
-				  <BrowserRouter>
-					<App />
-				</BrowserRouter>
-      		</ThemeProvider>
-    	</MuiThemeProvider>
-	</React.StrictMode>,
-	document.getElementById('root')
+    <React.StrictMode>
+        <MuiThemeProvider theme={theme}>
+            <ThemeProvider theme={theme}>
+                <BrowserRouter>
+                    <App />
+                </BrowserRouter>
+            </ThemeProvider>
+        </MuiThemeProvider>
+    </React.StrictMode>,
+    document.getElementById('root')
 );
