@@ -10,21 +10,27 @@ const benefits = ['nauka z fiszkami', 'skuteczne powtórki', 'przypomnienia', 's
 const WelcomeScreen = () => {
     return (
         <>
-            <Grid container direction="column" justify="center" alignItems="center" spacing={4}>
+            <Grid container direction="column" justify="center" alignItems="center" alignContent="center" spacing={1}>
                 <Grid item xs={12}>
-                    <Typography variant="h3" color="textPrimary" align="center" mt={8}>
+                    <Typography variant="h3" color="textPrimary" align="center" mt={6}>
                         <Typed strings={['BUDUJEMY WIEDZĘ.']} typeSpeed={40} showCursor={false} />
                     </Typography>
-                    <Typography variant="h3" color="textSecondary" align="center">
+                    <Typography variant="h3" color="textSecondary">
                         <Typed strings={['TWORZYMY RELACJE']} typeSpeed={40} startDelay={1500} showCursor={false} />
                     </Typography>
-                    <Box mt={6}>
+                </Grid>
+                <Grid item xs={12}>
+                    <Box mt={2}>
                         <img alt="drawing of two people sharing cards" src="welcome_screen_image.svg" />
-                    </Box>
+                    </Box>{' '}
+                </Grid>
+                <Grid item xs={12}>
                     <AppName>
                         Fisz<SwappedQ>Q</SwappedQ>
                         <SwappedI>I</SwappedI>
                     </AppName>
+                </Grid>
+                <Grid item xs={12}>
                     <List>
                         {benefits.map((item, index) => (
                             <ListItem key={index}>
@@ -35,7 +41,9 @@ const WelcomeScreen = () => {
                             </ListItem>
                         ))}
                     </List>
-                    <Button variant="contained" size="medium" color="primary" startIcon={<HowToRegIcon />} mt={2}>
+                </Grid>
+                <Grid item xs={12}>
+                    <Button variant="contained" size="medium" color="primary" startIcon={<HowToRegIcon />}>
                         ROZPOCZNIJ NAUKĘ
                     </Button>
                 </Grid>
