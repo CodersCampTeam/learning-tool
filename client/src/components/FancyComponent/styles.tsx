@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Button } from '@material-ui/core';
 
 type StyledButtonProps = {
-	test?: boolean
+    test?: boolean;
 };
 
 const StyledButton = styled(Button)`
