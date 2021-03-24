@@ -58,7 +58,7 @@ export const Search = (): ReactElement => {
                 <SearchIcon />
             </span>
             <InputBase
-                placeholder="Search…"
+                placeholder="Szukaj..."
                 classes={{
                     root: classes.inputRoot,
                     input: classes.inputInput
