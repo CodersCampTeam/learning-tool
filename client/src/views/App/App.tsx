@@ -12,6 +12,7 @@ import SearchResultsComponent from '../../components/SearchResults/SearchResults
 import { css } from '@emotion/react';
 import { CreateCollection } from '../../components/CreateCollection/CreateCollection';
 import PrivateRoute from '../../PrivateRoute';
+import AddFlashcard from '../../components/flashcard/AddFlashcard';
 
 const App = (): ReactElement => {
     return (
@@ -33,6 +34,7 @@ const App = (): ReactElement => {
                         <PrivateRoute path="/search/:search?" component={SearchResultsComponent} />
                         <Route exact path="/register" component={LoginRegistration} />
                         <Route exact path="/login" component={LoginRegistration} />
+                        <Route exact path="/addflashcard" component={AddFlashcard} />
                         <Route component={NotFound} />
                     </Switch>
                     <BottomNavBar />
