@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import { ReactElement } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import { createStyles, fade, Theme, makeStyles } from '@material-ui/core/styles';
@@ -27,7 +27,8 @@ const useStyles = makeStyles((theme: Theme) =>
             pointerEvents: 'none',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            color: '#fff'
         },
         inputRoot: {
             color: 'inherit'
@@ -48,14 +49,14 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export const Search: FC = (): ReactElement => {
+export const Search = (): ReactElement => {
     const classes = useStyles();
 
     return (
         <div className={classes.search}>
-            <div className={classes.searchIcon}>
+            <span className={classes.searchIcon}>
                 <SearchIcon />
-            </div>
+            </span>
             <InputBase
                 placeholder="Search…"
                 classes={{

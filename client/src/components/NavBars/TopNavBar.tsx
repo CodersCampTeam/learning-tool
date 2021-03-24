@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const TopNavBar: FC = (): ReactElement => {
     const classes = useStyles();
     return (
-        <AppBar position="static">
+        <AppBar position="fixed">
             <Toolbar>
                 <StyledAppName className={classes.title}>
                     <span>Fisz</span>
