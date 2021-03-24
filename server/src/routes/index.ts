@@ -48,7 +48,7 @@ router.use('/api/search', isAuthenticated, search);
 router.use(serveStatic(publicPath));
 router.use('*', (req, res) => {
     // send `index.html` file from ./client
-    return res.sendFile(path.join(publicPath, '../../build/index.html'));
+    return res.sendFile(path.join(publicPath, '../client/build/index.html'));
 });
 
 declare global {

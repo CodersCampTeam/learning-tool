@@ -10,15 +10,10 @@ const useStyles = makeStyles((theme: Theme) =>
         root: {
             flexGrow: 1
         },
-        menuButton: {
-            marginRight: theme.spacing(2)
-        },
         title: {
+            paddingRight: '2em',
             flexGrow: 1,
-            display: 'none',
-            [theme.breakpoints.up('sm')]: {
-                display: 'block'
-            }
+            display: 'block'
         }
     })
 );
