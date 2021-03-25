@@ -1,70 +1,63 @@
 import { ReactElement } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
-import { createStyles, fade, Theme, makeStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import styled from '@emotion/styled';
 
-// Styling taken from https://material-ui.com/components/app-bar/#app-bar-with-a-primary-search-field
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        search: {
-            position: 'relative',
-            borderRadius: theme.shape.borderRadius,
-            backgroundColor: fade(theme.palette.common.white, 0.15),
-            '&:hover': {
-                backgroundColor: fade(theme.palette.common.white, 0.25)
-            },
-            marginLeft: 0,
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-                marginLeft: theme.spacing(1),
-                width: 'auto'
-            }
-        },
-        searchIcon: {
-            padding: theme.spacing(0, 2),
-            height: '100%',
-            position: 'absolute',
-            pointerEvents: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff'
-        },
-        inputRoot: {
-            color: 'inherit'
-        },
-        inputInput: {
-            padding: theme.spacing(1, 1, 1, 0),
-            // vertical padding + font size from searchIcon
-            paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-            transition: theme.transitions.create('width'),
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-                width: '12ch',
-                '&:focus': {
-                    width: '20ch'
-                }
-            }
+const StyledIconButton = styled(IconButton)`
+    padding: 0;
+`;
+const StyledIconButtonRoot = styled.span`
+    & .MuiIconButton-root {
+        padding: 6px;
+    }
+`;
+
+const StyledSearchIcon = styled(SearchIcon)`
+    color: #fff;
+    padding-right: -20px;
+`;
+
+const StyledInputBase = styled(InputBase)`
+    color: #fff;
+    border-radius: 7px;
+    padding-left: 1em;
+    & .MuiInputBase-input {
+        color: rgba(255, 255, 255, 0.9);
+    }
+`;
+
+const StyledPaper = styled(Paper)`
+    display: 'flex';
+    alignitems: 'center';
+    width: 400;
+`;
+
+const StyledMuiPaperRoot = styled.span`
+    & .MuiPaper-root {
+        background-color: rgba(255, 255, 255, 0.1);
+        :hover {
+            background-color: rgba(255, 255, 255, 0.2);
         }
-    })
-);
+    }
+    display: flex;
+    justify-items: center;
+`;
 
 export const Search = (): ReactElement => {
-    const classes = useStyles();
-
     return (
-        <div className={classes.search}>
-            <span className={classes.searchIcon}>
-                <SearchIcon />
-            </span>
-            <InputBase
-                placeholder="Szukaj..."
-                classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput
-                }}
-                inputProps={{ 'aria-label': 'search' }}
-            />
+        <div>
+            <StyledMuiPaperRoot>
+                <StyledPaper component="form" elevation={0}>
+                    <StyledInputBase placeholder="Szukaj..." />
+                    <StyledIconButtonRoot>
+                        <StyledIconButton type="submit" aria-label="search">
+                            <StyledSearchIcon />
+                        </StyledIconButton>
+                    </StyledIconButtonRoot>
+                </StyledPaper>
+            </StyledMuiPaperRoot>
         </div>
     );
 };
