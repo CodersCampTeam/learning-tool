@@ -17,7 +17,7 @@ const StyledBottomNavigation = styled(BottomNavigation)`
   },
 `;
 
-export const BottomNavBar: FC = (): ReactElement => {
+export const BottomNavBar = (): ReactElement => {
     const [value, setValue] = React.useState(0);
 
     return (

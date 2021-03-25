@@ -11,9 +11,9 @@ export const StyledDiv = styled.div`
     padding-right: 2em;
 `;
 
-export const TopNavBar: FC = (): ReactElement => {
+export const TopNavBar = (): ReactElement => {
     return (
-        <AppBar position="fixed">
+        <AppBar position="sticky">
             <Toolbar>
                 <StyledDiv>
                     <StyledAppName>
