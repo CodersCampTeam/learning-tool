@@ -1,10 +1,9 @@
 import { FC, ReactElement } from 'react'
+import WelcomeScreen from './WelcomeScreen/WelcomeScreen';
 
 export const Home: FC = (): ReactElement => {
-  console.log('home...')
+
   return (
-    <div>
-      Hello to FiszQI!
-    </div>
+    <WelcomeScreen />
   )
 }
