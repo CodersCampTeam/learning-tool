@@ -7,6 +7,7 @@ import {
 } from '../models/FlashcardCollection';
 import { Flashcard } from '../models/Flashcard';
 import { checkCollectionPermissions } from '../services/checkCollectionPermissions';
+import Mongo from 'mongodb';
 const router = express.Router();
 
 router.post('/', async (req: Request, res: Response, next) => {
@@ -45,6 +46,46 @@ router.get('/:id', async (req: Request, res: Response, next) => {
                 model: Flashcard
             });
         res.send(flashcardCollection);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/', async (req: Request, res: Response, next) => {
+    const user = new Mongo.ObjectID(req['user']._id);
+    try {
+        Flashcard.aggregate(
+            [
+                {
+                    $lookup: {
+                        from: 'flashcardcollections',
+                        localField: 'collectionId',
+                        foreignField: '_id',
+                        as: 'flashcardcollection'
+                    }
+                },
+                {
+                    $addFields: {
+                        flashcardcollection: { $arrayElemAt: ['$flashcardcollection', 0] }
+                    }
+                },
+                {
+                    $group: {
+                        _id: '$flashcardcollection.name',
+                        user: { $first: '$flashcardcollection.owner' },
+                        flashcards: { $sum: 1 }
+                    }
+                },
+                {
+                    $match: {
+                        user: user
+                    }
+                }
+            ],
+            (err, results) => {
+                res.send(JSON.stringify(results, null, 2));
+            }
+        );
     } catch (error) {
         next(error);
     }
