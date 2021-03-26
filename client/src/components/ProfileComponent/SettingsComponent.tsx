@@ -21,7 +21,7 @@ const SettingsComponent = () => {
                     <ProfileInputFields />
                 </Grid>
                 <Grid container justify="center" alignItems="center" spacing={2}>
-                    <Grid item xs={11}>
+                    <Grid item xs={11} sm={4}>
                         <Typography variant="body1" align="center" color="textPrimary">
                             Harmonogram powtórek
                         </Typography>
@@ -41,12 +41,12 @@ const SettingsComponent = () => {
                 </Grid>
             </Grid>
             <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
-                <Grid item xs={9}>
+                <Grid item xs={9} sm={3}>
                     <Typography variant="body1" color="textPrimary" align="left">
                         Powiadomienia e-mail
                     </Typography>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={3} sm={1}>
                     <FormControlLabel
                         value="bottom"
                         control={
