@@ -4,8 +4,7 @@ import { About } from '../../components/About';
 import { Home } from '../../components/Home';
 import { NavBar } from '../../components/NavBar';
 import NotFound from '../../components/NotFound';
-import FancyComponent from '../../components/FancyComponent/FancyComponent';
-import  ProfileComponent  from '../../components/ProfileComponent/ProfileComponent';
+import ProfileComponent from '../../components/ProfileComponent/ProfileComponent';
 
 export const App: FC = () => {
     return (
