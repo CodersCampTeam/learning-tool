@@ -23,7 +23,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
         });
 
         await user.save();
-        res.redirect('/api/login');
+        res.send(200);
     } catch (error) {
         next(error);
     }
