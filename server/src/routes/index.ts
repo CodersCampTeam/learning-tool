@@ -20,7 +20,9 @@ const isAuthenticated = passport.authenticate('jwt', { session: false });
 
 const router = express.Router();
 
-const publicPath = path.join(__dirname, '../../../client/build');
+const publicPath = path.join(__dirname, '..', '..', '..', 'client', 'build');
+
+router.use(serveStatic(publicPath));
 
 router.use('/api/register', register);
 
@@ -44,13 +46,6 @@ router.use('/api/session', isAuthenticated, session);
 
 router.use('/api/search', isAuthenticated, search);
 
-// for any other requests, send `index.html` as a response
-router.use(serveStatic(publicPath));
-router.use('*', (req, res) => {
-    // send `index.html` file from ./client
-    return res.sendFile(path.join(publicPath, './index.html'));
-});
-
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Express {
@@ -64,6 +59,14 @@ router.get('/', isAuthenticated, (req: Request, res: Response) => {
 });
 
 router.use(defaultHandler);
+
+// for any other requests, send `index.html` as a response
+
+router.use('*', (req, res) => {
+    // send `index.html` file from ./client
+    return res.sendFile(path.join(publicPath, './index.html'));
+});
+
 runNotificationService();
 
 export { router as appRouter };

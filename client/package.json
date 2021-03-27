@@ -2,6 +2,8 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://localhost/:3001",
+  "homepage": ".",
   "dependencies": {
     "@emotion/babel-preset-css-prop": "^11.2.0",
     "@emotion/react": "^11.1.5",
