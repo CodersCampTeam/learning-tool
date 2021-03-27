@@ -3,7 +3,7 @@ import TabPanel from '../Tabs/TabPanel';
 import { Tabs, Tab } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
-import SettingsComponent from './SettingsComponent'
+import SettingsComponent from './SettingsComponent';
 
 const ProfileComponent = () => {
     const [value, setValue] = useState(0);
@@ -26,10 +26,9 @@ const ProfileComponent = () => {
                 Treść dla statystyk
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <SettingsComponent/>
+                <SettingsComponent />
             </TabPanel>
         </>
-
     );
 };
 export default ProfileComponent;

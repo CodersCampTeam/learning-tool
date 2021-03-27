@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Grid }from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -8,22 +8,17 @@ interface TabPanelProps {
     value: any;
 }
 
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
+const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => {
     return (
-        <Grid item
+        <Grid
+            item
             role="tabpanel"
             hidden={value !== index}
             id={`full-width-tabpanel-${index}`}
             aria-labelledby={`full-width-tab-${index}`}
             {...other}
         >
-            {value === index && (
-                <Box p={3}>
-                    {children}
-                </Box>
-            )}
+            {value === index && <Box p={3}>{children}</Box>}
         </Grid>
     );
 }

@@ -8,14 +8,14 @@ const ProfileInputFields = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const updateUsername = (e: any) => {
-        setUsername(e.target.value);
+    const updateUsername = (e: React.SyntheticEvent<EventTarget>) => {
+        setUsername((e.target as HTMLInputElement).value);
     };
-    const updateEmail = (e: any) => {
-        setEmail(e.target.value);
+    const updateEmail = (e: React.SyntheticEvent<EventTarget>) => {
+        setEmail((e.target as HTMLInputElement).value);
     };
-    const updatePassword = (e: any) => {
-        setPassword(e.target.value);
+    const updatePassword = (e: React.SyntheticEvent<EventTarget>) => {
+        setPassword((e.target as HTMLInputElement).value);
     };
     return (
         <Paper>

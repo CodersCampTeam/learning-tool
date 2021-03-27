@@ -1,8 +1,6 @@
-import { FC, ReactElement } from 'react';
 import { NavLink } from 'react-router-dom';
 
-export const NavBar: FC = (): ReactElement => {
-    console.log('nav bar...');
+export const NavBar = () => {
     return (
         <ul>
             <li>
