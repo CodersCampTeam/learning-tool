@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Paper, TextField, IconButton, Box } from '@material-ui/core';
 import { useState } from 'react';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 
-const ProfileInputFields = () => {
+const ProfileInputFields = (): ReactElement => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

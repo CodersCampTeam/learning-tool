@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Grid, Typography, Button, Box, Switch, FormControlLabel } from '@material-ui/core';
 import { useState } from 'react';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import CheckboxLabels from './CheckboxDaysRevision';
 import ProfileInputFields from './ProfileInputFields';
 
-const SettingsComponent = () => {
+const SettingsComponent = (): ReactElement => {
     const [notification, setNotifications] = useState({
         checkedA: true,
         checkedB: true

@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, ReactElement } from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Checkbox, Typography } from '@material-ui/core';
 
-const CheckboxLabels = () => {
+const CheckboxLabels = (): ReactElement => {
     const [state, setState] = useState([
         { label: 'poniedziałki', name: 'mon', checked: false },
         { label: 'wtorki', name: 'tue', checked: false },
@@ -39,5 +39,5 @@ const CheckboxLabels = () => {
             ))}
         </FormGroup>
     );
-}
-export default CheckboxLabels
+};
+export default CheckboxLabels;

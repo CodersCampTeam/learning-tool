@@ -1,17 +1,18 @@
-import React, { ChangeEvent, useState } from 'react';
-import TabPanel from '../Tabs/TabPanel';
+import React, { ReactElement, useState } from 'react';
+import TabPanel from '../components/Tabs/TabPanel';
 import { Tabs, Tab } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
-import SettingsComponent from './SettingsComponent';
+import SettingsComponent from '../components/ProfileComponent/SettingsComponent';
 
-const ProfileComponent = () => {
+const ProfileComponent = (): ReactElement => {
     const [value, setValue] = useState(0);
-    const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
-        setValue(newValue);
+    const handleChange = (event: React.SyntheticEvent<EventTarget>, value: number) => {
+        setValue(value);
     };
     return (
         <>
+            (
             <Tabs
                 value={value}
                 onChange={handleChange}
@@ -28,6 +29,7 @@ const ProfileComponent = () => {
             <TabPanel value={value} index={1}>
                 <SettingsComponent />
             </TabPanel>
+            )
         </>
     );
 };

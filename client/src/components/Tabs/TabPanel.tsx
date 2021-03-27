@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Box, Grid } from '@material-ui/core';
 
 interface TabPanelProps {
     children?: React.ReactNode;
     dir?: string;
-    index: any;
-    value: any;
+    index: number;
+    value: number;
 }
 
-const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => {
+const TabPanel = ({ children, value, index, ...other }: TabPanelProps): ReactElement => {
     return (
         <Grid
             item
@@ -21,6 +21,6 @@ const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => {
             {value === index && <Box p={3}>{children}</Box>}
         </Grid>
     );
-}
+};
 
 export default TabPanel;

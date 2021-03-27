@@ -5,7 +5,7 @@ import { Home } from '../../components/Home';
 import { TopNavBar } from '../../components/NavBars/TopNavBar';
 import { BottomNavBar } from '../../components/NavBars/BottomNavBar';
 import NotFound from '../../components/NotFound';
-import ProfileComponent from '../../components/ProfileComponent/ProfileComponent';
+import ProfileComponent from '../ProfileComponent';
 
 export const App: FC = () => {
     return (
