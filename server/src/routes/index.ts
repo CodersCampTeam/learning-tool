@@ -20,7 +20,7 @@ const isAuthenticated = passport.authenticate('jwt', { session: false });
 
 const router = express.Router();
 
-const publicPath = path.join(__dirname, '../../client', '../../client/build', '../');
+const publicPath = path.join(__dirname, '../../../client/build');
 
 router.use('/api/register', register);
 
@@ -48,7 +48,7 @@ router.use('/api/search', isAuthenticated, search);
 router.use(serveStatic(publicPath));
 router.use('*', (req, res) => {
     // send `index.html` file from ./client
-    return res.sendFile(path.join(publicPath, '../../build/index.html'));
+    return res.sendFile(path.join(publicPath, './index.html'));
 });
 
 declare global {
