@@ -4,6 +4,7 @@ import { About } from '../../components/About';
 import { Home } from '../../components/Home';
 import { TopNavBar } from '../../components/NavBars/TopNavBar';
 import { BottomNavBar } from '../../components/NavBars/BottomNavBar';
+import { HomeView } from '../HomeView/FlashcardCollectionView';
 import NotFound from '../../components/NotFound';
 import ProfileComponent from '../ProfileComponent';
 import Login from '../Login/Login';
@@ -22,6 +23,7 @@ const App = (): ReactElement => {
                         <Route exact path="/profil" component={ProfileComponent} />
                         <Route exact path="/register" component={Register} />
                         <Route exact path="/login" component={Login} />
+                        <Route exact path="/flashcardCollections" component={HomeView} />
                         <Route component={NotFound} />
                     </Switch>
 
