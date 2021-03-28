@@ -6,6 +6,11 @@ const theme = createMuiTheme({
         primary: grey,
         secondary: deepPurple
     },
+    typography: {
+        body1: {
+            fontWeight: 600
+        }
+    },
     props: {
         MuiTypography: {
             variantMapping: {
