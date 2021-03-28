@@ -12,7 +12,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
         passport.authenticate('local', { session: false }, (err, user, info) => {
             if (err || !user) {
                 return res.status(401).json({
-                    message: info ? info.message : 'Login failed',
+                    message: info ? info.message : 'Logowanie nie powiodło się',
                     user: user
                 });
             }
