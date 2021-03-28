@@ -5,8 +5,10 @@ import { Home } from '../../components/Home';
 import { TopNavBar } from '../../components/NavBars/TopNavBar';
 import { BottomNavBar } from '../../components/NavBars/BottomNavBar';
 import NotFound from '../../components/NotFound';
+import Login from '../Login/Login';
+import Register from '../Register/Register';
 
-export const App: FC = () => {
+const App = () => {
     return (
         <div>
             <header>
@@ -16,6 +18,8 @@ export const App: FC = () => {
                     <Switch>
                         <Route exact path="/about" component={About} />
                         <Route exact path="/" component={Home} />
+                        <Route exact path="/register" component={Register} />
+                        <Route exact path="/login" component={Login} />
                         <Route component={NotFound} />
                     </Switch>
 

@@ -13,7 +13,7 @@ import './middleware/passport';
 import swaggerDocument from './swaggerWrap';
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 const env = process.env.NODE_ENV || 'development';
 let connection_uri = process.env.MONGODB_DEV_URI || 'mongodb://localhost/playground';
 
