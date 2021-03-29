@@ -17,12 +17,12 @@ passport.use(
         },
         async (email: string, password: string, done) => {
             const user = await User.findOne({ email: email });
-            if (!user) return done(null, false, { message: 'User with provided email does not exist.' });
+            if (!user) return done(null, false, { message: 'Użytkownik/czka o podanym identyfikatorze nie istnieje' });
 
             bcrypt.compare(password, user.password, (error, isValid) => {
                 if (error) throw error;
                 if (!isValid) {
-                    return done(null, false, { message: 'Invalid email or password' });
+                    return done(null, false, { message: 'Nieprawidłowy email lub hasło' });
                 } else {
                     return done(null, user);
                 }

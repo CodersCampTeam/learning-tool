@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import Form from '../../components/Form/Form';
 import axios from 'axios';
+import { useForm } from 'react-hook-form';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
+    const { errors, setError } = useForm();
+    const handleSubmit = () => {
         const user = {
             email: email,
             password: password
         };
 
-        axios('/api/register', {
+        axios('/api/login', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
@@ -22,13 +22,23 @@ const Login = () => {
         })
             .then((response) => (window.location.href = `/`))
             .catch((error) => {
+                setError('server', {
+                    type: 'server',
+                    message: error.response.data.message
+                });
                 throw error;
             });
     };
 
     return (
         <>
-            <Form isregister={false} onEmailChange={setEmail} onPasswordChange={setPassword} onSubmit={handleSubmit} />
+            <Form
+                isregister={false}
+                onEmailChange={setEmail}
+                onPasswordChange={setPassword}
+                onSubmit={handleSubmit}
+                error={errors}
+            />
         </>
     );
 };

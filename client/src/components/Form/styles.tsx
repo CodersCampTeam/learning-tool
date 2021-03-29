@@ -10,6 +10,12 @@ interface FormStylesProps {
     isdisplay?: string;
 }
 
+export const StyledError = styled.div`
+    width: 90%;
+    margin-left: 5%;
+    color: red;
+`;
+
 export const StyledTextField = styled(TextField)`
     && {
         width: 90%;
@@ -29,7 +35,7 @@ export const StyledTextField = styled(TextField)`
 export const StyledFormControlLabel = styled(FormControlLabel)`
     && {
         ${(props: FormStylesProps) => (props.isdisplay === 'true' ? '' : 'display: none')};
-        width: 80%;
+        width: 90%;
         text-align: center;
         padding: 5px;
     }
@@ -86,7 +92,7 @@ export const StyledButtonGoogle = styled(Button)`
     }
 `;
 
-export const orParagraph = css`
+export const StyledParagraph = css`
     text-transform: uppercase;
     margin: 2vh;
     font-weight: 700;
