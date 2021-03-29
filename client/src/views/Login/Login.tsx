@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import Form from '../../components/Form/Form';
 import axios from 'axios';
 
-const Login = () => {
+const Login = (): ReactElement => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

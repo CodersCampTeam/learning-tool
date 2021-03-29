@@ -5,9 +5,8 @@ import { Home } from '../../components/Home';
 import { TopNavBar } from '../../components/NavBars/TopNavBar';
 import { BottomNavBar } from '../../components/NavBars/BottomNavBar';
 import NotFound from '../../components/NotFound';
-import ProfileComponent from '../ProfileComponent';
-import Login from '../Login/Login';
-import Register from '../Register/Register';
+import ProfileView from '../ProfileView';
+import LoginRegistration from '../LoginRegistration';
 
 const App = (): ReactElement => {
     return (
@@ -15,16 +14,14 @@ const App = (): ReactElement => {
             <header>
                 <BrowserRouter>
                     <TopNavBar />
-
                     <Switch>
                         <Route exact path="/about" component={About} />
                         <Route exact path="/" component={Home} />
-                        <Route exact path="/profil" component={ProfileComponent} />
-                        <Route exact path="/register" component={Register} />
-                        <Route exact path="/login" component={Login} />
+                        <Route exact path="/profil" component={ProfileView} />
+                        <Route exact path="/register" component={LoginRegistration} />
+                        <Route exact path="/login" component={LoginRegistration} />
                         <Route component={NotFound} />
                     </Switch>
-
                     <BottomNavBar />
                 </BrowserRouter>
             </header>

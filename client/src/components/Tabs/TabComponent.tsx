@@ -1,18 +1,23 @@
 import React, { ReactElement, useState } from 'react';
-import TabPanel from '../components/Tabs/TabPanel';
+import TabPanel from './TabPanel';
 import { Tabs, Tab } from '@material-ui/core';
-import SettingsIcon from '@material-ui/icons/Settings';
-import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
-import SettingsComponent from '../components/ProfileComponent/SettingsComponent';
 
-const ProfileComponent = (): ReactElement => {
-    const [value, setValue] = useState(0);
+interface ITabProps {
+    initial?: number;
+    children: Array<ReactElement>;
+    label1: string;
+    label2: string;
+    icon1: ReactElement;
+    icon2: ReactElement;
+}
+
+const TabComponent = (props: ITabProps): ReactElement => {
+    const [value, setValue] = useState(props.initial || 0);
     const handleChange = (event: React.SyntheticEvent<EventTarget>, value: number) => {
         setValue(value);
     };
     return (
         <>
-            (
             <Tabs
                 value={value}
                 onChange={handleChange}
@@ -20,17 +25,16 @@ const ProfileComponent = (): ReactElement => {
                 indicatorColor="secondary"
                 textColor="secondary"
             >
-                <Tab icon={<LocalLibraryIcon />} label={'Statystyki'} value={0} />
-                <Tab icon={<SettingsIcon />} label={'Ustawienia'} value={1} />
+                <Tab icon={props.icon1} label={props.label1} value={0} />
+                <Tab icon={props.icon2} label={props.label2} value={1} />
             </Tabs>
             <TabPanel value={value} index={0}>
-                Treść dla statystyk
+                {props.children[0]}
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <SettingsComponent />
+                {props.children[1]}
             </TabPanel>
-            )
         </>
     );
 };
-export default ProfileComponent;
+export default TabComponent;

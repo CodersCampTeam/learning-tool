@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, ReactElement } from 'react';
 import Form from '../../components/Form/Form';
 import axios from 'axios';
 
-const Register = () => {
+const Register = (): ReactElement => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

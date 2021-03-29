@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Grid, List, ListItem, ListItemIcon, ListItemText, Box } from '@material-ui/core';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import CheckIcon from '@material-ui/icons/Check';
 import Typed from 'react-typed';
 import { AppName, Button, Typography, SwappedQ, SwappedI } from './styles';
+import { useHistory } from 'react-router-dom';
 
-const benefits = ['nauka z fiszkami', 'skuteczne powtórki', 'przypomnienia', 'społeczność', 'bez opłat'];
+const WelcomeScreen = (): ReactElement => {
+    const history = useHistory();
 
-const WelcomeScreen = () => {
+    const benefits = ['nauka z fiszkami', 'skuteczne powtórki', 'przypomnienia', 'społeczność', 'bez opłat'];
+
     return (
         <>
             <Grid container direction="column" justify="center" alignItems="center" alignContent="center" spacing={1}>
@@ -43,7 +46,13 @@ const WelcomeScreen = () => {
                     </List>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="contained" size="medium" color="primary" startIcon={<HowToRegIcon />}>
+                    <Button
+                        onClick={() => history.push('/login')}
+                        variant="contained"
+                        size="medium"
+                        color="primary"
+                        startIcon={<HowToRegIcon />}
+                    >
                         ROZPOCZNIJ NAUKĘ
                     </Button>
                 </Grid>
