@@ -1,5 +1,5 @@
 import { FC, ReactElement } from 'react'
-import CollectionView from '../../components/FlashcardCollectionView/myCollections';
+import CollectionView from '../../components/FlashcardCollectionComponents/flashcardCollections';
 
 export const HomeView: FC = (): ReactElement => {
 
