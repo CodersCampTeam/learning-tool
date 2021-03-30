@@ -9,6 +9,7 @@ import NotFound from '../../components/NotFound';
 import ProfileComponent from '../ProfileComponent';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
+import SearchResultsComponent from '../../components/SearchResults/SearchResultsComponent';
 
 const App = (): ReactElement => {
     return (
@@ -24,6 +25,7 @@ const App = (): ReactElement => {
                         <Route exact path="/register" component={Register} />
                         <Route exact path="/login" component={Login} />
                         <Route exact path="/flashcardCollections" component={HomeView} />
+                        <Route path="/search/:search?" component={SearchResultsComponent} />
                         <Route component={NotFound} />
                     </Switch>
 
