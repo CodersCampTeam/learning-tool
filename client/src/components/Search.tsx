@@ -12,6 +12,7 @@ const StyledIconButtonRoot = styled.span`
     & .MuiIconButton-root {
         padding: 6px;
     }
+    width: 20%;
 `;
 
 const StyledSearchIcon = styled(SearchIcon)`
@@ -20,6 +21,7 @@ const StyledSearchIcon = styled(SearchIcon)`
 `;
 
 const StyledInputBase = styled(InputBase)`
+    width: 80%;
     color: #fff;
     border-radius: 7px;
     padding-left: 1em;

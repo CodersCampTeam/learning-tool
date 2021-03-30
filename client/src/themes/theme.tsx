@@ -1,5 +1,6 @@
 import { createMuiTheme } from '@material-ui/core';
 import { grey, deepPurple } from '@material-ui/core/colors';
+import { Children } from 'react';
 
 const theme = createMuiTheme({
     palette: {
@@ -8,7 +9,8 @@ const theme = createMuiTheme({
     },
     typography: {
         body1: {
-            fontWeight: 600
+            fontWeight: 600,
+            height: '100%'
         }
     },
     props: {
@@ -17,6 +19,21 @@ const theme = createMuiTheme({
                 h1: 'h2',
                 h2: 'h2',
                 h3: 'h3'
+            }
+        }
+    },
+    overrides: {
+        MuiCssBaseline: {
+            '@global': {
+                html: {
+                    height: '100%'
+                },
+                body: {
+                    height: '100%'
+                },
+                'body > div': {
+                    height: '100%'
+                }
             }
         }
     }

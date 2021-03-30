@@ -8,12 +8,11 @@ import styled from '@emotion/styled';
 export const StyledDiv = styled.div`
     display: block;
     flex-grow: 1;
-    padding-right: 2em;
 `;
 
 export const TopNavBar = (): ReactElement => {
     return (
-        <AppBar position="sticky">
+        <AppBar position="sticky" style={{ marginBottom: '1em' }}>
             <Toolbar>
                 <StyledDiv>
                     <StyledAppName>
