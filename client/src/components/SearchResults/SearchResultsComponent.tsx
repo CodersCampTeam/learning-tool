@@ -9,58 +9,74 @@ import SaveIcon from '@material-ui/icons/Save';
 import FeaturedPlayListOutlined from '@material-ui/icons/FeaturedPlayListOutlined';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { StyledGrid, CollectionHeader } from '../FlashcardCollectionComponents/styles';
+import { IconRow, AvatarRow } from './styles';
 
 const SearchResultsComponent = (): ReactElement => {
     const [state, setState] = useState<string[]>([]);
     const { search } = useParams<{ search: string }>();
     useEffect(() => {
         axios
-            .get(`http://localhost:3001/api/search/?search=${search || ''}`, { withCredentials: true })
+            .get(`/api/search/?search=${search || ''}`, { withCredentials: true })
             .then((json) => setState(json.data))
             .catch(() => setState([]));
     }, [search]);
 
     return (
-        <Grid container direction="column" justify="center" alignItems="center" alignContent="center" spacing={1}>
+        <Grid container direction="column" justify="center" alignItems="center" alignContent="center" spacing={2}>
+            <Box mt={3}>
+                <h3>Odkrywaj publiczne kolekcje fiszek</h3>
+            </Box>
             {state.length ? (
                 state.map((collection: any, index: number) => (
-                    <>
-                        <Typography>Odkrywaj publiczne kolekcje fiszek</Typography>
-                        <StyledGrid key={index}>
-                            <CollectionHeader>{collection.name}</CollectionHeader>
-                            <Grid container item xs={12} direction="row">
-                                <IconButton>
+                    <StyledGrid key={index}>
+                        <CollectionHeader>{collection.name}</CollectionHeader>
+                        <Grid container direction="row" justify="space-around" alignItems="center" spacing={0}>
+                            <Box mr={4}>
+                                <IconButton edge="start">
                                     <FeaturedPlayListOutlined />
                                 </IconButton>
                                 Fiszki: {collection.flashcards.length}
+                            </Box>
+                            <IconButton edge="end">
+                                <ArrowForward color="secondary" />
+                            </IconButton>
+                        </Grid>
+                        <AvatarRow>
+                            <div>
+                                {' '}
                                 <IconButton>
-                                    <ArrowForward />
-                                </IconButton>
-                            </Grid>
-                            <Grid container item xs={12} direction="row">
-                                <Grid container item xs={12} direction="row">
                                     <AccountCircleIcon />
-                                    <Typography variant="body2">{collection.owner}</Typography>
-                                </Grid>
-                                <IconButton>
-                                    <ThumbUpIcon />
                                 </IconButton>
-                                <IconButton>
-                                    <ChatIcon />
-                                </IconButton>
-                                <IconButton>
-                                    <SaveIcon />
-                                </IconButton>
-                            </Grid>
-                        </StyledGrid>
-                    </>
+                                {collection.owner}
+                            </div>
+                        </AvatarRow>
+                        <IconRow>
+                            <IconButton>
+                                <ThumbUpIcon />
+                            </IconButton>
+                            <IconButton>
+                                <ChatIcon />
+                            </IconButton>
+                            <IconButton>
+                                <SaveIcon />
+                            </IconButton>
+                        </IconRow>
+                    </StyledGrid>
                 ))
             ) : (
                 <>
-                    <Typography>Przykro nam, nie ma kolekcji o podanym tagu.</Typography>
-                    <Box mt={2}>
-                        <img alt="Artystyczna wizja szukania" src="searching.svg" />
-                    </Box>
+                    <Grid item xs={12}>
+                        <Box mt={4}>
+                            <Typography variant="h3" align="center">
+                                Przykro nam! <br /> Nie ma kolekcji o podanym tagu.
+                            </Typography>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Box mt={4}>
+                            <img width="240px" alt="Artystyczna wizja poszukiwania" src="/searching.svg" />
+                        </Box>
+                    </Grid>
                 </>
             )}
         </Grid>
