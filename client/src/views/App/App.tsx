@@ -10,29 +10,31 @@ import ProfileComponent from '../ProfileComponent';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
 import SearchResultsComponent from '../../components/SearchResults/SearchResultsComponent';
+import { css } from '@emotion/react';
 
 const App = (): ReactElement => {
     return (
-        <div>
-            <header>
-                <BrowserRouter>
-                    <TopNavBar />
+        <BrowserRouter>
+            <TopNavBar />
 
-                    <Switch>
-                        <Route exact path="/about" component={About} />
-                        <Route exact path="/" component={Home} />
-                        <Route exact path="/profil" component={ProfileComponent} />
-                        <Route exact path="/register" component={Register} />
-                        <Route exact path="/login" component={Login} />
-                        <Route exact path="/flashcardCollections" component={HomeView} />
-                        <Route path="/search/:search?" component={SearchResultsComponent} />
-                        <Route component={NotFound} />
-                    </Switch>
-
-                    <BottomNavBar />
-                </BrowserRouter>
-            </header>
-        </div>
+            <div
+                css={css`
+                    height: 100%;
+                `}
+            >
+                <Switch>
+                    <Route exact path="/about" component={About} />
+                    <Route exact path="/" component={Home} />
+                    <Route exact path="/profil" component={ProfileComponent} />
+                    <Route exact path="/register" component={Register} />
+                    <Route exact path="/login" component={Login} />
+                    <Route exact path="/flashcardCollections" component={HomeView} />
+                    <Route path="/search/:search?" component={SearchResultsComponent} />
+                    <Route component={NotFound} />
+                </Switch>
+            </div>
+            <BottomNavBar />
+        </BrowserRouter>
     );
 };
 
