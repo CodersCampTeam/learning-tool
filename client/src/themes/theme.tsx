@@ -23,6 +23,11 @@ const theme = createMuiTheme({
         }
     },
     overrides: {
+        MuiIconButton: {
+            root: {
+                padding: '10px'
+            }
+        },
         MuiCssBaseline: {
             '@global': {
                 html: {
