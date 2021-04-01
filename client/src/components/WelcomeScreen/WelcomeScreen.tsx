@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Grid, List, ListItem, ListItemIcon, ListItemText, Box } from '@material-ui/core';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import CheckIcon from '@material-ui/icons/Check';
@@ -7,7 +7,7 @@ import { AppName, Button, Typography, SwappedQ, SwappedI } from './styles';
 
 const benefits = ['nauka z fiszkami', 'skuteczne powtórki', 'przypomnienia', 'społeczność', 'bez opłat'];
 
-const WelcomeScreen = () => {
+const WelcomeScreen = (): ReactElement => {
     return (
         <>
             <Grid container direction="column" justify="center" alignItems="center" alignContent="center" spacing={1}>
@@ -21,8 +21,8 @@ const WelcomeScreen = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <Box mt={2}>
-                        <img alt="drawing of two people sharing cards" src="welcome_screen_image.svg" />
-                    </Box>{' '}
+                        <img alt="Rysunek dwóch osób dzielących się fiszkami" src="welcome_screen_image.svg" />
+                    </Box>
                 </Grid>
                 <Grid item xs={12}>
                     <AppName>

@@ -22,7 +22,20 @@ router.get('/', async function (req: Request, res: Response, next) {
                                 flashcards: { $exists: true, $not: { $size: 0 } }
                             }
                         },
-                        { $project: { _id: 0, flashcards: 1 } }
+                        { $project: { _id: 0, flashcards: 1, name: 1, owner: 1 } },
+                        {
+                            $lookup: {
+                                from: 'users',
+                                localField: 'owner',
+                                foreignField: '_id',
+                                as: 'owner'
+                            }
+                        },
+                        {
+                            $set: {
+                                owner: { $first: '$owner.username' }
+                            }
+                        }
                     ],
                     (err, results) => {
                         if (results.length < 1) {
@@ -37,7 +50,20 @@ router.get('/', async function (req: Request, res: Response, next) {
             FlashcardCollection.aggregate(
                 [
                     { $match: { isPublic: true, flashcards: { $exists: true, $not: { $size: 0 } } } },
-                    { $project: { _id: 0, flashcards: 1 } }
+                    { $project: { _id: 0, flashcards: 1, name: 1, owner: 1 } },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'owner',
+                            foreignField: '_id',
+                            as: 'owner'
+                        }
+                    },
+                    {
+                        $set: {
+                            owner: { $first: '$owner.username' }
+                        }
+                    }
                 ],
                 (err, results) => {
                     if (results.length < 1) {
