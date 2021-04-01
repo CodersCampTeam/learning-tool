@@ -1,30 +1,36 @@
 import styled from '@emotion/styled';
 import { Grid } from '@material-ui/core';
 
+ 
+
 export const StyledGrid = styled(Grid)`
     && {
- 
         display: flex;
         flex-basis: auto;
         flex-direction: column;      
         background-color: #F2F2F2;        
-        margin: 20px;
+        margin: 30px;
         font-family: righteous;
         align-items: center;
         box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
-        justify-content= "center";
+        justify-content: center;
         border-radius: 4px ;
         padding-top: 18px;     
-        width: 282px;
-        height: 162px;
+        min-width: 282px;
+        min-height: 162px;
+        @media (max-width: 320px)  {
+            min-width: 215px;
+          }
     }
 `;
+
 export const CollectionHeader = styled.div`
     display: flex;
     font-weight: 700;
     font-size: 16px;
     line-height: 150%;
     text-transform: uppercase;
+    justify-content: center;
 `;
 
 export const Settings = styled.div`
@@ -50,8 +56,11 @@ export const CreateCollection = styled.div`
     padding: 8px 22px;
     font-family: righteous;
     text-transform: uppercase;
-    width: 282px;
+    min-width: 282px;
     height: 45px;
     border-radius: 4px;
-    margin: 20px;
+    margin: 30px;
+    @media (max-width: 320px)  {
+        min-width: 215px;
+      }
 `;

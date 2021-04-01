@@ -54,25 +54,25 @@ router.get('/:id', async (req: Request, res: Response, next) => {
 router.get('/', async (req: Request, res: Response, next) => {
     const user = new Mongo.ObjectID(req['user']._id);
     try {
-		FlashcardCollection.aggregate(
-			[
-				{
-					$group: {
-						_id: '$name',
-						user: { $first: '$owner' },
-						total: { $sum: { $size: '$flashcards' } }
-					}
-				},
-				{
-					$match: {
-						user: user
-					}
-				}
-			],
-			(err, results) => {
-				res.send(JSON.stringify(results, null, 2));
-			}
-		);
+        FlashcardCollection.aggregate(
+            [
+                {
+                    $group: {
+                        _id: '$name',
+                        user: { $first: '$owner' },
+                        flashcards: { $sum: { $size: '$flashcards' } }
+                    }
+                },
+                {
+                    $match: {
+                        user: user
+                    }
+                }
+            ],
+            (err, results) => {
+                res.send(JSON.stringify(results, null, 2));
+            }
+        );
     } catch (error) {
         next(error);
     }
