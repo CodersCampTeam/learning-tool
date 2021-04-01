@@ -1,8 +1,6 @@
 import styled from '@emotion/styled';
 import { Grid } from '@material-ui/core';
 
- 
-
 export const StyledGrid = styled(Grid)`
     && {
         display: flex;
