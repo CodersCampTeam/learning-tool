@@ -1,16 +1,19 @@
 import { Box, Button, Container, FormControlLabel, Switch, TextField } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
+import axios from 'axios';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
 
 export const CreateCollection = () => {
     const [name, setName] = useState<string>('');
     const [tags, setTags] = useState<string[]>([]);
     const [isPublic, setIsPublic] = useState(false);
     const [error, setError] = useState(false);
+    const [redirect, setRedirect] = useState(false);
 
     const updateTags = (value: string) => {
-        value = value.replaceAll(/\s/g, '');
+        value = value.replace(/\s/g, '');
         const tagsArray = value.split(',').filter((e) => e);
         setTags(tagsArray);
     };
@@ -20,6 +23,15 @@ export const CreateCollection = () => {
             setError(true);
             return;
         }
+        axios
+            .post('/api/flashcard-collection', {
+                name,
+                isPublic,
+                tags
+            })
+            .then((res) => {
+                setRedirect(true);
+            });
     };
 
     const toggleIsPublic = (value: boolean) => {
@@ -31,12 +43,9 @@ export const CreateCollection = () => {
         setName(value);
     };
 
-    useEffect(() => {
-        console.log(name, tags, isPublic);
-    }, [name, isPublic, tags]);
-
     return (
         <>
+            {redirect && <Redirect to="/flashcardCollections" />}
             <Container maxWidth="sm">
                 <Box m={4} textAlign="center">
                     <h1>Tworzenie kolekcji</h1>
@@ -63,7 +72,7 @@ export const CreateCollection = () => {
                             <Switch
                                 checked={isPublic}
                                 onChange={(e) => toggleIsPublic(e.target.checked)}
-                                color="default"
+                                color="secondary"
                             />
                         }
                         label="Publiczna kolekcja"
