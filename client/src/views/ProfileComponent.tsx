@@ -12,7 +12,6 @@ const ProfileComponent = (): ReactElement => {
     };
     return (
         <>
-            (
             <Tabs
                 value={value}
                 onChange={handleChange}
@@ -29,7 +28,6 @@ const ProfileComponent = (): ReactElement => {
             <TabPanel value={value} index={1}>
                 <SettingsComponent />
             </TabPanel>
-            )
         </>
     );
 };
