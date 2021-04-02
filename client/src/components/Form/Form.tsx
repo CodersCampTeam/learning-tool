@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, Icon, Theme, TextField } from '@material-ui/core';
+import { Checkbox } from '@material-ui/core';
 import {
     StyledButtonGoogle,
     StyledForm,
@@ -9,7 +9,7 @@ import {
     StyledFormControlLabel,
     StyledError
 } from './styles';
-import React, { FormEvent, useEffect } from 'react';
+import React, { FormEvent, useEffect, ReactElement } from 'react';
 import { css } from '@emotion/react';
 import { Grid } from './styles';
 import { Search } from '@trejgun/material-ui-icons-google';
@@ -48,7 +48,14 @@ const handleGoogleRedirect = () => {
         });
 };
 
-const Form = ({ error, isregister, onUsernameChange, onEmailChange, onPasswordChange, onSubmit }: FormProps) => {
+const Form = ({
+    error,
+    isregister,
+    onUsernameChange,
+    onEmailChange,
+    onPasswordChange,
+    onSubmit
+}: FormProps): ReactElement => {
     const { handleSubmit, control, errors, watch } = useForm<IFormInput>();
     const emailWatch: string = watch(`emailInput`);
     const usernameWatch: string = watch(`usernameInput`);

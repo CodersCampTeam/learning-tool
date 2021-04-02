@@ -1,9 +1,10 @@
-import { ReactElement } from 'react';
+import React, { ChangeEvent, MouseEvent, ReactElement, useState } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import styled from '@emotion/styled';
+import { useHistory } from 'react-router-dom';
 
 const StyledIconButton = styled(IconButton)`
     padding: 0;
@@ -48,13 +49,25 @@ const StyledMuiPaperRoot = styled.span`
 `;
 
 export const Search = (): ReactElement => {
+    const [search, setSearch] = useState('');
+
+    const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        setSearch(e.currentTarget?.value);
+    };
+    const history = useHistory();
+    const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        history.push(`/search/${search}`);
+    };
+
     return (
         <div>
             <StyledMuiPaperRoot>
-                <StyledPaper component="form" elevation={0}>
-                    <StyledInputBase placeholder="Szukaj..." />
+                <StyledPaper elevation={0}>
+                    <StyledInputBase placeholder="Szukaj..." type="text" value={search} onChange={handleSearch} />
                     <StyledIconButtonRoot>
-                        <StyledIconButton type="submit" aria-label="search">
+                        <StyledIconButton aria-label="search" onClick={handleClick}>
                             <StyledSearchIcon />
                         </StyledIconButton>
                     </StyledIconButtonRoot>

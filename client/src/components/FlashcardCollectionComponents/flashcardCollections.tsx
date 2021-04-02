@@ -1,12 +1,12 @@
 import { Container, IconButton } from '@material-ui/core';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactElement } from 'react';
 import { AddCircle, ArrowForward, Assessment, BuildOutlined, FeaturedPlayListOutlined } from '@material-ui/icons';
 
 import { StyledGrid, CollectionHeader, Settings, AssessmentStyle, CreateCollection } from './styles';
 import { grey } from '@material-ui/core/colors';
 
-const CollectionView = () => {
+const CollectionView = (): ReactElement => {
     const url = '/api/flashcard-collection';
 
     const [data, setData] = useState([]);
