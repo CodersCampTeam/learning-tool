@@ -4,7 +4,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Checkbox, Typography } from '@material-ui/core';
 
 const CheckboxLabels = (): ReactElement => {
-    const [state, setState] = useState([
+    const [daysState, setDaysState] = useState([
         { label: 'poniedziałki', name: 'mon', checked: false },
         { label: 'wtorki', name: 'tue', checked: false },
         { label: 'środy', name: 'wed', checked: false },
@@ -15,26 +15,23 @@ const CheckboxLabels = (): ReactElement => {
     ]);
 
     const handleChange = (event: { target: { name: string; checked: boolean } }) => {
-        setState(
-            state.map((item) => {
-                return item.name === event.target.name ? { ...item, checked: !item.checked } : item;
+        setDaysState(
+            daysState.map((day) => {
+                return day.name === event.target.name ? { ...day, checked: !day.checked } : day;
             })
         );
     };
 
     return (
         <FormGroup row>
-            {state.map((item, index) => (
+            {daysState.map((day, dayIdx) => (
                 <FormControlLabel
-                    key={index}
+                    key={dayIdx}
                     control={
-                        <Checkbox checked={item.checked} onChange={handleChange} name={item.name} color="secondary" />
+                        <Checkbox checked={day.checked} onChange={handleChange} name={day.name} color="secondary" />
                     }
-                    label={
-                        <Typography variant="subtitle1" color="textSecondary">
-                            {item.label}
-                        </Typography>
-                    }
+                    label={day.label}
+                    style={{ display: 'table' }}
                 />
             ))}
         </FormGroup>

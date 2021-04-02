@@ -34,7 +34,7 @@ const SettingsComponent = (): ReactElement => {
                 </Grid>
                 <Grid container justify="center" alignItems="center" spacing={2}>
                     <Grid item xs={11} sm={4}>
-                        <Typography variant="body1" align="center" color="textPrimary">
+                        <Typography variant="h6" align="center" color="textPrimary">
                             Harmonogram powtórek
                         </Typography>
                         <Box textAlign="center" mb={4} mt={2}>
@@ -44,7 +44,7 @@ const SettingsComponent = (): ReactElement => {
                                 color="primary"
                                 size="medium"
                                 type="submit"
-                                startIcon={<DoneOutlineIcon />}
+                                endIcon={<DoneOutlineIcon />}
                             >
                                 Zapisz
                             </Button>
@@ -54,7 +54,7 @@ const SettingsComponent = (): ReactElement => {
             </Grid>
             <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
                 <Grid item xs={9} sm={3}>
-                    <Typography variant="body1" color="textPrimary" align="left">
+                    <Typography variant="subtitle1" color="textPrimary" align="left">
                         Powiadomienia e-mail
                     </Typography>
                 </Grid>
@@ -67,13 +67,11 @@ const SettingsComponent = (): ReactElement => {
                                 onChange={handleChange}
                                 name="checkedB"
                                 color="secondary"
-                                edge="end"
                                 aria-label="Włącz"
-                                size="small"
                             />
                         }
                         label="Włącz"
-                        labelPlacement="bottom"
+                        labelPlacement="end"
                     />
                 </Grid>
             </Grid>
