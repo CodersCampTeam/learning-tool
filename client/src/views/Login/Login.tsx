@@ -2,16 +2,11 @@ import React, { useState } from 'react';
 import Form from '../../components/Form/Form';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
-import { useHistory, useLocation } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { errors, setError } = useForm();
-    const history = useHistory();
-    const location = useLocation();
-    const { from } = location.state || { from: { pathname: '/' } };
-
     const handleSubmit = () => {
         const user = {
             email: email,
@@ -25,10 +20,7 @@ const Login = () => {
             },
             data: user
         })
-            .then((response) => {
-                console.log(from);
-                history.replace(from);
-            })
+            .then((response) => (window.location.href = `/`))
             .catch((error) => {
                 setError('server', {
                     type: 'server',
