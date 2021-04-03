@@ -14,6 +14,7 @@ import passport from 'passport';
 import { runNotificationService } from '../services/NotificationService';
 import search from './search';
 import session from '../routes/Session';
+import me from './me';
 import * as path from 'path';
 import profile from './profile';
 
@@ -46,6 +47,8 @@ router.use('/api/session', isAuthenticated, session);
 router.use('/api/search', isAuthenticated, search);
 
 router.use('/api/profile', isAuthenticated, profile);
+
+router.use('/api/me', isAuthenticated, me);
 
 // for any other requests, send `index.html` as a response
 router.use(serveStatic(publicPath));

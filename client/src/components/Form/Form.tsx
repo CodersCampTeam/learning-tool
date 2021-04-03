@@ -32,30 +32,7 @@ interface IFormInput {
     termsInput: string;
 }
 
-const handleGoogleRedirect = () => {
-    const requestOptions = {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        mode: 'no-cors' as RequestMode
-    };
-
-    fetch(`/api/google`, requestOptions)
-        .then((response) => {
-            window.location.href = `/`;
-        })
-        .catch((err) => {
-            console.error(err);
-        });
-};
-
-const Form = ({
-    error,
-    isregister,
-    onUsernameChange,
-    onEmailChange,
-    onPasswordChange,
-    onSubmit
-}: FormProps): ReactElement => {
+const Form = ({ error, isregister, onUsernameChange, onEmailChange, onPasswordChange, onSubmit }: FormProps) => {
     const { handleSubmit, control, errors, watch } = useForm<IFormInput>();
     const emailWatch: string = watch(`emailInput`);
     const usernameWatch: string = watch(`usernameInput`);
@@ -97,7 +74,7 @@ const Form = ({
                     spacing={1}
                     mt={4}
                 >
-                    <StyledButtonGoogle onClick={() => handleGoogleRedirect()} variant="outlined">
+                    <StyledButtonGoogle onClick={() => window.open('/api/google', '_self')} variant="outlined">
                         <Search
                             css={css`
                                 margin-right: 10px;
