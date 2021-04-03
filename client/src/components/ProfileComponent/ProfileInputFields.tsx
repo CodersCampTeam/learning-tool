@@ -1,89 +1,160 @@
-import React, { ReactElement } from 'react';
-import { Paper, TextField, IconButton, Box } from '@material-ui/core';
-import { useState } from 'react';
-import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import React, { ReactElement, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { Paper, TextField, Box, Typography, Grid, IconButton } from '@material-ui/core';
+import SaveIcon from '@material-ui/icons/Save';
 import { StyledError } from '../Form/styles';
+import axios from 'axios';
 
 const ProfileInputFields = (): ReactElement => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    useEffect(() => {
+        axios
+            .get('/api/profile', { withCredentials: true })
+            .then((json) => {
+                usernameSetValue('username', json.data.username);
+                emailSetValue('email', json.data.email);
+            })
+            .catch((error) => {
+                throw new Error(error.reponse);
+            });
+    }, ['username', 'email']);
 
-    const { register, handleSubmit, errors } = useForm();
+    const {
+        register: usernameRegister,
+        handleSubmit: usernameSubmit,
+        errors: usernameErrors,
+        getValues: usernameGetValues,
+        setValue: usernameSetValue,
+        setError: setUsernameError
+    } = useForm();
+    const {
+        register: emailRegister,
+        handleSubmit: emailSubmit,
+        errors: emailErrors,
+        getValues: emailGetValues,
+        setValue: emailSetValue,
+        setError: setEmailError
+    } = useForm();
+    const {
+        register: passwordRegister,
+        handleSubmit: passwordSubmit,
+        errors: passwordErrors,
+        getValues: passwordGetValues,
+        setError: setPasswordError
+    } = useForm({
+        defaultValues: {
+            password: '',
+            passwordConfirmation: ''
+        }
+    });
+    const onUsernameSubmit = () => {
+        axios.post('/api/profile', { username: usernameGetValues('username') }).catch((error) => {
+            setUsernameError('server', {
+                type: 'server',
+                message: error.response.data
+            });
+            throw error;
+        });
+    };
 
-    // const onSubmit = (data) => {
-    //     e.preventDefault();
-    //     console.log(DataTransfer);
-    // };
-    const updateUsername = (e: React.SyntheticEvent<EventTarget>) => {
-        setUsername((e.target as HTMLInputElement).value);
+    const onEmailSubmit = () => {
+        axios.post('/api/profile', { email: emailGetValues('email') }).catch((error) => {
+            setEmailError('server', {
+                type: 'server',
+                message: error.response.data
+            });
+            throw error;
+        });
     };
-    const updateEmail = (e: React.SyntheticEvent<EventTarget>) => {
-        setEmail((e.target as HTMLInputElement).value);
+
+    const onPasswordSubmit = () => {
+        axios.post('/api/profile', { password: passwordGetValues('password') }).catch((error) => {
+            setPasswordError('password', {
+                type: 'server',
+                message: error.response.data
+            });
+            throw error;
+        });
     };
-    const updatePassword = (e: React.SyntheticEvent<EventTarget>) => {
-        setPassword((e.target as HTMLInputElement).value);
-    };
+
     return (
-        <Paper>
-            <Box m={2} p={1}>
-                <form>
-                    <TextField
-                        onChange={updateUsername}
-                        autoFocus
-                        label="Nickname"
-                        name="username"
-                        value={username || ''}
-                        variant="standard"
-                        size="small"
-                        inputRef={register({ minLength: 2, maxLength: 30 })}
-                    />
-                    {errors.username && <StyledError>Nickname musi mieć 2-30 znaków.</StyledError>}
-                    <IconButton edge="end" aria-label="zapisz" color="primary">
-                        <DoneOutlineIcon />
-                    </IconButton>
-                </form>
-                <form>
-                    <TextField
-                        label="Email"
-                        value={email || ''}
-                        variant="standard"
-                        size="small"
-                        onChange={updateEmail}
-                        name="email"
-                        inputRef={register({ pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i })}
-                    />
-                    {errors.email && <StyledError>Wprowadzony email jest niepoprawny</StyledError>}
-                    <IconButton edge="end" aria-label="zapisz" color="primary">
-                        <DoneOutlineIcon />
-                    </IconButton>
-                </form>
-                <form>
-                    <TextField
-                        label="Hasło"
-                        value={password || ''}
-                        variant="standard"
-                        size="small"
-                        onChange={updatePassword}
-                        name="password"
-                        inputRef={register({
-                            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,1024}$/
-                        })}
-                    />
-                    {errors.password && (
-                        <StyledError>
-                            {' '}
-                            Hasło powinno składać się z min. 8 znaków zawierać duże i małe litery, liczbę oraz znak
-                            specjalny
-                        </StyledError>
-                    )}
-                    <IconButton edge="end" aria-label="zapisz" color="primary">
-                        <DoneOutlineIcon />
-                    </IconButton>
-                </form>
-            </Box>
-        </Paper>
+        <Grid item xs={12}>
+            <Typography variant="body1" align="center" color="textPrimary">
+                TWOJE DANE
+            </Typography>
+            <Paper>
+                <Box m={2} p={1}>
+                    <form onSubmit={usernameSubmit(onUsernameSubmit)} autoComplete="off">
+                        <h4>Zmień nickname</h4>
+                        <TextField
+                            autoFocus
+                            helperText="Nickname"
+                            name="username"
+                            variant="standard"
+                            size="small"
+                            inputRef={usernameRegister({ minLength: 2, maxLength: 30 })}
+                        />
+                        <IconButton edge="end" aria-label="zapisz" color="primary" type="submit">
+                            <SaveIcon />
+                        </IconButton>
+                        {usernameErrors.username && <StyledError>Nickname musi mieć od 2 do 30 znaków.</StyledError>}
+                        {usernameErrors?.server && <StyledError>{usernameErrors?.server.message}</StyledError>}
+                    </form>
+                    <form onSubmit={emailSubmit(onEmailSubmit)} autoComplete="off">
+                        <h4>Zmień e-mail</h4>
+                        <TextField
+                            helperText="Email"
+                            variant="standard"
+                            size="small"
+                            name="email"
+                            type="email"
+                            inputRef={emailRegister({ pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i })}
+                        />
+                        <IconButton edge="end" aria-label="zapisz" color="primary" type="submit">
+                            <SaveIcon />
+                        </IconButton>
+                        {emailErrors.email && <StyledError>Wprowadzony email jest niepoprawny</StyledError>}
+                        {emailErrors?.server && <StyledError>{emailErrors?.server.message}</StyledError>}
+                    </form>
+                    <form onSubmit={passwordSubmit(onPasswordSubmit)} autoComplete="off">
+                        <h4>Zmień hasło</h4>
+                        <TextField
+                            helperText="Nowe hasło"
+                            variant="standard"
+                            size="small"
+                            name="password"
+                            inputRef={passwordRegister({
+                                pattern: /^(?=.*[a-zżźćńółęąś])(?=.*[A-ZŻŹĆĄŚĘŁÓŃ])(?=.*\d)(?=.*[@$!%*?&])[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\d@$!%*?&]{8,1024}$/
+                            })}
+                        />
+                        {passwordErrors.password && passwordErrors.password.type === 'server' && (
+                            <StyledError>{passwordErrors.password?.message}</StyledError>
+                        )}
+                        {passwordErrors.password && passwordErrors.password.type === 'pattern' && (
+                            <StyledError>
+                                Hasło powinno składać się z min. 8 znaków, w tym dużych i małych liter, liczb oraz
+                                znaków specjalnych.
+                            </StyledError>
+                        )}
+
+                        <TextField
+                            helperText="Powtórz nowe hasło"
+                            variant="standard"
+                            size="small"
+                            name="passwordConfirmation"
+                            inputRef={passwordRegister({
+                                validate: (value) => {
+                                    return value === passwordGetValues('password') ? true : false;
+                                }
+                            })}
+                        />
+                        <IconButton edge="end" aria-label="zapisz" color="primary" type="submit">
+                            <SaveIcon />
+                        </IconButton>
+                        {passwordErrors.passwordConfirmation && <StyledError>Hasła do siebie nie pasują.</StyledError>}
+                    </form>
+                </Box>
+            </Paper>
+        </Grid>
     );
 };
 export default ProfileInputFields;

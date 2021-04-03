@@ -63,7 +63,11 @@ const Form = ({
 
     const passwordMatching = (value: string) => {
         if (isregister) {
-            return value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,1024}$/) || '';
+            return (
+                value.match(
+                    /^(?=.*[a-zżźćńółęąś])(?=.*[A-ZŻŹĆĄŚĘŁÓŃ])(?=.*\d)(?=.*[@$!%*?&])[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\d@$!%*?&]{8,1024}$/
+                ) || ''
+            );
         } else {
             return true;
         }

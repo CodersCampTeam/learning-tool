@@ -12,7 +12,7 @@ const StyledBottomNavigation = styled(BottomNavigation)`
 && {
     background-color: #f9f9f9;
     bottom: 0;
-    position: sticky;
+    position: fixed;
     width: 100%;
   },
 `;
@@ -31,7 +31,7 @@ export const BottomNavBar = (): ReactElement => {
             <BottomNavigationAction label="Start" icon={<HomeIcon />} component={Link} to="/" />
             <BottomNavigationAction label="Stwórz" icon={<AddCircleIcon />} component={Link} to="/create" />
             <BottomNavigationAction label="Czat" icon={<MessageIcon />} component={Link} to="/chat" />
-            <BottomNavigationAction label="Profil" icon={<PersonIcon />} component={Link} to="/profile" />
+            <BottomNavigationAction label="Profil" icon={<PersonIcon />} component={Link} to="/profil" />
         </StyledBottomNavigation>
     );
 };
