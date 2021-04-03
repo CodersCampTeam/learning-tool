@@ -1,22 +1,103 @@
-import React, { ReactElement } from 'react';
-import { Grid, Typography, Button, Box, Switch, FormControlLabel } from '@material-ui/core';
-import { useState } from 'react';
+import axios from 'axios';
+import React, { ReactElement, useState, useContext } from 'react';
+import { Grid, Typography, Button, Box, Switch, FormControlLabel, Checkbox } from '@material-ui/core';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
-import CheckboxLabels from './CheckboxDaysRevision';
 import MeetingRoom from '@material-ui/icons/MeetingRoom';
-import ProfileInputFields from './ProfileInputFields';
 import { useHistory } from 'react-router-dom';
+import ProfileInputFields from './ProfileInputFields';
+import FormGroup from '@material-ui/core/FormGroup';
+import { SettingsContext, ISettingsContext } from '../../views/ProfileView';
 
+//{ isActive, sessionHarmonogram }: SettingsComponentProps
 const SettingsComponent = (): ReactElement => {
-    const [notification, setNotifications] = useState({
-        checkedA: true,
-        checkedB: true
-    });
+    const url = '/api/settings';
+
+    const settinsContext = useContext<ISettingsContext>(SettingsContext);
 
     const history = useHistory();
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNotifications({ ...notification, [event.target.name]: event.target.checked });
+    const [notificationIsActive, setNotificationIsActive] = useState(settinsContext.isActive);
+
+    const [daysState, setDaysState] = useState([
+        {
+            label: 'poniedziałki',
+            dayNumber: '1',
+            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('1')
+        },
+        {
+            label: 'wtorki',
+            dayNumber: '2',
+            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('2')
+        },
+        {
+            label: 'środy',
+            dayNumber: '3',
+            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('3')
+        },
+        {
+            label: 'czwartki',
+            dayNumber: '4',
+            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('4')
+        },
+        {
+            label: 'piątki',
+            dayNumber: '5',
+            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('5')
+        },
+        {
+            label: 'soboty',
+            dayNumber: '6',
+            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('6')
+        },
+        {
+            label: 'niedziele',
+            dayNumber: '0',
+            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('0')
+        }
+    ]);
+
+    const handleNotificationSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNotificationIsActive(event.target.checked);
+        settinsContext.isActive = event.target.checked;
+        axios.put(`${url}/is-active`, { isActive: event.target.checked });
+    };
+
+    const handleChange = (event: { target: { name: string; checked: boolean } }) => {
+        setDaysState(
+            daysState.map((dayObj) => {
+                return dayObj.dayNumber === event.target.name ? { ...dayObj, checked: !dayObj.checked } : dayObj;
+            })
+        );
+    };
+
+    const handleSaveClicked = () => {
+        const sessionHarmonogram: string[] = [];
+        const today = new Date(Date.now());
+        daysState.map((dayObj) => {
+            if (dayObj.checked) {
+                // here calculate next day of notification.
+                // // (this is to not store additional time zone, as client time is already in zone)
+                // let nextDate: Date;
+                // if (today.getDay() > dayObj.dayNumber) {
+                //     nextDate = today;
+                //     const days = 7 - today.getDay() + dayObj.dayNumber;
+                //     nextDate.setDate(today.getDate() + days);
+                // } else if (today.getDay() < dayObj.dayNumber) {
+                //     nextDate = today;
+                //     const days = dayObj.dayNumber - nextDate.getDay();
+                //     nextDate.setDate(today.getDate() + days);
+                // } else {
+                //     nextDate = today;
+                //     nextDate.setDate(today.getDate() + 7);
+                // }
+                // sessionHarmonogram.push(nextDate.toString());
+
+                sessionHarmonogram.push(dayObj.dayNumber);
+            }
+        });
+        settinsContext.sessionHarmonogram = sessionHarmonogram;
+        console.log(settinsContext.sessionHarmonogram);
+        axios.put(`${url}/harmonogram`, { harmonogram: sessionHarmonogram }).then((json) => console.log(json));
     };
 
     const handleLogout = () => {
@@ -38,13 +119,30 @@ const SettingsComponent = (): ReactElement => {
                             Harmonogram powtórek
                         </Typography>
                         <Box textAlign="center" mb={4} mt={2}>
-                            <CheckboxLabels />
+                            <FormGroup row>
+                                {daysState.map((day, dayIdx) => (
+                                    <FormControlLabel
+                                        key={dayIdx}
+                                        control={
+                                            <Checkbox
+                                                checked={day.checked}
+                                                onChange={handleChange}
+                                                name={day.dayNumber.toString()}
+                                                color="secondary"
+                                            />
+                                        }
+                                        label={day.label}
+                                        style={{ display: 'table' }}
+                                    />
+                                ))}
+                            </FormGroup>
                             <Button
                                 variant="contained"
                                 color="primary"
                                 size="medium"
                                 type="submit"
                                 endIcon={<DoneOutlineIcon />}
+                                onClick={handleSaveClicked}
                             >
                                 Zapisz
                             </Button>
@@ -63,9 +161,9 @@ const SettingsComponent = (): ReactElement => {
                         value="bottom"
                         control={
                             <Switch
-                                checked={notification.checkedB}
-                                onChange={handleChange}
-                                name="checkedB"
+                                checked={notificationIsActive}
+                                onChange={handleNotificationSwitch}
+                                size="small"
                                 color="secondary"
                                 aria-label="Włącz"
                             />

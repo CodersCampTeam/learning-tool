@@ -16,6 +16,7 @@ const TabComponent = (props: ITabProps): ReactElement => {
     const handleChange = (event: React.SyntheticEvent<EventTarget>, value: number) => {
         setValue(value);
     };
+
     return (
         <>
             <Tabs

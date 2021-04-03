@@ -7,6 +7,7 @@ router.post('/', async (req: Request, res: Response, next) => {
         const user = req['user'];
 
         const settings = new SessionSettings({
+            isActive: req.body.isActive,
             sessionHarmonogram: new Date(req.body.sessionHarmonogram),
             notificationsType: req.body.notificationsType
         });
@@ -20,6 +21,49 @@ router.post('/', async (req: Request, res: Response, next) => {
         await user.save();
 
         res.status(200).send(settings);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.put('/harmonogram', async (req: Request, res: Response, next) => {
+    try {
+        const user = req['user'];
+
+        user.sessionSettings.sessionHarmonogram = req.body.harmonogram;
+
+        await user.save();
+
+        res.status(200).send(user.sessionSettings);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.put('/is-active', async (req: Request, res: Response, next) => {
+    try {
+        const user = req['user'];
+
+        if (user.sessionSettings) {
+            user.sessionSettings.isActive = req.body.isActive;
+        } else {
+            const settings = new SessionSettings();
+            settings.isActive = req.body.isActive;
+            user.sessionSettings = settings;
+        }
+        await user.save();
+
+        res.status(200).send(user.sessionSettings);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/', async (req: Request, res: Response, next) => {
+    try {
+        const user = req['user'];
+
+        res.status(200).send(user.sessionSettings);
     } catch (error) {
         next(error);
     }

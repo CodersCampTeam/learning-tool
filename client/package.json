@@ -58,6 +58,5 @@
     "customize-cra": "^1.0.0",
     "react-app-rewired": "^2.1.8",
     "react-router-dom": "^5.2.0"
-  },
-  "proxy": "http://localhost:3001"
+  }
 }

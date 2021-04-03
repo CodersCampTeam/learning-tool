@@ -51,7 +51,9 @@ const userSchema = new mongoose.Schema({
         required: false
     },
     sessionSettings: {
-        type: sessionSettingsSchema
+        type: sessionSettingsSchema,
+        required: false,
+        default: () => ({})
     },
     googleId: {
         type: String
