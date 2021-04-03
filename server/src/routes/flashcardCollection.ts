@@ -54,26 +54,13 @@ router.get('/:id', async (req: Request, res: Response, next) => {
 router.get('/', async (req: Request, res: Response, next) => {
     const user = new Mongo.ObjectID(req['user']._id);
     try {
-        Flashcard.aggregate(
+        FlashcardCollection.aggregate(
             [
                 {
-                    $lookup: {
-                        from: 'flashcardcollections',
-                        localField: 'collectionId',
-                        foreignField: '_id',
-                        as: 'flashcardcollection'
-                    }
-                },
-                {
-                    $addFields: {
-                        flashcardcollection: { $arrayElemAt: ['$flashcardcollection', 0] }
-                    }
-                },
-                {
                     $group: {
-                        _id: '$flashcardcollection.name',
-                        user: { $first: '$flashcardcollection.owner' },
-                        flashcards: { $sum: 1 }
+                        _id: '$name',
+                        user: { $first: '$owner' },
+                        flashcards: { $sum: { $size: '$flashcards' } }
                     }
                 },
                 {
