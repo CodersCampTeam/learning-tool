@@ -10,7 +10,7 @@ const Login = (): ReactElement => {
     const { errors, setError } = useForm();
     const history = useHistory();
     const location = useLocation();
-    const { from } = location.state || { from: { pathname: '/' } };
+    const { from } = (location.state as any) || { from: { pathname: '/' } };
 
     const handleSubmit = () => {
         const user = {

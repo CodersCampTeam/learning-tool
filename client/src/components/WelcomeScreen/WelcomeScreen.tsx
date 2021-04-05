@@ -4,11 +4,9 @@ import HowToRegIcon from '@material-ui/icons/HowToReg';
 import CheckIcon from '@material-ui/icons/Check';
 import Typed from 'react-typed';
 import { AppName, Button, Typography, SwappedQ, SwappedI } from './styles';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const WelcomeScreen = (): ReactElement => {
-    const history = useHistory();
-
     const benefits = ['nauka z fiszkami', 'skuteczne powtórki', 'przypomnienia', 'społeczność', 'bez opłat'];
 
     return (
@@ -46,15 +44,11 @@ const WelcomeScreen = (): ReactElement => {
                     </List>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button
-                        onClick={() => history.push('/login')}
-                        variant="contained"
-                        size="medium"
-                        color="primary"
-                        startIcon={<HowToRegIcon />}
-                    >
-                        ROZPOCZNIJ NAUKĘ
-                    </Button>
+                    <Link to="/login">
+                        <Button variant="contained" size="medium" color="primary" startIcon={<HowToRegIcon />}>
+                            ROZPOCZNIJ NAUKĘ
+                        </Button>
+                    </Link>
                 </Grid>
             </Grid>
         </>

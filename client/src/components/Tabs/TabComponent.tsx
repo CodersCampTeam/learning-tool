@@ -5,10 +5,10 @@ import { Tabs, Tab } from '@material-ui/core';
 interface ITabProps {
     initial?: number;
     children: Array<ReactElement>;
-    label1: string;
-    label2: string;
-    icon1: ReactElement;
-    icon2: ReactElement;
+    labelLeft: string;
+    labelRight: string;
+    iconLeft: ReactElement;
+    iconRight: ReactElement;
 }
 
 const TabComponent = (props: ITabProps): ReactElement => {
@@ -25,8 +25,8 @@ const TabComponent = (props: ITabProps): ReactElement => {
                 indicatorColor="secondary"
                 textColor="secondary"
             >
-                <Tab icon={props.icon1} label={props.label1} value={0} />
-                <Tab icon={props.icon2} label={props.label2} value={1} />
+                <Tab icon={props.iconLeft} label={props.labelLeft} value={0} />
+                <Tab icon={props.iconRight} label={props.labelRight} value={1} />
             </Tabs>
             <TabPanel value={value} index={0}>
                 {props.children[0]}

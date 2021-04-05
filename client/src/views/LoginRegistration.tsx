@@ -13,10 +13,10 @@ const LoginRegistration = (): ReactElement => {
         <>
             <TabComponent
                 initial={currentTab === '/login' ? 0 : 1}
-                icon1={<EmojiObjectsIcon />}
-                label1={'Logowanie'}
-                icon2={<HowToRegIcon />}
-                label2={'Rejestracja'}
+                iconLeft={<EmojiObjectsIcon />}
+                labelLeft={'Logowanie'}
+                iconRight={<HowToRegIcon />}
+                labelRight={'Rejestracja'}
             >
                 <Login />
                 <Register />

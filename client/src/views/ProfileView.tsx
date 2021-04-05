@@ -8,10 +8,10 @@ const ProfileView = (): ReactElement => {
     return (
         <>
             <TabComponent
-                icon1={<LocalLibraryIcon />}
-                label1={'Statystyki'}
-                icon2={<SettingsIcon />}
-                label2={'Ustawienia'}
+                iconLeft={<LocalLibraryIcon />}
+                labelLeft={'Statystyki'}
+                iconRight={<SettingsIcon />}
+                labelRight={'Ustawienia'}
             >
                 <div>Treść dla statystyk</div>
                 <SettingsComponent />
