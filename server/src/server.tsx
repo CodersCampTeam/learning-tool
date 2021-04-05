@@ -38,6 +38,13 @@ mongoose.connect(
         if (env === 'development') console.log('connected to db');
     }
 );
+if (env === 'development') {
+    app.use((req, res, next) => {
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4000');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        next();
+    });
+}
 
 app.use(express.json());
 app.use(cookieParser());

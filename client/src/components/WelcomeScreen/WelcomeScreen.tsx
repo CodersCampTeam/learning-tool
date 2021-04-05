@@ -24,8 +24,8 @@ const WelcomeScreen = (): ReactElement => {
                 </Grid>
                 <Grid item xs={12}>
                     <Box mt={2}>
-                        <img alt="drawing of two people sharing cards" src="welcome_screen_image.svg" />
-                    </Box>{' '}
+                        <img alt="Rysunek dwóch osób dzielących się fiszkami" src="welcome_screen_image.svg" />
+                    </Box>
                 </Grid>
                 <Grid item xs={12}>
                     <AppName>

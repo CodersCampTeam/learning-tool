@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { FC, ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import AddCircleIcon from '@material-ui/icons/Add';
@@ -12,7 +12,7 @@ const StyledBottomNavigation = styled(BottomNavigation)`
 && {
     background-color: #f9f9f9;
     bottom: 0;
-    position: fixed;
+    position: sticky;
     width: 100%;
   },
 `;

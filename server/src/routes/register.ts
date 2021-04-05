@@ -10,10 +10,10 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
         if (error) return res.status(400).send(error.details[0].message);
 
         let user = await User.findOne({ email: req.body.email });
-        if (user) return res.status(400).send('User already registered');
+        if (user) return res.status(400).send('Użytkownik/czka już istnieje');
 
         const userName = await User.findOne({ username: req.body.username });
-        if (userName) return res.status(400).send('Username already used');
+        if (userName) return res.status(400).send('Nazwa użytkownika/czki już istnieje');
         const salt = await bcrypt.genSalt(10);
 
         user = new User({
