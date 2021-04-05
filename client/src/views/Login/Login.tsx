@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import Form from '../../components/Form/Form';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router-dom';
 
-const Login = () => {
+const Login = (): ReactElement => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { errors, setError } = useForm();
     const history = useHistory();
     const location = useLocation();
-    const { from } = location.state || { from: { pathname: '/' } };
+    const { from } = (location.state as any) || { from: { pathname: '/' } };
 
     const handleSubmit = () => {
         const user = {
