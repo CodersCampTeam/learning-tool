@@ -35,9 +35,6 @@ const theme = createMuiTheme({
                 html: {
                     height: '100%'
                 },
-                body: {
-                    height: '100%'
-                },
                 'body > div': {
                     height: '100%'
                 }

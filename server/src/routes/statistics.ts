@@ -1,73 +1,71 @@
 import express, { Request, Response } from 'express';
-import { Answer } from '../models/Answer';
 import Mongo from 'mongodb';
+import { FlashcardCollection } from '../models/FlashcardCollection';
 
 const router = express.Router();
 
-router.get('/', async (req: Request, res: Response, next) => {
-    const user = new Mongo.ObjectID(req.user?._id);
+router.get('/header', async (req: Request, res: Response, next) => {
+    const user = new Mongo.ObjectID(req['user']._id);
     try {
-        Answer.aggregate(
+        FlashcardCollection.aggregate(
             [
                 {
                     $lookup: {
-                        from: 'answerhistories',
-                        localField: '_id',
-                        foreignField: 'answers',
-                        as: 'answershist'
-                    }
-                },
-                {
-                    $lookup: {
                         from: 'flashcards',
-                        localField: 'flashcardId',
-                        foreignField: '_id',
-                        as: 'flashcards'
+                        localField: '_id',
+                        foreignField: 'collectionId',
+                        as: 'flashcard'
                     }
                 },
                 {
                     $lookup: {
-                        from: 'flashcardcollections',
-                        localField: 'flashcards.collectionId',
-                        foreignField: '_id',
-                        as: 'flashcardcollection'
+                        from: 'answerhistories',
+                        localField: 'owner',
+                        foreignField: 'user',
+                        as: 'answers'
                     }
                 },
                 {
                     $addFields: {
-                        flashcardcollection: { $arrayElemAt: ['$flashcardcollection', 0] },
-                        flashcards: { $arrayElemAt: ['$flashcards', 0] },
-                        answershist: { $arrayElemAt: ['$answershist', 0] },
-                        users: { $toString: '$users' }
-                    }
-                },
-                {
-                    $group: {
-                        _id: '$answershist._id',
-                        user: { $first: '$answershist.user' },
-                        sessionDate: { $first: '$answershist.sessionDate' },
-                        owner: { $first: '$flashcardcollection.owner' },
-                        collectionName: { $first: '$flashcardcollection.name' },
-                        isPublic: { $first: '$flashcardcollection.isPublic' },
-                        answersTotal: { $sum: 1 },
-                        correctAnswers: { $sum: { $cond: [{ $eq: ['$isCorrect', true] }, 1, 0] } },
-                        wrongAnswers: { $sum: { $cond: [{ $eq: ['$isCorrect', false] }, 1, 0] } },
-                        details: {
-                            $push: {
-                                date: '$date',
-                                isCorrect: '$isCorrect'
+                        countAnswers: {
+                            $reduce: {
+                                input: '$answers.answers',
+                                initialValue: [],
+                                in: { $setUnion: ['$$value', '$$this'] }
                             }
                         }
+                    }
+                },
+                { $unwind: { path: '$countAnswers', preserveNullAndEmptyArrays: true } },
+                { $unwind: { path: '$flashcards', preserveNullAndEmptyArrays: true } },
+                { $unwind: { path: '$answers', preserveNullAndEmptyArrays: true } },
+                {
+                    $group: {
+                        _id: '$owner',
+                        mycollections: { $addToSet: '$name' },
+                        user: { $first: '$owner' },
+                        myflashcards: { $addToSet: '$flashcards' },
+                        session: { $addToSet: '$answers._id' },
+                        answerSession: { $addToSet: '$countAnswers' }
                     }
                 },
                 {
                     $match: {
                         user: user
                     }
+                },
+                {
+                    $project: {
+                        mycollections: { $sum: { $size: '$mycollections' } },
+                        user: 1,
+                        myflashcards: { $sum: { $size: '$myflashcards' } },
+                        answers: { $sum: { $size: '$answerSession' } },
+                        session: { $sum: { $size: '$session' } }
+                    }
                 }
             ],
             (err, results) => {
-                res.status(200).send(JSON.stringify(results, null, 2));
+                res.send(JSON.stringify(results, null, 2));
             }
         );
     } catch (error) {
