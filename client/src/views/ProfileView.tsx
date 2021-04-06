@@ -6,8 +6,8 @@ import SettingsComponent from '../components/ProfileComponent/SettingsComponent'
 import axios from 'axios';
 
 export interface ISettingsContext {
-    isActive?: boolean;
-    sessionHarmonogram?: string[];
+    isActive: boolean;
+    sessionHarmonogram: string[];
 }
 
 export const SettingsContext = createContext<ISettingsContext>({
