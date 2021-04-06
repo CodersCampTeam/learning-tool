@@ -40,15 +40,17 @@ router.put('/harmonogram', async (req: Request, res: Response, next) => {
     }
 });
 
-router.put('/is-active', async (req: Request, res: Response, next) => {
+router.put('/activate', async (req: Request, res: Response, next) => {
     try {
         const user = req['user'];
 
         if (user.sessionSettings) {
             user.sessionSettings.isActive = req.body.isActive;
+            user.sessionSettings.hour = req.body.hour;
         } else {
             const settings = new SessionSettings();
             settings.isActive = req.body.isActive;
+            settings.hour = req.body.hour;
             user.sessionSettings = settings;
         }
         await user.save();

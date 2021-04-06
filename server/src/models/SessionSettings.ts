@@ -4,6 +4,7 @@ import { NotificationsTypes } from './Enums';
 
 interface ISessionSettings extends mongoose.Document {
     sessionHarmonogram: string[];
+    hour: number;
     notificationsType: NotificationsTypes;
     isActive: boolean;
 }
@@ -17,6 +18,11 @@ const sessionSettingsSchema = new mongoose.Schema({
             }
         ],
         default: []
+    },
+    hour: {
+        type: Number,
+        required: true,
+        default: 16
     },
     notificationsType: {
         type: NotificationsTypes,
@@ -35,6 +41,7 @@ const SessionSettings = mongoose.model<ISessionSettings>('SessionSettings', sess
 function validateSessionSettings(sessionSettings: typeof SessionSettings): Joi.ValidationResult {
     const schema = Joi.object({
         sessionHarmonogram: Joi.array().default([]),
+        hour: Joi.number().default(16),
         notificationsType: Joi.string().valid(...Object.values(NotificationsTypes)),
         isActive: Joi.boolean()
     });

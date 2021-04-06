@@ -8,58 +8,62 @@ import ProfileInputFields from './ProfileInputFields';
 import FormGroup from '@material-ui/core/FormGroup';
 import { SettingsContext, ISettingsContext } from '../../views/ProfileView';
 
-//{ isActive, sessionHarmonogram }: SettingsComponentProps
 const SettingsComponent = (): ReactElement => {
     const url = '/api/settings';
 
-    const settinsContext = useContext<ISettingsContext>(SettingsContext);
+    const settingsContext = useContext<ISettingsContext>(SettingsContext);
 
     const history = useHistory();
 
-    const [notificationIsActive, setNotificationIsActive] = useState(settinsContext.isActive);
+    const [notificationIsActive, setNotificationIsActive] = useState(settingsContext.isActive);
 
     const [daysState, setDaysState] = useState([
         {
             label: 'poniedziałki',
             dayNumber: '1',
-            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('1')
+            checked: settingsContext.sessionHarmonogram.includes('1')
         },
         {
             label: 'wtorki',
             dayNumber: '2',
-            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('2')
+            checked: settingsContext.sessionHarmonogram.includes('2')
         },
         {
             label: 'środy',
             dayNumber: '3',
-            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('3')
+            checked: settingsContext.sessionHarmonogram.includes('3')
         },
         {
             label: 'czwartki',
             dayNumber: '4',
-            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('4')
+            checked: settingsContext.sessionHarmonogram.includes('4')
         },
         {
             label: 'piątki',
             dayNumber: '5',
-            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('5')
+            checked: settingsContext.sessionHarmonogram.includes('5')
         },
         {
             label: 'soboty',
             dayNumber: '6',
-            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('6')
+            checked: settingsContext.sessionHarmonogram.includes('6')
         },
         {
             label: 'niedziele',
             dayNumber: '0',
-            checked: settinsContext.sessionHarmonogram && settinsContext.sessionHarmonogram.includes('0')
+            checked: settingsContext.sessionHarmonogram.includes('0')
         }
     ]);
 
     const handleNotificationSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNotificationIsActive(event.target.checked);
-        settinsContext.isActive = event.target.checked;
-        axios.put(`${url}/is-active`, { isActive: event.target.checked });
+        settingsContext.isActive = event.target.checked;
+
+        // Could add input for setting hour in future. For now it is fixed to 4 PM in all time zones
+        const date = new Date();
+        date.setHours(16);
+
+        axios.put(`${url}/activate`, { isActive: event.target.checked, hour: date.getUTCHours() });
     };
 
     const handleChange = (event: { target: { name: string; checked: boolean } }) => {
@@ -72,32 +76,13 @@ const SettingsComponent = (): ReactElement => {
 
     const handleSaveClicked = () => {
         const sessionHarmonogram: string[] = [];
-        const today = new Date(Date.now());
         daysState.map((dayObj) => {
             if (dayObj.checked) {
-                // here calculate next day of notification.
-                // // (this is to not store additional time zone, as client time is already in zone)
-                // let nextDate: Date;
-                // if (today.getDay() > dayObj.dayNumber) {
-                //     nextDate = today;
-                //     const days = 7 - today.getDay() + dayObj.dayNumber;
-                //     nextDate.setDate(today.getDate() + days);
-                // } else if (today.getDay() < dayObj.dayNumber) {
-                //     nextDate = today;
-                //     const days = dayObj.dayNumber - nextDate.getDay();
-                //     nextDate.setDate(today.getDate() + days);
-                // } else {
-                //     nextDate = today;
-                //     nextDate.setDate(today.getDate() + 7);
-                // }
-                // sessionHarmonogram.push(nextDate.toString());
-
                 sessionHarmonogram.push(dayObj.dayNumber);
             }
         });
-        settinsContext.sessionHarmonogram = sessionHarmonogram;
-        console.log(settinsContext.sessionHarmonogram);
-        axios.put(`${url}/harmonogram`, { harmonogram: sessionHarmonogram }).then((json) => console.log(json));
+        settingsContext.sessionHarmonogram = sessionHarmonogram;
+        axios.put(`${url}/harmonogram`, { harmonogram: sessionHarmonogram });
     };
 
     const handleLogout = () => {
