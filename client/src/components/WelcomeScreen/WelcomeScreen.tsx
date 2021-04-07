@@ -4,10 +4,11 @@ import HowToRegIcon from '@material-ui/icons/HowToReg';
 import CheckIcon from '@material-ui/icons/Check';
 import Typed from 'react-typed';
 import { AppName, Button, Typography, SwappedQ, SwappedI } from './styles';
-
-const benefits = ['nauka z fiszkami', 'skuteczne powtórki', 'przypomnienia', 'społeczność', 'bez opłat'];
+import { Link } from 'react-router-dom';
 
 const WelcomeScreen = (): ReactElement => {
+    const benefits = ['nauka z fiszkami', 'skuteczne powtórki', 'przypomnienia', 'społeczność', 'bez opłat'];
+
     return (
         <>
             <Grid container direction="column" justify="center" alignItems="center" alignContent="center" spacing={1}>
@@ -43,9 +44,11 @@ const WelcomeScreen = (): ReactElement => {
                     </List>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="contained" size="medium" color="primary" startIcon={<HowToRegIcon />}>
-                        ROZPOCZNIJ NAUKĘ
-                    </Button>
+                    <Link to="/login">
+                        <Button variant="contained" size="medium" color="primary" startIcon={<HowToRegIcon />}>
+                            ROZPOCZNIJ NAUKĘ
+                        </Button>
+                    </Link>
                 </Grid>
             </Grid>
         </>
