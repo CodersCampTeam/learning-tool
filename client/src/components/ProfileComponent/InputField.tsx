@@ -1,6 +1,7 @@
-import React, { FormEvent, ReactElement, useEffect } from 'react';
-import { TextField, IconButton } from '@material-ui/core';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { TextField, IconButton, Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
+import { useForm } from 'react-hook-form';
 import { StyledError } from '../Form/styles';
 import SaveIcon from '@material-ui/icons/Save';
 import axios from 'axios';
@@ -14,7 +15,6 @@ interface IInputProps {
         minLength?: number;
         maxLength?: number;
         pattern?: RegExp;
-        validate?: any;
     };
     value?: string;
     message: string;
@@ -26,18 +26,20 @@ const InputField = (props: IInputProps): ReactElement => {
     useEffect(() => {
         setValue(props.name, props.value);
     }, [props.value]);
-    const onSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
+    const [openErrorAlert, setOpenErrorAlert] = useState(false);
+    const onSubmit = (): void => {
         axios
             .post('/api/profile', { [props.name]: getValues(props.name) })
             .then(() => {
-                //tutaj snackbary
+                setOpenSuccessAlert(true);
             })
             .catch((error) => {
                 setError('server', {
                     type: 'server',
                     message: error.response.data
                 });
-                throw error;
+                setOpenErrorAlert(true);
             });
     };
 
@@ -57,11 +59,44 @@ const InputField = (props: IInputProps): ReactElement => {
                 inputRef={register(props.inputRef)}
                 onChange={handleChange}
             />
-            <IconButton edge="end" aria-label="zapisz" color="primary" type="submit">
-                <SaveIcon />
-            </IconButton>
+            {!props.requireConfirmation && (
+                <IconButton edge="end" aria-label="zapisz" color="primary" type="submit">
+                    <SaveIcon />
+                </IconButton>
+            )}
             {errors[props.name] && <StyledError>{props.message}</StyledError>}
             {errors?.server && <StyledError>{errors?.server.message}</StyledError>}
+            {props.requireConfirmation && (
+                <>
+                    <TextField
+                        helperText={`powtórz ${props.helperText}`}
+                        variant="standard"
+                        size="small"
+                        name="confirmation"
+                        inputRef={register({
+                            validate: (value) => {
+                                return value === getValues(props.name) ? true : false;
+                            }
+                        })}
+                    />
+                    <IconButton edge="end" aria-label="zapisz" color="primary" type="submit">
+                        <SaveIcon />
+                    </IconButton>
+                </>
+            )}
+            {props.requireConfirmation && errors.confirmation && (
+                <StyledError>Wartości do siebie nie pasują.</StyledError>
+            )}
+            <Snackbar open={openSuccessAlert} autoHideDuration={5000} onClose={() => setOpenSuccessAlert(false)}>
+                <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => setOpenSuccessAlert(false)}>
+                    Pomyślnie zapisano!
+                </MuiAlert>
+            </Snackbar>
+            <Snackbar open={openErrorAlert} autoHideDuration={5000} onClose={() => setOpenErrorAlert(false)}>
+                <MuiAlert elevation={6} variant="filled" severity="error" onClose={() => setOpenErrorAlert(false)}>
+                    Wystąpił błąd!
+                </MuiAlert>
+            </Snackbar>
         </form>
     );
 };

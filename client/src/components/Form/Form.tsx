@@ -41,9 +41,7 @@ const Form = ({ error, isregister, onUsernameChange, onEmailChange, onPasswordCh
     const passwordMatching = (value: string) => {
         if (isregister) {
             return (
-                value.match(
-                    /^(?=.*[a-zżźćńółęąś])(?=.*[A-ZŻŹĆĄŚĘŁÓŃ])(?=.*\d)(?=.*[@$!%*?&])[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\d@$!%*?&]{8,1024}$/
-                ) || ''
+                value.match(/^(?=.*[a-zżźćńółęąś])(?=.*[A-ZŻŹĆĄŚĘŁÓŃ])(?=.*\d)(?=.*[!@#$%^&*()\-__+.]).{8,1024}$/) || ''
             );
         } else {
             return true;

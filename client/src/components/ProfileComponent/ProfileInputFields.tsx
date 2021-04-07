@@ -1,8 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Paper, TextField, Box, Typography, Grid, IconButton } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
-import { StyledError } from '../Form/styles';
+import { Paper, Box, Typography, Grid } from '@material-ui/core';
 import axios from 'axios';
 import InputField from './InputField';
 
@@ -31,7 +28,7 @@ const ProfileInputFields = (): ReactElement => {
                 <Box m={2} p={1}>
                     <InputField
                         header={'Zmień nickname'}
-                        helperText={'Nickname'}
+                        helperText={'nickname'}
                         name={'username'}
                         value={username}
                         type={'text'}
@@ -40,7 +37,7 @@ const ProfileInputFields = (): ReactElement => {
                     />
                     <InputField
                         header={'Zmień e-mail'}
-                        helperText={'Email'}
+                        helperText={'email'}
                         name={'email'}
                         value={email}
                         type={'email'}
@@ -49,15 +46,16 @@ const ProfileInputFields = (): ReactElement => {
                     />
                     <InputField
                         header={'Zmień hasło'}
-                        helperText={'Nowe hasło'}
+                        helperText={'nowe hasło'}
                         name={'password'}
-                        type={'text'}
+                        type={'password'}
                         inputRef={{
-                            pattern: /^(?=.*[a-zżźćńółęąś])(?=.*[A-ZŻŹĆĄŚĘŁÓŃ])(?=.*\d)(?=.*[@$!%*?&])[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\d@$!%*?&]{8,1024}$/
+                            pattern: /^(?=.*[a-zżźćńółęąś])(?=.*[A-ZŻŹĆĄŚĘŁÓŃ])(?=.*\d)(?=.*[!@#$%^&*()\-__+.]).{8,1024}$/
                         }}
                         message={
                             'Hasło powinno składać się z min. 8 znaków, w tym dużych i małych liter, liczb oraz znaków specjalnych.'
                         }
+                        requireConfirmation={true}
                     />
                 </Box>
             </Paper>
