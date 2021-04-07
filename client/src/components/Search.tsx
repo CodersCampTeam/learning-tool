@@ -1,4 +1,4 @@
-import React, { ChangeEvent, MouseEvent, ReactElement, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, MouseEvent, ReactElement, useState } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
@@ -55,6 +55,13 @@ export const Search = (): ReactElement => {
         e.preventDefault();
         setSearch(e.currentTarget?.value);
     };
+
+    const handleKeyClick = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            history.push(`/search/${search}`);
+        }
+    };
+
     const history = useHistory();
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
@@ -65,7 +72,13 @@ export const Search = (): ReactElement => {
         <div>
             <StyledMuiPaperRoot>
                 <StyledPaper elevation={0}>
-                    <StyledInputBase placeholder="Szukaj..." type="text" value={search} onChange={handleSearch} />
+                    <StyledInputBase
+                        placeholder="Szukaj..."
+                        type="text"
+                        value={search}
+                        onChange={handleSearch}
+                        onKeyUp={handleKeyClick}
+                    />
                     <StyledIconButtonRoot>
                         <StyledIconButton aria-label="search" onClick={handleClick}>
                             <StyledSearchIcon />
