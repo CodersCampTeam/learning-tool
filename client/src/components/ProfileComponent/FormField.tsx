@@ -21,7 +21,7 @@ interface IInputProps {
     requireConfirmation?: boolean;
 }
 
-const InputField = (props: IInputProps): ReactElement => {
+const FormField = (props: IInputProps): ReactElement => {
     const { register, handleSubmit, errors, getValues, setValue, setError, clearErrors } = useForm();
     useEffect(() => {
         setValue(props.name, props.value);
@@ -72,6 +72,7 @@ const InputField = (props: IInputProps): ReactElement => {
                         helperText={`powtórz ${props.helperText}`}
                         variant="standard"
                         size="small"
+                        type="password"
                         name="confirmation"
                         inputRef={register({
                             validate: (value) => {
@@ -100,4 +101,4 @@ const InputField = (props: IInputProps): ReactElement => {
         </form>
     );
 };
-export default InputField;
+export default FormField;

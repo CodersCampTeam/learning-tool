@@ -1,9 +1,9 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Paper, Box, Typography, Grid } from '@material-ui/core';
 import axios from 'axios';
-import InputField from './InputField';
+import FormField from './FormField';
 
-const ProfileInputFields = (): ReactElement => {
+const ProfileFormFields = (): ReactElement => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
 
@@ -26,7 +26,7 @@ const ProfileInputFields = (): ReactElement => {
             </Typography>
             <Paper>
                 <Box m={2} p={1}>
-                    <InputField
+                    <FormField
                         header={'Zmień nickname'}
                         helperText={'nickname'}
                         name={'username'}
@@ -35,7 +35,7 @@ const ProfileInputFields = (): ReactElement => {
                         inputRef={{ minLength: 2, maxLength: 30 }}
                         message={'Nickname musi mieć od 2 do 30 znaków.'}
                     />
-                    <InputField
+                    <FormField
                         header={'Zmień e-mail'}
                         helperText={'email'}
                         name={'email'}
@@ -44,7 +44,7 @@ const ProfileInputFields = (): ReactElement => {
                         inputRef={{ pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i }}
                         message={'Wprowadzony email jest niepoprawny'}
                     />
-                    <InputField
+                    <FormField
                         header={'Zmień hasło'}
                         helperText={'nowe hasło'}
                         name={'password'}
@@ -62,4 +62,4 @@ const ProfileInputFields = (): ReactElement => {
         </Grid>
     );
 };
-export default ProfileInputFields;
+export default ProfileFormFields;
