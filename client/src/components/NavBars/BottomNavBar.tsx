@@ -29,8 +29,8 @@ export const BottomNavBar = (): ReactElement => {
             showLabels
         >
             <BottomNavigationAction label="Start" icon={<HomeIcon />} component={Link} to="/" />
-            <BottomNavigationAction label="Stwórz" icon={<AddCircleIcon />} component={Link} to="/create" />
-            <BottomNavigationAction label="Czat" icon={<MessageIcon />} component={Link} to="/chat" />
+            <BottomNavigationAction label="Stwórz" icon={<AddCircleIcon />} component={Link} to="/stworz-kolekcje" />
+            <BottomNavigationAction label="Czat" icon={<MessageIcon />} component={Link} to="/czat" />
             <BottomNavigationAction label="Profil" icon={<PersonIcon />} component={Link} to="/profil" />
         </StyledBottomNavigation>
     );
