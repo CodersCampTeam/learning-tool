@@ -198,7 +198,7 @@ const Form = ({ error, isregister, onUsernameChange, onEmailChange, onPasswordCh
                             {isregister ? `ZAREJESTRUJ` : 'ZALOGUJ SIĘ'}
                         </StyledButton>
                     </StyledForm>
-                    <StyledLink to={isregister ? '/login' : '/register'}>
+                    <StyledLink to={isregister ? '/logowanie' : '/rejestracja'}>
                         {isregister ? `Masz już konto? Zaloguj się` : `Nie masz konta? Zarejestruj się`}
                     </StyledLink>
                 </Grid>
