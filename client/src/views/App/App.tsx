@@ -26,7 +26,8 @@ const App = (): ReactElement => {
                     ></div>
                     <Switch>
                         <PrivateRoute exact path="/about" component={About} />
-                        <Route exact path="/" component={Home} />
+                        <PrivateRoute exact path="/" component={HomeView} />
+                        <Route exact path="/start" component={Home} />
                         <PrivateRoute exact path="/create" component={CreateCollection} />
                         <Route exact path="/profil" component={ProfileView} />
                         <PrivateRoute exact path="/flashcardCollections" component={HomeView} />

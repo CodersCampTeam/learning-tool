@@ -62,3 +62,9 @@ export const CreateCollection = styled.div`
         min-width: 215px;
     }
 `;
+
+export const RowDiv = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+`;
