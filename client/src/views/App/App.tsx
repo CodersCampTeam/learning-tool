@@ -12,6 +12,7 @@ import SearchResultsComponent from '../../components/SearchResults/SearchResults
 import { css } from '@emotion/react';
 import { CreateCollection } from '../../components/CreateCollection/CreateCollection';
 import PrivateRoute from '../../PrivateRoute';
+import { CollectionView } from '../CollectionView/CollectionView';
 
 const App = (): ReactElement => {
     return (
@@ -30,6 +31,7 @@ const App = (): ReactElement => {
                         <PrivateRoute exact path="/stworz-kolekcje" component={CreateCollection} />
                         <PrivateRoute exact path="/profil" component={ProfileView} />
                         <PrivateRoute exact path="/kolekcje" component={HomeView} />
+                        <Route exact path="/kolekcje/:id" component={CollectionView} />
                         <PrivateRoute path="/szukaj/:search?" component={SearchResultsComponent} />
                         <Route exact path="/rejestracja" component={LoginRegistration} />
                         <Route exact path="/logowanie" component={LoginRegistration} />
