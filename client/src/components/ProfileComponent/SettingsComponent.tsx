@@ -5,12 +5,16 @@ import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import CheckboxLabels from './CheckboxDaysRevision';
 import MeetingRoom from '@material-ui/icons/MeetingRoom';
 import ProfileInputFields from './ProfileInputFields';
+import { useHistory } from 'react-router-dom';
 
 const SettingsComponent = (): ReactElement => {
     const [notification, setNotifications] = useState({
         checkedA: true,
         checkedB: true
     });
+
+    const history = useHistory();
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNotifications({ ...notification, [event.target.name]: event.target.checked });
     };
@@ -19,7 +23,7 @@ const SettingsComponent = (): ReactElement => {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         document.cookie = `jwt= ; expires= ${date.getUTCDate()}; path=/`;
-        window.location.href = '/';
+        history.push('/');
     };
 
     return (
