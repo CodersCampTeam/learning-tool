@@ -8,7 +8,7 @@ export const StatisticsHeader = styled.div`
 	font-family: righteous;
 	font-size: 16px;
 	line-height: 150%;
-	margin: 0;
+	margin-bottom: 10px;
 `;
 
 export const StyledGrid = styled(Grid)`
@@ -17,17 +17,20 @@ export const StyledGrid = styled(Grid)`
         flex-basis: auto;
         flex-direction: column;
         background-color: #f2f2f2;
-        margin: 30px;
+        margin-top: 30px;
         font-family: righteous;
-        align-items: center;
         box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
         justify-content: center;
-        border-radius: 4px;
-        padding-top: 18px;
+        border-radius: 4px;  
+        padding-left: 20px;
         min-width: 282px;
-        min-height: 162px;
+        min-height: 192px;
         @media (max-width: 320px) {
             min-width: 215px;
         }
     }
+`;
+export const RowDiv = styled.div`
+	display: flex;
+	flex-direction: row;
 `;

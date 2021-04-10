@@ -124,12 +124,24 @@ router.get('/collection', async (req: Request, res: Response, next) => {
                     $sort: { answerss: -1 }
                 },
                 {
+                    $addFields: {
+                        countAnswers: {
+                            $reduce: {
+                                input: '$flashcardCollection.flashcards',
+                                initialValue: [],
+                                in: { $setUnion: ['$$value', '$$this'] }
+                            }
+                        }
+                    }
+                },
+                {
                     $group: {
                         _id: { coll: '$flashcardCollection._id', user: '$user' },
                         CollectionName: { $first: '$flashcardCollection.name' },
                         user: { $first: '$user' },
                         owner: { $first: '$flashcardCollection.owner' },
                         lastSession: { $max: '$sessionDate' },
+                        flashcards: { $addToSet: '$countAnswers' },
                         maxDate: {
                             $push: {
                                 date: '$sessionDate',
@@ -163,11 +175,13 @@ router.get('/collection', async (req: Request, res: Response, next) => {
                         user: user
                     }
                 },
+                { $unwind: { path: '$flashcards', preserveNullAndEmptyArrays: true } },
                 {
                     $project: {
                         CollectionName: 1,
                         owner: 1,
                         answerss: 1,
+                        flashcards: { $sum: { $size: '$flashcards' } },
                         maxDate: {
                             $slice: ['$maxDate', -1]
                         }

@@ -42,8 +42,11 @@ const ProfileView = (): ReactElement => {
 				iconRight={<SettingsIcon />}
 				labelRight={'Ustawienia'}
 			>
-				<StatisticHeader />
-				<StatisticCollection />
+				<div>
+					<StatisticHeader />
+					<br />
+					<StatisticCollection />
+				</div>
 				{userSettings && <SettingsComponent />}
 			</TabComponent>
 		</SettingsContext.Provider>
