@@ -43,7 +43,7 @@ router.get('/', async function (req: Request, res: Response, next) {
                         },
                         {
                             $set: {
-                                owner: { $first: '$owner.username' }
+                                owner: '$owner.username'
                             }
                         }
                     ],
@@ -81,7 +81,7 @@ router.get('/', async function (req: Request, res: Response, next) {
                     },
                     {
                         $set: {
-                            owner: { $first: '$owner.username' }
+                            owner: '$owner.username'
                         }
                     }
                 ],

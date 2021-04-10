@@ -54,9 +54,9 @@ const CollectionView = (): ReactElement => {
                         </RowDiv>
                         <RowDiv>
                             {collection.isOwned ? (
-                                <GradeIcon style={{ fontSize: 20, color: grey[800] }} />
-                            ) : (
                                 <StarBorderIcon style={{ fontSize: 20, color: grey[800] }} />
+                            ) : (
+                                <GradeIcon style={{ fontSize: 20, color: grey[800] }} />
                             )}
                             <Typography variant="body1" display="inline">
                                 {collection.subscribedUsers}
