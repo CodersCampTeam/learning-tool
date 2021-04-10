@@ -57,15 +57,26 @@ router.get('/', async (req: Request, res: Response, next) => {
         FlashcardCollection.aggregate(
             [
                 {
-                    $group: {
-                        _id: '$name',
-                        user: { $first: '$owner' },
-                        flashcards: { $sum: { $size: '$flashcards' } }
+                    $match: {
+                        $or: [{ owner: user }, { subscribedUsers: user }]
                     }
                 },
                 {
-                    $match: {
-                        user: user
+                    $group: {
+                        _id: '$_id',
+                        name: { $first: '$name' },
+                        user: { $first: '$owner' },
+                        flashcards: { $sum: { $size: { $ifNull: ['$flashcards', []] } } },
+                        subscribedUsers: { $sum: { $size: { $ifNull: ['$subscribedUsers', []] } } }
+                    }
+                },
+                {
+                    $project: {
+                        isOwned: { $eq: ['$user', user] },
+                        user: 1,
+                        flashcards: 1,
+                        name: 1,
+                        subscribedUsers: 1
                     }
                 }
             ],
