@@ -1,5 +1,6 @@
 import { Box, Button, Card, CircularProgress, Container, IconButton } from '@material-ui/core';
-import { AddCircle, Edit } from '@material-ui/icons';
+import { AddCircle } from '@material-ui/icons';
+import SettingsIcon from '@material-ui/icons/Settings';
 import { Delete } from '@material-ui/icons';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -71,14 +72,21 @@ export const CollectionView = (): JSX.Element => {
 
                 {data.flashcards?.map((flashcard, index) => (
                     <Card key={index} style={{ margin: '15px 0' }}>
-                        <Box paddingX={2} paddingY={0.2}>
+                        <Box
+                            paddingX={2}
+                            paddingY={0.2}
+                            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                        >
                             {flashcard.prompt}
-                            <IconButton onClick={() => removeFlashCard(flashcard._id)} aria-label="delete">
-                                <Delete />
-                            </IconButton>
-                            <IconButton onClick={() => editFlashCard(flashcard._id)} aria-label="edit">
-                                <Edit />
-                            </IconButton>
+
+                            <div>
+                                <IconButton onClick={() => removeFlashCard(flashcard._id)} aria-label="delete">
+                                    <Delete />
+                                </IconButton>
+                                <IconButton onClick={() => editFlashCard(flashcard._id)} aria-label="edit">
+                                    <SettingsIcon />
+                                </IconButton>
+                            </div>
                         </Box>
                     </Card>
                 ))}
