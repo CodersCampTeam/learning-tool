@@ -4,6 +4,7 @@ import { Tabs, Tab } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import SettingsComponent from '../components/ProfileComponent/SettingsComponent';
+import StatisticHeader from '../components/statistics/statisticHeader';
 import axios from 'axios';
 
 export interface ISettingsContext {
@@ -54,7 +55,7 @@ const ProfileComponent = (): ReactElement => {
                 <Tab icon={<SettingsIcon />} label={'Ustawienia'} value={1} />
             </Tabs>
             <TabPanel value={value} index={0}>
-                Treść dla statystyk
+                <StatisticHeader />
             </TabPanel>
             <SettingsContext.Provider value={userSettings}>
                 <TabPanel value={value} index={1}>
