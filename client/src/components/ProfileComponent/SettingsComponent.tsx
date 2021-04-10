@@ -3,15 +3,27 @@ import { Grid, Typography, Button, Box, Switch, FormControlLabel } from '@materi
 import { useState } from 'react';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import CheckboxLabels from './CheckboxDaysRevision';
+import MeetingRoom from '@material-ui/icons/MeetingRoom';
 import ProfileInputFields from './ProfileInputFields';
+import { useHistory } from 'react-router-dom';
 
 const SettingsComponent = (): ReactElement => {
     const [notification, setNotifications] = useState({
         checkedA: true,
         checkedB: true
     });
+
+    const history = useHistory();
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNotifications({ ...notification, [event.target.name]: event.target.checked });
+    };
+
+    const handleLogout = () => {
+        const date = new Date();
+        date.setDate(date.getDate() - 1);
+        document.cookie = `jwt= ; expires= ${date.getUTCDate()}; path=/`;
+        history.push('/');
     };
 
     return (
@@ -65,6 +77,17 @@ const SettingsComponent = (): ReactElement => {
                     />
                 </Grid>
             </Grid>
+            <Button
+                variant="contained"
+                color="primary"
+                size="medium"
+                type="submit"
+                endIcon={<MeetingRoom />}
+                onClick={handleLogout}
+                style={{ margin: 'auto', display: 'flex' }}
+            >
+                Wyloguj się
+            </Button>
         </>
     );
 };
