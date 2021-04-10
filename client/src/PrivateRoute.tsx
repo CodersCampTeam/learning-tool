@@ -33,7 +33,7 @@ const PrivateRoute = ({ ...props }: any) => {
         if (isAuthenticated) {
             return <Route {...props} />;
         } else {
-            return <Redirect to={{ pathname: '/start', state: { from: props.location } }} />;
+            return <Redirect to={{ pathname: 'logowanie', state: { from: props.location } }} />;
         }
     }
 };

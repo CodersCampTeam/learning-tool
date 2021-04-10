@@ -45,7 +45,7 @@ export const CreateCollection = () => {
 
     return (
         <>
-            {redirect && <Redirect to="/flashcardCollections" />}
+            {redirect && <Redirect to="/kolekcje" />}
             <Container maxWidth="sm">
                 <Box m={4} textAlign="center">
                     <h1>Tworzenie kolekcji</h1>

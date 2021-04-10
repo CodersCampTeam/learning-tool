@@ -1,64 +1,65 @@
-import React, { ReactElement } from 'react';
-import { Paper, TextField, IconButton, Box } from '@material-ui/core';
-import { useState } from 'react';
-import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { Paper, Box, Typography, Grid } from '@material-ui/core';
+import axios from 'axios';
+import FormField from './FormField';
 
-const ProfileInputFields = (): ReactElement => {
+const ProfileFormFields = (): ReactElement => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
 
-    const updateUsername = (e: React.SyntheticEvent<EventTarget>) => {
-        setUsername((e.target as HTMLInputElement).value);
-    };
-    const updateEmail = (e: React.SyntheticEvent<EventTarget>) => {
-        setEmail((e.target as HTMLInputElement).value);
-    };
-    const updatePassword = (e: React.SyntheticEvent<EventTarget>) => {
-        setPassword((e.target as HTMLInputElement).value);
-    };
+    useEffect(() => {
+        axios
+            .get('/api/profile', { withCredentials: true })
+            .then((json) => {
+                setUsername(json.data.username);
+                setEmail(json.data.email);
+            })
+            .catch((error) => {
+                throw new Error(error.reponse);
+            });
+    }, []);
+
     return (
-        <Paper>
-            <Box m={2} p={1}>
-                <form>
-                    <TextField
-                        onChange={updateUsername}
-                        autoFocus
-                        label="Nickname"
-                        value={username || ''}
-                        variant="standard"
-                        size="small"
+        <Grid item xs={12}>
+            <Typography variant="body1" align="center" color="textPrimary">
+                TWOJE DANE
+            </Typography>
+            <Paper>
+                <Box m={2} p={1}>
+                    <FormField
+                        header={'Zmień nickname'}
+                        helperText={'nickname'}
+                        name={'username'}
+                        value={username}
+                        type={'text'}
+                        inputRef={{ minLength: 2, maxLength: 30 }}
+                        message={'Nickname musi mieć od 2 do 30 znaków.'}
                     />
-                    <IconButton edge="end" aria-label="zapisz" color="primary">
-                        <DoneOutlineIcon />
-                    </IconButton>
-                </form>
-                <form>
-                    <TextField
-                        label="Email"
-                        value={email || ''}
-                        variant="standard"
-                        size="small"
-                        onChange={updateEmail}
+                    <FormField
+                        header={'Zmień e-mail'}
+                        helperText={'email'}
+                        name={'email'}
+                        value={email}
+                        type={'email'}
+                        inputRef={{ pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i }}
+                        message={'Wprowadzony email jest niepoprawny'}
                     />
-                    <IconButton edge="end" aria-label="zapisz" color="primary">
-                        <DoneOutlineIcon />
-                    </IconButton>
-                </form>
-                <form>
-                    <TextField
-                        label="Hasło"
-                        value={password || ''}
-                        variant="standard"
-                        size="small"
-                        onChange={updatePassword}
+                    <FormField
+                        header={'Zmień hasło'}
+                        helperText={'nowe hasło'}
+                        name={'password'}
+                        type={'password'}
+                        inputRef={{
+                            pattern: /^(?=.*[a-zżźćńółęąś])(?=.*[A-ZŻŹĆĄŚĘŁÓŃ])(?=.*\d)(?=.*[!@#$%^&*()\-__+.]).{8,1024}$/
+                        }}
+                        message={
+                            'Hasło powinno składać się z min. 8 znaków, w tym dużych i małych liter, liczb oraz znaków specjalnych.'
+                        }
+                        requireConfirmation={true}
                     />
-                    <IconButton edge="end" aria-label="zapisz" color="primary">
-                        <DoneOutlineIcon />
-                    </IconButton>
-                </form>
-            </Box>
-        </Paper>
+                </Box>
+            </Paper>
+        </Grid>
     );
 };
-export default ProfileInputFields;
+export default ProfileFormFields;

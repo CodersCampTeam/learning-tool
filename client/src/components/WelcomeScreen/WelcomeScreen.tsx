@@ -44,7 +44,7 @@ const WelcomeScreen = (): ReactElement => {
                     </List>
                 </Grid>
                 <Grid item xs={12}>
-                    <Link to="/login">
+                    <Link to="/logowanie">
                         <Button variant="contained" size="medium" color="primary" startIcon={<HowToRegIcon />}>
                             ROZPOCZNIJ NAUKĘ
                         </Button>
