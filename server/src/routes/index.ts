@@ -17,6 +17,7 @@ import session from '../routes/Session';
 import me from './me';
 import * as path from 'path';
 import profile from './profile';
+import subscribe from './subscribe';
 
 const isAuthenticated = passport.authenticate('jwt', { session: false });
 
@@ -49,6 +50,8 @@ router.use('/api/search', isAuthenticated, search);
 router.use('/api/profile', isAuthenticated, profile);
 
 router.use('/api/me', isAuthenticated, me);
+
+router.use('/api/subscribe', isAuthenticated, subscribe);
 
 // for any other requests, send `index.html` as a response
 router.use(serveStatic(publicPath));

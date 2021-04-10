@@ -25,10 +25,10 @@ const App = (): ReactElement => {
                         `}
                     ></div>
                     <Switch>
-                        <PrivateRoute exact path="/o-apce" component={About} />
-                        <Route exact path="/" component={Home} />
+                        <PrivateRoute exact path="/" component={HomeView} />
+                        <Route exact path="/start" component={Home} />
                         <PrivateRoute exact path="/stworz-kolekcje" component={CreateCollection} />
-                        <Route exact path="/profil" component={ProfileView} />
+                        <PrivateRoute exact path="/profil" component={ProfileView} />
                         <PrivateRoute exact path="/kolekcje" component={HomeView} />
                         <PrivateRoute path="/szukaj/:search?" component={SearchResultsComponent} />
                         <Route exact path="/rejestracja" component={LoginRegistration} />

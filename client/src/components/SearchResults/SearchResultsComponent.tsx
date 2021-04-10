@@ -3,16 +3,27 @@ import axios from 'axios';
 import React, { useState, useEffect, ReactElement } from 'react';
 import { useParams } from 'react-router-dom';
 import ChatIcon from '@material-ui/icons/Chat';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import GradeIcon from '@material-ui/icons/Grade';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import SaveIcon from '@material-ui/icons/Save';
+import DeleteIcon from '@material-ui/icons/Delete';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 import FeaturedPlayListOutlined from '@material-ui/icons/FeaturedPlayListOutlined';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { StyledGrid, CollectionHeader } from '../FlashcardCollectionComponents/styles';
 import { IconRow, AvatarRow, CollectionDetails, NoResults } from './styles';
 
+interface ICollection {
+    name: string;
+    flashcards: string[];
+    owner: string;
+    isSubscribed: boolean;
+    subscribedUsers: string[];
+    _id: string;
+}
+
 const SearchResultsComponent = (): ReactElement => {
-    const [state, setState] = useState<string[]>([]);
+    const [state, setState] = useState<ICollection[]>([]);
     const { search } = useParams<{ search: string }>();
     useEffect(() => {
         axios
@@ -21,10 +32,37 @@ const SearchResultsComponent = (): ReactElement => {
             .catch(() => setState([]));
     }, [search]);
 
+    const handleSubscribeClick = (id: string) => () => {
+        axios
+            .post(`/api/subscribe/`, { id }, { withCredentials: true })
+            .then((json) => {
+                setState(
+                    state.map((el: ICollection) => {
+                        if (el._id !== json.data._id) return el;
+                        return { ...el, subscribedUsers: json.data.subscribedUsers, isSubscribed: true };
+                    })
+                );
+            })
+            .catch(console.log);
+    };
+    const handleUnsubscribeClick = (id: string) => () => {
+        axios
+            .delete(`/api/subscribe/${id}`, { withCredentials: true })
+            .then((json) => {
+                setState(
+                    state.map((el: ICollection) => {
+                        if (el._id !== json.data._id) return el;
+                        return { ...el, subscribedUsers: json.data.subscribedUsers, isSubscribed: false };
+                    })
+                );
+            })
+            .catch(console.log);
+    };
+
     return (
         <Grid container direction="column" justify="center" alignItems="center" alignContent="center" spacing={2}>
             {state.length ? (
-                state.map((collection: any, index: number) => (
+                state.map((collection: ICollection, index: number) => (
                     <StyledGrid key={index}>
                         <CollectionHeader>{collection.name}</CollectionHeader>
                         <Grid container direction="row" justify="space-around" spacing={0}>
@@ -42,14 +80,21 @@ const SearchResultsComponent = (): ReactElement => {
                         </AvatarRow>
                         <IconRow>
                             <IconButton>
-                                <ThumbUpIcon />
+                                {collection.isSubscribed ? <GradeIcon /> : <StarBorderIcon />}
+                                <Typography variant="body1">{collection.subscribedUsers.length}</Typography>
                             </IconButton>
                             <IconButton>
                                 <ChatIcon />
                             </IconButton>
-                            <IconButton>
-                                <SaveIcon />
-                            </IconButton>
+                            {collection.isSubscribed ? (
+                                <IconButton onClick={handleUnsubscribeClick(collection._id)}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            ) : (
+                                <IconButton onClick={handleSubscribeClick(collection._id)}>
+                                    <SaveIcon />
+                                </IconButton>
+                            )}
                         </IconRow>
                     </StyledGrid>
                 ))
