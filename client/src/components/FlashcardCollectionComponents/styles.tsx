@@ -68,4 +68,5 @@ export const RowDiv = styled.div`
 	display: flex;
 	flex-direction: row;
 	margin: 10px;
+    margin-bottom: 10px;
 `;

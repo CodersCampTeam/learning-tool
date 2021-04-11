@@ -1,4 +1,4 @@
-import { Container, IconButton, Typography } from '@material-ui/core';
+import { CircularProgress, Container, IconButton, Typography } from '@material-ui/core';
 import axios from 'axios';
 import React, { useState, useEffect, ReactElement } from 'react';
 import {
@@ -22,14 +22,6 @@ const StatisticCollection = (): ReactElement => {
 		axios.get(url).then((json) => setData(json.data));
 	}, []);
 
-	interface ICollection {
-		CollectionName: string,
-		flashcards: number,
-		isOwned: boolean,
-		correctAnswers: any,
-		maxDate: string[]
-	}
-
 	return (
 		<Container maxWidth="xs" justify-content="center">
 			<CollectionHeader> Statystyki dla kolekcji</CollectionHeader>
@@ -43,7 +35,7 @@ const StatisticCollection = (): ReactElement => {
 								Fiszki: {collection['flashcards']}
 							</Typography>
 							<IconButton>
-								<ArrowForward style={{ fontSize: 30, color: grey[700], marginLeft: 80, padding: 0 }} />
+								<ArrowForward style={{ fontSize: 30, color: grey[700], marginLeft: 85, padding: 0 }} />
 							</IconButton>
 						</RowDiv>
 						<Typography variant="body2" display="inline" color="secondary">
@@ -52,11 +44,22 @@ const StatisticCollection = (): ReactElement => {
 						<Typography variant="body2" display="inline">
 							Dobre odpowiedzi: {collection['maxDate'][0]['correctAnswers']}
 							<br />
-							Umiesz:{' '}
-							{Math.round(
-								collection['maxDate'][0]['correctAnswers'] / collection['maxDate'][0]['total'] * 100
-							)}{' '}
-							%<br />
+							<RowDiv>
+								Umiesz:{' '}
+								{Math.round(
+									collection['maxDate'][0]['correctAnswers'] / collection['maxDate'][0]['total'] * 100
+								)}{' '}
+								%<br />
+								<CircularProgress
+									variant="determinate"
+									style={{ fontSize: 20, color: grey[700], marginLeft: 80, padding: 0 }}
+									value={Math.round(
+										collection['maxDate'][0]['correctAnswers'] /
+											collection['maxDate'][0]['total'] *
+											100
+									)}
+								/>
+							</RowDiv>
 						</Typography>
 					</StyledGrid>
 				))

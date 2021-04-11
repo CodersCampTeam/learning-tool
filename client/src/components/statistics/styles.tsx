@@ -8,7 +8,6 @@ export const StatisticsHeader = styled.div`
 	font-family: righteous;
 	font-size: 16px;
 	line-height: 150%;
-	margin-bottom: 10px;
 `;
 
 export const StyledGrid = styled(Grid)`
@@ -26,11 +25,12 @@ export const StyledGrid = styled(Grid)`
         min-width: 282px;
         min-height: 192px;
         @media (max-width: 320px) {
-            min-width: 215px;
+            min-width: 260px;
         }
     }
 `;
 export const RowDiv = styled.div`
 	display: flex;
 	flex-direction: row;
+    align-items: center;
 `;
