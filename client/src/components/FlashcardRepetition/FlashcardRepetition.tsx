@@ -83,6 +83,7 @@ export const FlashcardRepetition = () => {
     const loadNextFlashcard = () => {
         const currQuestionNumber = question.questionNumber; // Already + 1
         if (currQuestionNumber < flashcards.length) {
+            setShowAnswer(false);
             setQuestion({
                 question: flashcards[currQuestionNumber].prompt,
                 questionNumber: currQuestionNumber + 1,
