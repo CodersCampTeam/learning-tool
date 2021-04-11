@@ -25,10 +25,11 @@ export const StyledGrid = styled(Grid)`
 export const CollectionHeader = styled.div`
     display: flex;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 17px;
     line-height: 150%;
     text-transform: uppercase;
     justify-content: center;
+    padding-bottom: 10px;
 `;
 
 export const Settings = styled.div`
@@ -67,4 +68,5 @@ export const RowDiv = styled.div`
     display: flex;
     flex-direction: row;
     margin: 10px;
+    margin-bottom: 10px;
 `;

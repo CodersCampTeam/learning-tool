@@ -4,6 +4,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import SettingsComponent from '../components/ProfileComponent/SettingsComponent';
 import axios from 'axios';
+import StatisticHeader from '../components/statistics/statisticHeader';
+import StatisticCollection from '../components/statistics/statisticCollection';
 
 export interface ISettingsContext {
     isActive: boolean;
@@ -40,7 +42,11 @@ const ProfileView = (): ReactElement => {
                 iconRight={<SettingsIcon />}
                 labelRight={'Ustawienia'}
             >
-                <div>Treść dla statystyk</div>
+                <div>
+                    <StatisticHeader />
+                    <br />
+                    <StatisticCollection />
+                </div>
                 {userSettings && <SettingsComponent />}
             </TabComponent>
         </SettingsContext.Provider>
