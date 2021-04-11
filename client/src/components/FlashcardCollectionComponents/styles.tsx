@@ -23,50 +23,50 @@ export const StyledGrid = styled(Grid)`
 `;
 
 export const CollectionHeader = styled.div`
-	display: flex;
-	font-weight: 700;
-	font-size: 17px;
-	line-height: 150%;
-	text-transform: uppercase;
-	justify-content: center;
-	padding-bottom: 10px;
+    display: flex;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 150%;
+    text-transform: uppercase;
+    justify-content: center;
+    padding-bottom: 10px;
 `;
 
 export const Settings = styled.div`
-	display: flex;
-	padding: 5px;
+    display: flex;
+    padding: 5px;
 `;
 
 export const AssessmentStyle = styled.div`
-	margin-right: 22px;
-	margin-left: 22px;
+    margin-right: 22px;
+    margin-left: 22px;
 `;
 
 export const CreateCollection = styled.div`
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	font-weight: 600;
-	background-color: #e0e0e0;
-	font-size: 14px;
-	line-height: 26px;
-	text-align: center;
-	letter-spacing: 0.46px;
-	padding: 8px 22px;
-	font-family: righteous;
-	text-transform: uppercase;
-	min-width: 282px;
-	height: 45px;
-	border-radius: 4px;
-	margin: 30px;
-	@media (max-width: 320px) {
-		min-width: 215px;
-	}
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: 600;
+    background-color: #e0e0e0;
+    font-size: 14px;
+    line-height: 26px;
+    text-align: center;
+    letter-spacing: 0.46px;
+    padding: 8px 22px;
+    font-family: righteous;
+    text-transform: uppercase;
+    min-width: 282px;
+    height: 45px;
+    border-radius: 4px;
+    margin: 30px;
+    @media (max-width: 320px) {
+        min-width: 215px;
+    }
 `;
 
 export const RowDiv = styled.div`
-	display: flex;
-	flex-direction: row;
-	margin: 10px;
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
     margin-bottom: 10px;
 `;
