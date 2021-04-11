@@ -7,6 +7,7 @@ import { AddCircle, ArrowForward, Assessment, BuildOutlined, FeaturedPlayListOut
 import { StyledGrid, CollectionHeader, Settings, AssessmentStyle, CreateCollection, RowDiv } from './styles';
 import { grey } from '@material-ui/core/colors';
 import GradeIcon from '@material-ui/icons/Grade';
+import { Link } from 'react-router-dom';
 
 interface ICollection {
     name: string;
@@ -65,7 +66,7 @@ const CollectionView = (): ReactElement => {
                     </Grid>
                     <Settings>
                         {collection.isOwned ? (
-                            <IconButton>
+                            <IconButton component={Link} to={`/stworz-fiszke/${collection._id}`}>
                                 <BuildOutlined fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
                             </IconButton>
                         ) : (

@@ -4,7 +4,7 @@ import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import Container from '@material-ui/core/Container';
 import styled from '@emotion/styled';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useParams, useHistory } from 'react-router-dom';
 
 const AddFlashcard: FC = (): ReactElement => {
     const [prompt, setPrompt] = useState('');
@@ -15,6 +15,8 @@ const AddFlashcard: FC = (): ReactElement => {
     const [errors, setErrors] = useState<string[]>([]);
     const [isError, setIsError] = useState(false);
     const [redirect, setRedirect] = useState(false);
+    const { collectionId } = useParams<{ collectionId: string }>();
+    const history = useHistory();
     interface Flashcard {
         prompt: string;
         answers: string[];
@@ -30,26 +32,21 @@ const AddFlashcard: FC = (): ReactElement => {
         console.log('all answers: ', answers);
     };
 
-    const saveFlashcard = (selectedCollectionId: string) => {
+    const saveFlashcard = () => {
         console.log('saving flashcard...');
 
         const flashcard: Flashcard = {
             prompt: prompt,
             correctAnswer: correctAnswer,
             isQuizQuestion: answers.length > 1 ? true : false,
-            collectionId: '607164558d64f830a7df04a0', // TODO flashcard collection id - dodać z URLa lub headera
+            collectionId: collectionId,
             answers: answers,
             extraInfo: extraInfo
         };
 
-        axios('/api/flashcard/' + flashcard.collectionId, {
-            method: 'PUT',
-            headers: {
-                'content-type': 'application/json'
-            },
-            data: flashcard
-        })
-            .then((response) => (window.location.href = `/`))
+        axios
+            .put(`/api/flashcard/${flashcard.collectionId}`, flashcard, { withCredentials: true })
+            .then((response) => history.push('/'))
             .catch((error) => {
                 throw error;
             });
@@ -57,7 +54,7 @@ const AddFlashcard: FC = (): ReactElement => {
 
     return (
         <>
-            {redirect && <Redirect to="/flashcardCollections" />}
+            {redirect && <Redirect to="/kolekcje" />}
             <Container maxWidth="sm">
                 <Box m={4} textAlign="center">
                     <h1>Tworzenie Fiszki</h1>
