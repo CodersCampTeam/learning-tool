@@ -81,7 +81,7 @@ export const CreateCollection = () => {
                 <br />
                 <Box textAlign="center">
                     <Button onClick={addCollection} variant="contained" color="primary" endIcon={<SaveIcon />}>
-                        Save
+                        Zapisz
                     </Button>
                 </Box>
             </Container>

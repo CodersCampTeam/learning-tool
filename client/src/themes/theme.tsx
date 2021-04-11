@@ -1,10 +1,9 @@
 import { createMuiTheme } from '@material-ui/core';
-import { grey, deepPurple } from '@material-ui/core/colors';
-import { Children } from 'react';
+import { deepPurple } from '@material-ui/core/colors';
 
 const theme = createMuiTheme({
     palette: {
-        primary: grey,
+        primary: deepPurple,
         secondary: deepPurple
     },
     typography: {
@@ -34,10 +33,14 @@ const theme = createMuiTheme({
                     height: '100%'
                 },
                 body: {
-                    height: '100%'
+                    height: '100%',
+                    overflowX: 'hidden'
                 },
                 'body > div': {
                     height: '100%'
+                },
+                a: {
+                    textDecoration: 'none'
                 }
             }
         }

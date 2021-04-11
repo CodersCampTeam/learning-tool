@@ -7,6 +7,7 @@ import { AddCircle, ArrowForward, Assessment, BuildOutlined, FeaturedPlayListOut
 import { StyledGrid, CollectionHeader, Settings, AssessmentStyle, CreateCollection, RowDiv } from './styles';
 import { grey } from '@material-ui/core/colors';
 import GradeIcon from '@material-ui/icons/Grade';
+import { Link } from 'react-router-dom';
 
 interface ICollection {
     name: string;
@@ -36,12 +37,14 @@ const CollectionView = (): ReactElement => {
 
     return (
         <Container maxWidth="xs" justify-content="center">
-            <CreateCollection>
-                <div>Stwórz nową kolekcję</div>
-                <IconButton>
-                    <AddCircle style={{ fontSize: 30, color: grey[800] }} />
-                </IconButton>
-            </CreateCollection>
+            <Link to="/stworz-kolekcje">
+                <CreateCollection>
+                    <div style={{ margin: '0 auto', color: grey[800] }}>Stwórz nową kolekcję</div>
+                    <IconButton>
+                        <AddCircle style={{ fontSize: 30, color: grey[800] }} />
+                    </IconButton>
+                </CreateCollection>
+            </Link>
             {data.map((collection: ICollection) => (
                 <StyledGrid>
                     <CollectionHeader>{collection.name}</CollectionHeader>
@@ -65,9 +68,11 @@ const CollectionView = (): ReactElement => {
                     </Grid>
                     <Settings>
                         {collection.isOwned ? (
-                            <IconButton>
-                                <BuildOutlined fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
-                            </IconButton>
+                            <Link to={`/kolekcje/${collection._id}`}>
+                                <IconButton>
+                                    <BuildOutlined fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
+                                </IconButton>
+                            </Link>
                         ) : (
                             <IconButton onClick={handleUnsubscribeClick(collection._id)}>
                                 <DeleteIcon fontSize="large" style={{ color: grey[700], fontSize: 42 }} />

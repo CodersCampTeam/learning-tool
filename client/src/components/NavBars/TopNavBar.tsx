@@ -4,6 +4,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { Search } from '../Search';
 import { StyledAppName } from '../../styles/StyledAppName';
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 export const StyledDiv = styled.div`
     display: block;
@@ -16,8 +17,10 @@ export const TopNavBar = (): ReactElement => {
             <Toolbar>
                 <StyledDiv>
                     <StyledAppName>
-                        <span>Fisz</span>
-                        <span>QI</span>
+                        <Link to="/">
+                            <span>Fisz</span>
+                            <span>QI</span>
+                        </Link>
                     </StyledAppName>
                 </StyledDiv>
                 <Search />

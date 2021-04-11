@@ -20,23 +20,21 @@ const App = (): ReactElement => {
             <header>
                 <BrowserRouter>
                     <TopNavBar />
-                    <div
-                        css={css`
-                            height: 100%;
-                        `}
-                    ></div>
-                    <Switch>
-                        <PrivateRoute exact path="/" component={HomeView} />
-                        <Route exact path="/start" component={Home} />
-                        <PrivateRoute exact path="/stworz-kolekcje" component={CreateCollection} />
-                        <PrivateRoute exact path="/profil" component={ProfileView} />
-                        <PrivateRoute exact path="/kolekcje" component={HomeView} />
-                        <Route exact path="/kolekcje/:id" component={CollectionView} />
-                        <PrivateRoute path="/szukaj/:search?" component={SearchResultsComponent} />
-                        <Route exact path="/rejestracja" component={LoginRegistration} />
-                        <Route exact path="/logowanie" component={LoginRegistration} />
-                        <Route component={NotFound} />
-                    </Switch>
+
+                    <div style={{ paddingBottom: '70px' }}>
+                        <Switch>
+                            <PrivateRoute exact path="/" component={HomeView} />
+                            <Route exact path="/start" component={Home} />
+                            <PrivateRoute exact path="/stworz-kolekcje" component={CreateCollection} />
+                            <PrivateRoute exact path="/profil" component={ProfileView} />
+                            <PrivateRoute exact path="/kolekcje" component={HomeView} />
+                            <Route exact path="/kolekcje/:id" component={CollectionView} />
+                            <PrivateRoute path="/szukaj/:search?" component={SearchResultsComponent} />
+                            <Route exact path="/rejestracja" component={LoginRegistration} />
+                            <Route exact path="/logowanie" component={LoginRegistration} />
+                            <Route component={NotFound} />
+                        </Switch>
+                    </div>
                     <BottomNavBar />
                 </BrowserRouter>
             </header>

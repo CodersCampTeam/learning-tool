@@ -11,8 +11,8 @@ const WelcomeScreen = (): ReactElement => {
 
     return (
         <>
-            <Grid container direction="column" justify="center" alignItems="center" alignContent="center" spacing={1}>
-                <Grid item xs={12}>
+            <Grid container direction="column" justify="center" alignItems="center" alignContent="center">
+                <Grid item xs={12} style={{ minHeight: '115px' }}>
                     <Typography variant="h3" color="textPrimary" align="center" mt={6}>
                         <Typed strings={['BUDUJEMY WIEDZĘ.']} typeSpeed={40} showCursor={false} />
                     </Typography>
@@ -43,7 +43,7 @@ const WelcomeScreen = (): ReactElement => {
                         ))}
                     </List>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ margin: '20px auto 0' }}>
                     <Link to="/logowanie">
                         <Button variant="contained" size="medium" color="primary" startIcon={<HowToRegIcon />}>
                             ROZPOCZNIJ NAUKĘ
