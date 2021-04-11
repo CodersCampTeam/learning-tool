@@ -16,31 +16,28 @@ import { CollectionView } from '../CollectionView/CollectionView';
 
 const App = (): ReactElement => {
     return (
-        <div>
-            <header>
-                <BrowserRouter>
-                    <TopNavBar />
-                    <div
-                        css={css`
-                            height: 100%;
-                        `}
-                    ></div>
-                    <Switch>
-                        <PrivateRoute exact path="/" component={HomeView} />
-                        <Route exact path="/start" component={Home} />
-                        <PrivateRoute exact path="/stworz-kolekcje" component={CreateCollection} />
-                        <PrivateRoute exact path="/profil" component={ProfileView} />
-                        <PrivateRoute exact path="/kolekcje" component={HomeView} />
-                        <Route exact path="/kolekcje/:id" component={CollectionView} />
-                        <PrivateRoute path="/szukaj/:search?" component={SearchResultsComponent} />
-                        <Route exact path="/rejestracja" component={LoginRegistration} />
-                        <Route exact path="/logowanie" component={LoginRegistration} />
-                        <Route component={NotFound} />
-                    </Switch>
-                    <BottomNavBar />
-                </BrowserRouter>
-            </header>
-        </div>
+        <BrowserRouter>
+            <TopNavBar />
+            <div
+                css={css`
+                    height: 100%;
+                `}
+            >
+                <Switch>
+                    <PrivateRoute exact path="/" component={HomeView} />
+                    <Route exact path="/start" component={Home} />
+                    <PrivateRoute exact path="/stworz-kolekcje" component={CreateCollection} />
+                    <PrivateRoute exact path="/profil" component={ProfileView} />
+                    <PrivateRoute exact path="/kolekcje" component={HomeView} />
+                    <Route exact path="/kolekcje/:id" component={CollectionView} />
+                    <PrivateRoute path="/szukaj/:search?" component={SearchResultsComponent} />
+                    <Route exact path="/rejestracja" component={LoginRegistration} />
+                    <Route exact path="/logowanie" component={LoginRegistration} />
+                    <Route component={NotFound} />
+                </Switch>
+            </div>
+            <BottomNavBar />
+        </BrowserRouter>
     );
 };
 

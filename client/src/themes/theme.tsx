@@ -1,6 +1,5 @@
 import { createMuiTheme } from '@material-ui/core';
 import { grey, deepPurple } from '@material-ui/core/colors';
-import { Children } from 'react';
 
 const theme = createMuiTheme({
     palette: {
@@ -9,8 +8,11 @@ const theme = createMuiTheme({
     },
     typography: {
         body1: {
-            fontWeight: 600,
+            fontWeight: 400,
             height: '100%'
+        },
+        subtitle1: {
+            fontWeight: 600
         }
     },
     props: {

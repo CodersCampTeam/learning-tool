@@ -1,22 +1,88 @@
-import React, { ReactElement } from 'react';
-import { Grid, Typography, Button, Box, Switch, FormControlLabel } from '@material-ui/core';
-import { useState } from 'react';
+import axios from 'axios';
+import React, { ReactElement, useState, useContext } from 'react';
+import { Grid, Typography, Button, Box, Switch, FormControlLabel, Checkbox } from '@material-ui/core';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
-import CheckboxLabels from './CheckboxDaysRevision';
 import MeetingRoom from '@material-ui/icons/MeetingRoom';
-import ProfileInputFields from './ProfileInputFields';
 import { useHistory } from 'react-router-dom';
+import ProfileInputFields from './ProfileInputFields';
+import FormGroup from '@material-ui/core/FormGroup';
+import { SettingsContext, ISettingsContext } from '../../views/ProfileView';
 
 const SettingsComponent = (): ReactElement => {
-    const [notification, setNotifications] = useState({
-        checkedA: true,
-        checkedB: true
-    });
+    const url = '/api/settings';
+
+    const settingsContext = useContext<ISettingsContext>(SettingsContext);
 
     const history = useHistory();
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNotifications({ ...notification, [event.target.name]: event.target.checked });
+    const [notificationIsActive, setNotificationIsActive] = useState(settingsContext.isActive);
+
+    const [daysState, setDaysState] = useState([
+        {
+            label: 'poniedziałki',
+            dayNumber: '1',
+            checked: settingsContext.sessionHarmonogram.includes('1')
+        },
+        {
+            label: 'wtorki',
+            dayNumber: '2',
+            checked: settingsContext.sessionHarmonogram.includes('2')
+        },
+        {
+            label: 'środy',
+            dayNumber: '3',
+            checked: settingsContext.sessionHarmonogram.includes('3')
+        },
+        {
+            label: 'czwartki',
+            dayNumber: '4',
+            checked: settingsContext.sessionHarmonogram.includes('4')
+        },
+        {
+            label: 'piątki',
+            dayNumber: '5',
+            checked: settingsContext.sessionHarmonogram.includes('5')
+        },
+        {
+            label: 'soboty',
+            dayNumber: '6',
+            checked: settingsContext.sessionHarmonogram.includes('6')
+        },
+        {
+            label: 'niedziele',
+            dayNumber: '0',
+            checked: settingsContext.sessionHarmonogram.includes('0')
+        }
+    ]);
+
+    const handleNotificationSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNotificationIsActive(event.target.checked);
+        settingsContext.isActive = event.target.checked;
+
+        // Could add input for setting hour in future. For now it is fixed to 4 PM in all time zones
+        const date = new Date();
+        date.setHours(16);
+
+        axios.put(`${url}/activate`, { isActive: event.target.checked, hour: date.getUTCHours() });
+    };
+
+    const handleChange = (event: { target: { name: string; checked: boolean } }) => {
+        setDaysState(
+            daysState.map((dayObj) => {
+                return dayObj.dayNumber === event.target.name ? { ...dayObj, checked: !dayObj.checked } : dayObj;
+            })
+        );
+    };
+
+    const handleSaveClicked = () => {
+        const sessionHarmonogram: string[] = [];
+        daysState.map((dayObj) => {
+            if (dayObj.checked) {
+                sessionHarmonogram.push(dayObj.dayNumber);
+            }
+        });
+        settingsContext.sessionHarmonogram = sessionHarmonogram;
+        axios.put(`${url}/harmonogram`, { harmonogram: sessionHarmonogram });
     };
 
     const handleLogout = () => {
@@ -34,17 +100,34 @@ const SettingsComponent = (): ReactElement => {
                 </Grid>
                 <Grid container justify="center" alignItems="center" spacing={2}>
                     <Grid item xs={11} sm={4}>
-                        <Typography variant="body1" align="center" color="textPrimary">
+                        <Typography variant="h6" align="center" color="textPrimary">
                             Harmonogram powtórek
                         </Typography>
                         <Box textAlign="center" mb={4} mt={2}>
-                            <CheckboxLabels />
+                            <FormGroup row>
+                                {daysState.map((day, dayIdx) => (
+                                    <FormControlLabel
+                                        key={dayIdx}
+                                        control={
+                                            <Checkbox
+                                                checked={day.checked}
+                                                onChange={handleChange}
+                                                name={day.dayNumber.toString()}
+                                                color="secondary"
+                                            />
+                                        }
+                                        label={day.label}
+                                        style={{ display: 'table' }}
+                                    />
+                                ))}
+                            </FormGroup>
                             <Button
                                 variant="contained"
                                 color="primary"
                                 size="medium"
                                 type="submit"
-                                startIcon={<DoneOutlineIcon />}
+                                endIcon={<DoneOutlineIcon />}
+                                onClick={handleSaveClicked}
                             >
                                 Zapisz
                             </Button>
@@ -54,7 +137,7 @@ const SettingsComponent = (): ReactElement => {
             </Grid>
             <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
                 <Grid item xs={9} sm={3}>
-                    <Typography variant="body1" color="textPrimary" align="left">
+                    <Typography variant="subtitle1" color="textPrimary" align="left">
                         Powiadomienia e-mail
                     </Typography>
                 </Grid>
@@ -63,17 +146,15 @@ const SettingsComponent = (): ReactElement => {
                         value="bottom"
                         control={
                             <Switch
-                                checked={notification.checkedB}
-                                onChange={handleChange}
-                                name="checkedB"
-                                color="secondary"
-                                edge="end"
-                                aria-label="Włącz"
+                                checked={notificationIsActive}
+                                onChange={handleNotificationSwitch}
                                 size="small"
+                                color="secondary"
+                                aria-label="Włącz"
                             />
                         }
                         label="Włącz"
-                        labelPlacement="bottom"
+                        labelPlacement="end"
                     />
                 </Grid>
             </Grid>
