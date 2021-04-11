@@ -44,7 +44,7 @@ const CollectionView = (): ReactElement => {
                 </IconButton>
             </CreateCollection>
             {data.map((collection: ICollection) => (
-                <StyledGrid>
+                <StyledGrid key={collection._id}>
                     <CollectionHeader>{collection.name}</CollectionHeader>
                     <Grid container direction="row" justify="center" alignItems="baseline">
                         <RowDiv>

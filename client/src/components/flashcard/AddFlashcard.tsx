@@ -1,80 +1,103 @@
-import { Button, TextField, Box } from '@material-ui/core';
+import { Button, TextField, Box, Snackbar } from '@material-ui/core';
 import React, { FC, ReactElement, useState } from 'react';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import Container from '@material-ui/core/Container';
-import styled from '@emotion/styled';
 import axios from 'axios';
-import { Redirect, useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const AddFlashcard: FC = (): ReactElement => {
     const [prompt, setPrompt] = useState('');
+    const [promptError, setPromptError] = useState(false);
+    const [answerError, setAnswerError] = useState(false);
     const [correctAnswer, setCorrectAnswer] = useState(0);
-    const [answers, setAnswers] = useState<string[]>([]);
+    const [answer, setAnswer] = useState('');
     const [hint, setHint] = useState('');
     const [extraInfo, setExtraInfo] = useState('');
-    const [errors, setErrors] = useState<string[]>([]);
-    const [isError, setIsError] = useState(false);
-    const [redirect, setRedirect] = useState(false);
+    const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
+    const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const { collectionId } = useParams<{ collectionId: string }>();
     const history = useHistory();
     interface Flashcard {
         prompt: string;
         answers: string[];
-        extraInfo: string;
+        extraInfo?: string;
         collectionId: string;
         isQuizQuestion: boolean;
         correctAnswer: number;
     }
 
-    const addAnswer = (answer: string) => {
-        console.log('adding answer: ', answer);
-        setAnswers([...answers, answer]);
-        console.log('all answers: ', answers);
-    };
-
     const saveFlashcard = () => {
-        console.log('saving flashcard...');
+        if (!prompt) {
+            setPromptError(true);
+            return;
+        }
+        if (!answer) {
+            setAnswerError(true);
+            return;
+        }
 
         const flashcard: Flashcard = {
             prompt: prompt,
             correctAnswer: correctAnswer,
-            isQuizQuestion: answers.length > 1 ? true : false,
+            isQuizQuestion: false,
             collectionId: collectionId,
-            answers: answers,
-            extraInfo: extraInfo
+            answers: [answer],
+            extraInfo: extraInfo || undefined
         };
 
         axios
             .put(`/api/flashcard/${flashcard.collectionId}`, flashcard, { withCredentials: true })
-            .then((response) => history.push('/'))
+            .then((response) => {
+                setOpenSuccessAlert(true);
+                setTimeout(() => history.push('/kolekcje/' + collectionId), 1000);
+            })
             .catch((error) => {
+                setOpenErrorAlert(true);
                 throw error;
             });
     };
 
+    const handleSetPrompt = (value: string) => {
+        if (value.length < 1) {
+            setPromptError(true);
+        } else {
+            setPromptError(false);
+        }
+        setPrompt(value);
+    };
+
+    const handleSetAnswer = (value: string) => {
+        if (value.length < 1) {
+            setAnswerError(true);
+        } else {
+            setAnswerError(false);
+        }
+        setAnswer(value);
+    };
+
     return (
         <>
-            {redirect && <Redirect to="/kolekcje" />}
             <Container maxWidth="sm">
                 <Box m={4} textAlign="center">
                     <h1>Tworzenie Fiszki</h1>
                 </Box>
                 <Box m={4}>
                     <TextField
-                        error={isError} // TODO jak to ustawic?
+                        error={promptError}
                         fullWidth
                         label="Pytanie"
                         helperText="To pole jest wymagane"
-                        onChange={(e) => setPrompt(e.target.value)}
+                        onChange={(e) => handleSetPrompt(e.target.value)}
                     />
                 </Box>
                 <Box m={4}>
                     <TextField
-                        error={isError}
+                        error={answerError}
                         fullWidth
                         label="Odpowiedź"
                         helperText="To pole jest wymagane"
-                        onChange={(e) => addAnswer(e.target.value)}
+                        onChange={(e) => handleSetAnswer(e.target.value)}
                     />
                 </Box>
                 <Box m={4}>
@@ -97,6 +120,30 @@ const AddFlashcard: FC = (): ReactElement => {
                     >
                         Zapisz
                     </Button>
+                    <Snackbar
+                        open={openSuccessAlert}
+                        autoHideDuration={1000}
+                        onClose={() => setOpenSuccessAlert(false)}
+                    >
+                        <MuiAlert
+                            elevation={6}
+                            variant="filled"
+                            severity="success"
+                            onClose={() => setOpenSuccessAlert(false)}
+                        >
+                            Pomyślnie zapisano fiszkę!
+                        </MuiAlert>
+                    </Snackbar>
+                    <Snackbar open={openErrorAlert} autoHideDuration={5000} onClose={() => setOpenErrorAlert(false)}>
+                        <MuiAlert
+                            elevation={6}
+                            variant="filled"
+                            severity="error"
+                            onClose={() => setOpenErrorAlert(false)}
+                        >
+                            Wystąpił błąd!
+                        </MuiAlert>
+                    </Snackbar>
                 </Box>
             </Container>
         </>

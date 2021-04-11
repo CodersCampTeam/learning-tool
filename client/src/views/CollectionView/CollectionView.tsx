@@ -5,6 +5,7 @@ import { Delete } from '@material-ui/icons';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 
 interface flashCard {
     _id: string;
@@ -65,11 +66,16 @@ export const CollectionView = (): JSX.Element => {
         return (
             <div style={{ textAlign: 'center' }}>
                 <h1>Edytuj kolekcję {data.name} </h1>
-
-                <Button style={{ marginBottom: '10px' }} variant="contained" color="default" endIcon={<AddCircle />}>
+                <Button
+                    component={Link}
+                    to={`/stworz-fiszke/${id}`}
+                    style={{ marginBottom: '10px' }}
+                    variant="contained"
+                    color="default"
+                    endIcon={<AddCircle />}
+                >
                     Dodaj nową fiszkę
                 </Button>
-
                 {data.flashcards?.map((flashcard, index) => (
                     <Card key={index} style={{ margin: '15px 0' }}>
                         <Box
