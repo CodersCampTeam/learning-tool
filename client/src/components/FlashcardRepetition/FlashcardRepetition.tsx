@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { useEffect, useState } from 'react';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -13,6 +10,9 @@ import { CancelOutlined, ContactSupportOutlined, CheckCircleOutline } from '@mat
 import { Grid } from '@material-ui/core';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import green from '@material-ui/core/colors/green';
+import red from '@material-ui/core/colors/red';
+import lightBlue from '@material-ui/core/colors/lightBlue';
 
 const StyledCard = styled(Card)`
     min-height: 20em;
@@ -93,8 +93,27 @@ export const FlashcardRepetition = () => {
         }
     };
 
+    function handleKeyboardNavigation(event: { key: any }) {
+        switch (event.key) {
+            case 'a':
+                handleNotKnown();
+                break;
+            case 's':
+                setShowAnswer(true);
+                break;
+            case 'd':
+                handleKnown();
+                break;
+            case 'w':
+                setShowExtraInfo((showExtraInfo) => !showExtraInfo);
+                break;
+            default:
+                break;
+        }
+    }
+
     return (
-        <>
+        <div tabIndex={0} id="example" onKeyUp={handleKeyboardNavigation}>
             <Grid item xs={12} style={{ margin: '1em' }}>
                 <Grid container justify="flex-end" alignItems="center" style={{ gridGap: '3em' }}>
                     {/* <FormControlLabel
@@ -141,7 +160,7 @@ export const FlashcardRepetition = () => {
                             </Typography>
                         )}
                         {showAnswer && (
-                            <Typography variant="body1" component="p" align="center">
+                            <Typography variant="h6" component="p" align="center">
                                 {question.questionAnswer}
                             </Typography>
                         )}
@@ -151,16 +170,16 @@ export const FlashcardRepetition = () => {
             <Grid item xs={12} style={{ margin: '1em' }}>
                 <Grid container justify="center" alignItems="center" style={{ gridGap: '3em' }}>
                     <IconButton onClick={handleNotKnown}>
-                        <CancelOutlined style={{ fontSize: 42 }} />
+                        <CancelOutlined style={{ fontSize: 42, color: green[500] }} />
                     </IconButton>
                     <IconButton onClick={() => setShowAnswer(true)}>
-                        <ContactSupportOutlined style={{ fontSize: 42 }} />
+                        <ContactSupportOutlined style={{ fontSize: 42, color: lightBlue[500] }} />
                     </IconButton>
                     <IconButton onClick={handleKnown}>
-                        <CheckCircleOutline style={{ fontSize: 42 }} />
+                        <CheckCircleOutline style={{ fontSize: 42, color: red[500] }} />
                     </IconButton>
                 </Grid>
             </Grid>
-        </>
+        </div>
     );
 };
