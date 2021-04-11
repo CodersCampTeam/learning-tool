@@ -40,7 +40,9 @@ const Form = ({ error, isregister, onUsernameChange, onEmailChange, onPasswordCh
 
     const passwordMatching = (value: string) => {
         if (isregister) {
-            return value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,1024}$/) || '';
+            return (
+                value.match(/^(?=.*[a-zżźćńółęąś])(?=.*[A-ZŻŹĆĄŚĘŁÓŃ])(?=.*\d)(?=.*[!@#$%^&*()\-__+.]).{8,1024}$/) || ''
+            );
         } else {
             return true;
         }
@@ -196,7 +198,7 @@ const Form = ({ error, isregister, onUsernameChange, onEmailChange, onPasswordCh
                             {isregister ? `ZAREJESTRUJ` : 'ZALOGUJ SIĘ'}
                         </StyledButton>
                     </StyledForm>
-                    <StyledLink to={isregister ? '/login' : '/register'}>
+                    <StyledLink to={isregister ? '/logowanie' : '/rejestracja'}>
                         {isregister ? `Masz już konto? Zaloguj się` : `Nie masz konta? Zarejestruj się`}
                     </StyledLink>
                 </Grid>

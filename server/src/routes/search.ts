@@ -22,7 +22,17 @@ router.get('/', async function (req: Request, res: Response, next) {
                                 flashcards: { $exists: true, $not: { $size: 0 } }
                             }
                         },
-                        { $project: { _id: 0, flashcards: 1, name: 1, owner: 1 } },
+                        {
+                            $project: {
+                                flashcards: 1,
+                                name: 1,
+                                owner: 1,
+                                subscribedUsers: { $ifNull: ['$subscribedUsers', []] },
+                                isSubscribed: {
+                                    $in: [req['user']._id, '$subscribedUsers']
+                                }
+                            }
+                        },
                         {
                             $lookup: {
                                 from: 'users',
@@ -33,7 +43,7 @@ router.get('/', async function (req: Request, res: Response, next) {
                         },
                         {
                             $set: {
-                                owner: { $first: '$owner.username' }
+                                owner: '$owner.username'
                             }
                         }
                     ],
@@ -50,7 +60,17 @@ router.get('/', async function (req: Request, res: Response, next) {
             FlashcardCollection.aggregate(
                 [
                     { $match: { isPublic: true, flashcards: { $exists: true, $not: { $size: 0 } } } },
-                    { $project: { _id: 0, flashcards: 1, name: 1, owner: 1 } },
+                    {
+                        $project: {
+                            flashcards: 1,
+                            name: 1,
+                            owner: 1,
+                            subscribedUsers: { $ifNull: ['$subscribedUsers', []] },
+                            isSubscribed: {
+                                $in: [req['user']._id, '$subscribedUsers']
+                            }
+                        }
+                    },
                     {
                         $lookup: {
                             from: 'users',
@@ -61,7 +81,7 @@ router.get('/', async function (req: Request, res: Response, next) {
                     },
                     {
                         $set: {
-                            owner: { $first: '$owner.username' }
+                            owner: '$owner.username'
                         }
                     }
                 ],

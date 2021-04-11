@@ -7,6 +7,7 @@ interface IFlashcardCollection extends mongoose.Document {
     isPublic: boolean;
     tags: mongoose.Schema.Types.ObjectId[];
     flashcards: mongoose.Schema.Types.ObjectId[];
+    subscribedUsers: mongoose.Schema.Types.ObjectId[];
 }
 
 const flashcardCollectionSchema = new mongoose.Schema({
@@ -42,6 +43,15 @@ const flashcardCollectionSchema = new mongoose.Schema({
             }
         ],
         default: []
+    },
+    subscribedUsers: {
+        type: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ],
+        default: []
     }
 });
 
@@ -53,7 +63,8 @@ function validateFlashcardCollection(flashcardCollection: IFlashcardCollection):
         name: Joi.string().min(1).max(255).required(),
         isPublic: Joi.boolean().default(false),
         tags: Joi.array().default([]),
-        flashcards: Joi.array().default([])
+        flashcards: Joi.array().default([]),
+        subscribedUsers: Joi.array().default([])
     });
 
     return schema.validate(flashcardCollection);
@@ -65,7 +76,8 @@ function validateFlashcardCollectionUpdate(flashcardCollection: IFlashcardCollec
         name: Joi.string().min(1).max(255),
         isPublic: Joi.boolean().default(false),
         tags: Joi.array().default([]),
-        flashcards: Joi.array().default([])
+        flashcards: Joi.array().default([]),
+        subscribedUsers: Joi.array().default([])
     });
 
     return schema.validate(flashcardCollection);

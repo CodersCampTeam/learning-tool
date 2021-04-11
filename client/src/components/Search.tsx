@@ -58,14 +58,14 @@ export const Search = (): ReactElement => {
 
     const handleKeyClick = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            history.push(`/search/${search}`);
+            history.push(`/szukaj/${search}`);
         }
     };
 
     const history = useHistory();
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        history.push(`/search/${search}`);
+        history.push(`/szukaj/${search}`);
     };
 
     return (

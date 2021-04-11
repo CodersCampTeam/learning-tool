@@ -51,7 +51,9 @@ const userSchema = new mongoose.Schema({
         required: false
     },
     sessionSettings: {
-        type: sessionSettingsSchema
+        type: sessionSettingsSchema,
+        required: false,
+        default: () => ({})
     },
     googleId: {
         type: String
@@ -67,7 +69,7 @@ userSchema.methods.generateAuthToken = function () {
 
 const User = mongoose.model<IUser>('User', userSchema);
 
-function validateUser(user: typeof User): Joi.ValidationResult {
+function validateUser(user: IUser): Joi.ValidationResult {
     const schema = Joi.object({
         email: Joi.string().required().email(),
         password: passwordComplexity().required(),
@@ -81,4 +83,14 @@ function validateUser(user: typeof User): Joi.ValidationResult {
     return schema.validate(user);
 }
 
-export { User, validateUser };
+function validateUserProfile(user: IUser): Joi.ValidationResult {
+    const schema = Joi.object({
+        email: Joi.string().email(),
+        password: passwordComplexity(),
+        username: Joi.string().min(2).max(30)
+    });
+
+    return schema.validate(user);
+}
+
+export { User, validateUser, validateUserProfile };

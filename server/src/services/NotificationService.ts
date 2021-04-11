@@ -4,24 +4,21 @@ import { User } from '../models/User';
 
 const runNotificationService = (): void => {
     if (process.env.EMAIL_ADDRESS && process.env.EMAIL_PSWD && process.env.JEST_WORKER_ID === undefined) {
-        // Schedule checks every minute. Mail will be sent to user which
-        // session time DD:MM:YYYY HH:MM:-- match current time
-        cron.schedule('* * * * *', sendEmail);
+        // Schedule checks every hour. Mail will be sent to user which
+        // session time DD:MM:YYYY HH:--:-- match current time
+        cron.schedule('0 * * * *', sendEmail);
     }
 };
 
 async function sendEmail(): Promise<void> {
-    const dateMin = new Date();
-    dateMin.setSeconds(0);
-
-    const dateMax = new Date();
-    dateMax.setSeconds(59);
+    const today = new Date();
+    const todayDay = today.getDay();
+    const todayHour = today.getUTCHours();
 
     const users = await User.find({
-        'sessionSettings.sessionHarmonogram': {
-            $lte: dateMax,
-            $gte: dateMin
-        }
+        'sessionSettings.sessionHarmonogram': todayDay,
+        'sessionSettings.hour': todayHour,
+        'sessionSettings.isActive': true
     });
 
     const transporter = nodemailer.createTransport({

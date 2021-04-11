@@ -22,7 +22,7 @@ const Register = (): ReactElement => {
             },
             data: user
         })
-            .then((response) => (window.location.href = `/login`))
+            .then((response) => (window.location.href = `/logowanie`))
             .catch((error) => {
                 const errors = error.response.data;
                 setError('server', {
