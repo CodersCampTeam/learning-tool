@@ -1,12 +1,14 @@
 import axios from 'axios';
 import React, { ReactElement, useState, useContext } from 'react';
 import { Grid, Typography, Button, Box, Switch, FormControlLabel, Checkbox } from '@material-ui/core';
-import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import MeetingRoom from '@material-ui/icons/MeetingRoom';
 import { useHistory } from 'react-router-dom';
 import ProfileInputFields from './ProfileInputFields';
 import FormGroup from '@material-ui/core/FormGroup';
 import { SettingsContext, ISettingsContext } from '../../views/ProfileView';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import SaveIcon from '@material-ui/icons/Save';
 
 const SettingsComponent = (): ReactElement => {
     const url = '/api/settings';
@@ -55,6 +57,8 @@ const SettingsComponent = (): ReactElement => {
         }
     ]);
 
+    const [open, setOpen] = React.useState(false);
+
     const handleNotificationSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNotificationIsActive(event.target.checked);
         settingsContext.isActive = event.target.checked;
@@ -82,7 +86,9 @@ const SettingsComponent = (): ReactElement => {
             }
         });
         settingsContext.sessionHarmonogram = sessionHarmonogram;
-        axios.put(`${url}/harmonogram`, { harmonogram: sessionHarmonogram });
+        axios.put(`${url}/harmonogram`, { harmonogram: sessionHarmonogram }).then(() => {
+            setOpen(true);
+        });
     };
 
     const handleLogout = () => {
@@ -126,10 +132,10 @@ const SettingsComponent = (): ReactElement => {
                                 color="primary"
                                 size="medium"
                                 type="submit"
-                                endIcon={<DoneOutlineIcon />}
+                                endIcon={<SaveIcon />}
                                 onClick={handleSaveClicked}
                             >
-                                Zapisz
+                                Zapisz harmonogram
                             </Button>
                         </Box>
                     </Grid>
@@ -169,6 +175,20 @@ const SettingsComponent = (): ReactElement => {
             >
                 Wyloguj się
             </Button>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center'
+                }}
+                open={open}
+                autoHideDuration={1500}
+                onClose={() => setOpen(false)}
+            >
+                <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => setOpen(false)}>
+                    Pomyślnie zapisano!
+                </MuiAlert>
+            </Snackbar>
+            ;
         </>
     );
 };
