@@ -7,8 +7,7 @@ import ProfileInputFields from './ProfileInputFields';
 import FormGroup from '@material-ui/core/FormGroup';
 import { SettingsContext, ISettingsContext } from '../../views/ProfileView';
 import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import MuiAlert from '@material-ui/lab/Alert';
 import SaveIcon from '@material-ui/icons/Save';
 
 const SettingsComponent = (): ReactElement => {
@@ -99,14 +98,6 @@ const SettingsComponent = (): ReactElement => {
         history.push('/');
     };
 
-    const handleClose = (event: React.SyntheticEvent | React.MouseEvent, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setOpen(false);
-    };
-
     return (
         <>
             <Grid container direction="column" justify="center" alignItems="center" alignContent="center" spacing={4}>
@@ -191,16 +182,12 @@ const SettingsComponent = (): ReactElement => {
                 }}
                 open={open}
                 autoHideDuration={1500}
-                onClose={handleClose}
-                message="Zapisano"
-                action={
-                    <React.Fragment>
-                        <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-                            <CloseIcon fontSize="small" />
-                        </IconButton>
-                    </React.Fragment>
-                }
-            />
+                onClose={() => setOpen(false)}
+            >
+                <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => setOpen(false)}>
+                    Pomyślnie zapisano!
+                </MuiAlert>
+            </Snackbar>
             ;
         </>
     );
