@@ -79,40 +79,21 @@ router.get('/headerHistory', async (req: Request, res: Response, next) => {
 router.get('/collection', async (req: Request, res: Response, next) => {
     const user = new Mongo.ObjectID(req['user']._id);
     try {
-        FlashcardCollection.aggregate(
+        AnswerHistory.aggregate(
             [
                 { $sort: { max: -1 } },
                 {
                     $lookup: {
-                        from: 'flashcards',
-                        localField: '_id',
-                        foreignField: 'collectionId',
-                        as: 'flashcard'
-                    }
-                },
-                {
-                    $lookup: {
-                        from: 'answerhistories',
-                        let: { order_item: '$owner', order_qty: '$_id' },
-                        pipeline: [
-                            {
-                                $match: {
-                                    $expr: {
-                                        $and: [
-                                            { $eq: ['$flashcardCollection', '$$order_qty'] },
-                                            { $eq: ['$user', '$$order_item'] }
-                                        ]
-                                    }
-                                }
-                            }
-                        ],
-                        as: 'stockdata'
+                        from: 'flashcardcollections',
+                        localField: 'flashcardCollection',
+                        foreignField: '_id',
+                        as: 'flashcardCollection'
                     }
                 },
                 {
                     $lookup: {
                         from: 'answers',
-                        localField: 'stockdata.answers',
+                        localField: 'answers',
                         foreignField: '_id',
                         as: 'answers'
                     }
