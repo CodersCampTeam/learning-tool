@@ -38,3 +38,8 @@ const PrivateRoute = ({ ...props }: any) => {
     }
 };
 export default PrivateRoute;
+
+export const checkPrivateRoute = (path: string): boolean => {
+    if (path === '/') return true;
+    return ['/profil', '/kolekcje', '/stworz-kolekcje', '/stworz-fiszke'].some((el) => path.startsWith(el));
+};

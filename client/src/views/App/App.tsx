@@ -11,7 +11,7 @@ import LoginRegistration from '../LoginRegistration';
 import SearchResultsComponent from '../../components/SearchResults/SearchResultsComponent';
 import { css } from '@emotion/react';
 import { CreateCollection } from '../../components/CreateCollection/CreateCollection';
-import PrivateRoute from '../../PrivateRoute';
+import PrivateRoute, { checkPrivateRoute } from '../../PrivateRoute';
 import { CollectionView } from '../CollectionView/CollectionView';
 
 const App = (): ReactElement => {
@@ -19,8 +19,12 @@ const App = (): ReactElement => {
         <div>
             <header>
                 <BrowserRouter>
-                    <TopNavBar />
-
+                    <Route
+                        path="/"
+                        render={(routeProps) => (
+                            <TopNavBar displaySearch={checkPrivateRoute(routeProps.location.pathname)} />
+                        )}
+                    />
                     <div style={{ paddingBottom: '70px' }}>
                         <Switch>
                             <PrivateRoute exact path="/" component={HomeView} />
@@ -28,14 +32,19 @@ const App = (): ReactElement => {
                             <PrivateRoute exact path="/stworz-kolekcje" component={CreateCollection} />
                             <PrivateRoute exact path="/profil" component={ProfileView} />
                             <PrivateRoute exact path="/kolekcje" component={HomeView} />
-                            <Route exact path="/kolekcje/:id" component={CollectionView} />
+                            <PrivateRoute exact path="/kolekcje/:id" component={CollectionView} />
                             <PrivateRoute path="/szukaj/:search?" component={SearchResultsComponent} />
                             <Route exact path="/rejestracja" component={LoginRegistration} />
                             <Route exact path="/logowanie" component={LoginRegistration} />
                             <Route component={NotFound} />
                         </Switch>
                     </div>
-                    <BottomNavBar />
+                    <Route
+                        path="/"
+                        render={(routeProps) =>
+                            checkPrivateRoute(routeProps.location.pathname) ? <BottomNavBar /> : null
+                        }
+                    />
                 </BrowserRouter>
             </header>
         </div>

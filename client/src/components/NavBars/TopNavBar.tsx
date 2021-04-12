@@ -11,7 +11,7 @@ export const StyledDiv = styled.div`
     flex-grow: 1;
 `;
 
-export const TopNavBar = (): ReactElement => {
+export const TopNavBar = ({ displaySearch }: { displaySearch: boolean }): ReactElement => {
     return (
         <AppBar position="sticky" style={{ marginBottom: '1em' }}>
             <Toolbar>
@@ -23,7 +23,7 @@ export const TopNavBar = (): ReactElement => {
                         </Link>
                     </StyledAppName>
                 </StyledDiv>
-                <Search />
+                {displaySearch ? <Search /> : null}
             </Toolbar>
         </AppBar>
     );
