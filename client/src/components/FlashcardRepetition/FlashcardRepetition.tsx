@@ -70,7 +70,7 @@ export const FlashcardRepetition = () => {
                         question: res.data.flashcards[0].prompt,
                         questionNumber: 1,
                         questionAnswer: res.data.flashcards[0].answers[res.data.flashcards[0].correctAnswer],
-                        answers: [],
+                        answers: res.data.flashcards[0].answers,
                         extraInfo: res.data.flashcards[0].extraInfo,
                         isQuizQuestion: res.data.flashcards[0].isQuizQuestion
                     });
@@ -107,7 +107,8 @@ export const FlashcardRepetition = () => {
                 handleNotKnown();
                 break;
             case 's':
-                setShowAnswer(true);
+                console.log(quizMode, question.answers.length);
+                if (quizMode === false || (quizMode === true && question.answers.length === 1)) setShowAnswer(true);
                 break;
             case 'd':
                 handleKnown();
@@ -174,7 +175,7 @@ export const FlashcardRepetition = () => {
                             {question.question}
                         </Typography>
                         {showExtraInfo && question.extraInfo.length > 0 && (
-                            <Typography variant="caption" component="p" align="center">
+                            <Typography variant="subtitle2" component="p" align="center">
                                 {question.extraInfo}
                             </Typography>
                         )}
