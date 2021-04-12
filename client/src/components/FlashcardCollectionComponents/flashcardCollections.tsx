@@ -8,6 +8,7 @@ import { StyledGrid, CollectionHeader, Settings, AssessmentStyle, CreateCollecti
 import { grey } from '@material-ui/core/colors';
 import GradeIcon from '@material-ui/icons/Grade';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router';
 
 interface ICollection {
     name: string;
@@ -22,6 +23,8 @@ const CollectionView = (): ReactElement => {
 
     const [data, setData] = useState([]);
 
+    const history = useHistory();
+
     useEffect(() => {
         axios.get(url).then((json) => setData(json.data || []));
     }, []);
@@ -33,6 +36,10 @@ const CollectionView = (): ReactElement => {
                 setData(data.filter((el: ICollection) => el._id !== id));
             })
             .catch(console.log);
+    };
+
+    const handleLearn = (id: string) => () => {
+        history.push(`/powtorka/${id}`);
     };
 
     return (
@@ -83,7 +90,7 @@ const CollectionView = (): ReactElement => {
                                 <Assessment fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
                             </IconButton>
                         </AssessmentStyle>
-                        <IconButton>
+                        <IconButton onClick={handleLearn(collection._id)}>
                             <ArrowForward style={{ fontSize: 42, color: grey[700] }} />
                         </IconButton>
                     </Settings>

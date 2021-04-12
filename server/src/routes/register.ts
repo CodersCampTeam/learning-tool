@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { User, validateUser } from '../models/User';
 import bcrypt from 'bcryptjs';
+import { SessionSettings } from '../models/SessionSettings';
 
 const router = express.Router();
 
@@ -19,11 +20,12 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
         user = new User({
             username: req.body.username,
             email: req.body.email,
-            password: await bcrypt.hash(req.body.password, salt)
+            password: await bcrypt.hash(req.body.password, salt),
+            sessionSettings: new SessionSettings()
         });
 
         await user.save();
-        res.send(200);
+        res.sendStatus(200);
     } catch (error) {
         next(error);
     }

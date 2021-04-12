@@ -9,7 +9,16 @@ const theme = createMuiTheme({
     typography: {
         body1: {
             fontWeight: 600,
-            height: '100%'
+            height: '100%',
+            fontFamily: 'righteous'
+        },
+        subtitle1: {
+            fontWeight: 600
+        },
+        body2: {
+            height: '100%',
+            fontFamily: 'righteous',
+            fontSize: 17
         }
     },
     props: {
@@ -24,7 +33,7 @@ const theme = createMuiTheme({
     overrides: {
         MuiIconButton: {
             root: {
-                padding: '10px'
+                padding: '0px'
             }
         },
         MuiCssBaseline: {
