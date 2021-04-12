@@ -46,9 +46,11 @@ const CollectionView = (): ReactElement => {
         <Container maxWidth="xs" justify-content="center">
             <Link to="/stworz-kolekcje">
                 <CreateCollection>
-                    <div style={{ margin: '0 auto', color: grey[800] }}>Stwórz nową kolekcję</div>
+                    <Typography color="textPrimary" align="center" variant="subtitle1">
+                        Stwórz nową kolekcję
+                    </Typography>
                     <IconButton>
-                        <AddCircle style={{ fontSize: 30, color: grey[800] }} />
+                        <AddCircle style={{ fontSize: 30, color: grey[800], marginLeft: '5px' }} />
                     </IconButton>
                 </CreateCollection>
             </Link>
@@ -57,7 +59,7 @@ const CollectionView = (): ReactElement => {
                     <CollectionHeader>{collection.name}</CollectionHeader>
                     <Grid container direction="row" justify="center" alignItems="baseline">
                         <RowDiv>
-                            <FeaturedPlayListOutlined style={{ fontSize: 20, color: grey[800] }} />
+                            <FeaturedPlayListOutlined style={{ fontSize: 20, color: grey[800], marginRight: '5px' }} />
                             <Typography variant="body1" display="inline">
                                 Fiszki: {collection.flashcards}
                             </Typography>
@@ -86,9 +88,11 @@ const CollectionView = (): ReactElement => {
                             </IconButton>
                         )}
                         <AssessmentStyle>
-                            <IconButton>
-                                <Assessment fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
-                            </IconButton>
+                            <Link to="/profil">
+                                <IconButton>
+                                    <Assessment fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
+                                </IconButton>
+                            </Link>
                         </AssessmentStyle>
                         <IconButton onClick={handleLearn(collection._id)}>
                             <ArrowForward style={{ fontSize: 42, color: grey[700] }} />

@@ -34,7 +34,7 @@ const StyledInputBase = styled(InputBase)`
 const StyledPaper = styled(Paper)`
     display: 'flex';
     alignitems: 'center';
-    width: 400;
+    width: 190px;
 `;
 
 const StyledMuiPaperRoot = styled.span`

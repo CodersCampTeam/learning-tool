@@ -23,8 +23,8 @@ const TabComponent = (props: ITabProps): ReactElement => {
                 value={value}
                 onChange={handleChange}
                 variant="fullWidth"
-                indicatorColor="secondary"
-                textColor="secondary"
+                indicatorColor="primary"
+                textColor="primary"
             >
                 <Tab icon={props.iconLeft} label={props.labelLeft} value={0} />
                 <Tab icon={props.iconRight} label={props.labelRight} value={1} />

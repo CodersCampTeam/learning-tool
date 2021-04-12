@@ -41,5 +41,7 @@ export default PrivateRoute;
 
 export const checkPrivateRoute = (path: string): boolean => {
     if (path === '/') return true;
-    return ['/profil', '/kolekcje', '/stworz-kolekcje', '/stworz-fiszke'].some((el) => path.startsWith(el));
+    return ['/profil', '/kolekcje', '/stworz-kolekcje', '/stworz-fiszke', '/powtorka', '/szukaj', '/czat'].some((el) =>
+        path.startsWith(el)
+    );
 };

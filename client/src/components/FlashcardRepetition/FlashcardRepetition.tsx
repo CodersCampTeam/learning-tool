@@ -103,7 +103,7 @@ export const FlashcardRepetition = () => {
                             <Switch
                                 checked={quizMode}
                                 onChange={(event) => setQuizMode(event.target.checked)}
-                                color="secondary"
+                                color="primary"
                                 aria-label="tryb quizu"
                             />
                         }
@@ -116,7 +116,7 @@ export const FlashcardRepetition = () => {
                             <Switch
                                 checked={showExtraInfo}
                                 onChange={(event) => setShowExtraInfo(event.target.checked)}
-                                color="secondary"
+                                color="primary"
                                 aria-label="Pokaż dodatkowe info"
                             />
                         }

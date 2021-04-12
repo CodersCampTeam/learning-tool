@@ -1,4 +1,4 @@
-import { Box, Button, Container, FormControlLabel, Switch, TextField } from '@material-ui/core';
+import { Box, Button, Container, FormControlLabel, Switch, TextField, Typography } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import axios from 'axios';
 
@@ -48,7 +48,7 @@ export const CreateCollection = () => {
             {redirect && <Redirect to="/kolekcje" />}
             <Container maxWidth="sm">
                 <Box m={4} textAlign="center">
-                    <h1>Tworzenie kolekcji</h1>
+                    <Typography variant="h2">TWORZENIE KOLEKCJI</Typography>
                 </Box>
                 <Box m={4}>
                     <TextField
@@ -72,7 +72,7 @@ export const CreateCollection = () => {
                             <Switch
                                 checked={isPublic}
                                 onChange={(e) => toggleIsPublic(e.target.checked)}
-                                color="secondary"
+                                color="primary"
                             />
                         }
                         label="Publiczna kolekcja"

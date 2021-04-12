@@ -1,7 +1,7 @@
 import { Container } from '@material-ui/core';
 import axios from 'axios';
 import { useState, useEffect, ReactElement } from 'react';
-import { StatisticsHeader } from './styles';
+import { StatsHeader } from './styles';
 
 const StatisticHeader = (): ReactElement => {
     const url = '/api/statistics/header';
@@ -23,32 +23,32 @@ const StatisticHeader = (): ReactElement => {
     return (
         <Container maxWidth="xs" justify-content="center">
             {dataCollection.length > 0 ? (
-                dataCollection.map((collection) => (
-                    <StatisticsHeader>
+                dataCollection.map((collection, index) => (
+                    <StatsHeader key={index}>
                         Własne kolekcje: {collection['mycollections']}
                         <br />
                         Fiszki: {collection['myflashcards']}
-                    </StatisticsHeader>
+                    </StatsHeader>
                 ))
             ) : (
-                <StatisticsHeader>
+                <StatsHeader>
                     {' '}
                     Własne kolekcje: 0 <br /> Fiszki: 0
-                </StatisticsHeader>
+                </StatsHeader>
             )}
             {dataHistory.length > 0 ? (
-                dataHistory.map((history) => (
-                    <StatisticsHeader>
+                dataHistory.map((history, index) => (
+                    <StatsHeader key={index}>
                         Powtórzone fiszki: {history['answers']}
                         <br />
                         Sesje: {history['session']}
-                    </StatisticsHeader>
+                    </StatsHeader>
                 ))
             ) : (
-                <StatisticsHeader>
+                <StatsHeader>
                     {' '}
-                    Powtórzone fiszki: 0 <br /> Sesjse: 0
-                </StatisticsHeader>
+                    Powtórzone fiszki: 0 <br /> Sesje: 0
+                </StatsHeader>
             )}
         </Container>
     );

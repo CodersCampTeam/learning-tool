@@ -1,13 +1,14 @@
 import styled from '@emotion/styled';
 import { Grid } from '@material-ui/core';
 
-export const StatisticsHeader = styled.div`
+export const StatsHeader = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    font-family: righteous;
+    font-family: Open Sans;
     font-size: 16px;
     line-height: 150%;
+    font-weight: bold;
 `;
 
 export const StyledGrid = styled(Grid)`
@@ -17,7 +18,7 @@ export const StyledGrid = styled(Grid)`
         flex-direction: column;
         background-color: #f2f2f2;
         margin-top: 30px;
-        font-family: righteous;
+        font-family: Open Sans;
         box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
         justify-content: center;
         border-radius: 4px;
