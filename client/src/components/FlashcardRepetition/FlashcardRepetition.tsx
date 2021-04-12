@@ -134,7 +134,7 @@ export const FlashcardRepetition = () => {
     return (
         <div tabIndex={0} id="example" onKeyUp={handleKeyboardNavigation}>
             <Grid item xs={12} style={{ margin: '1em' }}>
-                <Grid container justify="flex-end" alignItems="center" style={{ gridGap: '3em' }}>
+                <Grid container justify="flex-end" alignItems="center">
                     <FormControlLabel
                         value="bottom"
                         control={
