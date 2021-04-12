@@ -23,7 +23,7 @@ const SettingsComponent = (): ReactElement => {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         document.cookie = `jwt= ; expires= ${date.getUTCDate()}; path=/`;
-        history.push('/');
+        history.push('/start');
     };
 
     return (

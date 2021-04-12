@@ -70,8 +70,8 @@ export const CollectionView = (): JSX.Element => {
                     Dodaj nową fiszkę
                 </Button>
 
-                {data.flashcards?.map((flashcard, index) => (
-                    <Card key={index} style={{ margin: '15px 0' }}>
+                {data.flashcards?.map((flashcard) => (
+                    <Card key={flashcard._id} style={{ margin: '15px 0' }}>
                         <Box
                             paddingX={2}
                             paddingY={0.2}
