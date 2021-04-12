@@ -61,7 +61,7 @@ const FormField = (props: IInputProps): ReactElement => {
             />
             {!props.requireConfirmation && (
                 <IconButton edge="end" aria-label="zapisz" color="primary" type="submit">
-                    <SaveIcon />
+                    <SaveIcon style={{ marginLeft: '20px' }} />
                 </IconButton>
             )}
             {errors[props.name] && <StyledError>{props.message}</StyledError>}
@@ -81,7 +81,7 @@ const FormField = (props: IInputProps): ReactElement => {
                         })}
                     />
                     <IconButton edge="end" aria-label="zapisz" color="primary" type="submit">
-                        <SaveIcon />
+                        <SaveIcon style={{ marginLeft: '20px' }} />
                     </IconButton>
                 </>
             )}

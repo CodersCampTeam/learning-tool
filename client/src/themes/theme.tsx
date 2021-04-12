@@ -1,18 +1,28 @@
 import { createMuiTheme } from '@material-ui/core';
-import { grey, deepPurple } from '@material-ui/core/colors';
+import { deepPurple, grey } from '@material-ui/core/colors';
 
 const theme = createMuiTheme({
     palette: {
-        primary: grey,
-        secondary: deepPurple
+        primary: deepPurple,
+        secondary: grey
     },
     typography: {
         body1: {
-            fontWeight: 400,
+            fontFamily: 'Open Sans',
+            fontWeight: 600,
             height: '100%'
         },
         subtitle1: {
             fontWeight: 600
+        },
+        h2: {
+            fontWeight: 600,
+            fontSize: '26px'
+        },
+        body2: {
+            height: '100%',
+            fontFamily: 'Open Sans',
+            fontSize: 19
         }
     },
     props: {
@@ -27,7 +37,7 @@ const theme = createMuiTheme({
     overrides: {
         MuiIconButton: {
             root: {
-                padding: '10px'
+                padding: '0px'
             }
         },
         MuiCssBaseline: {
@@ -36,10 +46,14 @@ const theme = createMuiTheme({
                     height: '100%'
                 },
                 body: {
-                    height: '100%'
+                    height: '100%',
+                    overflowX: 'hidden'
                 },
                 'body > div': {
                     height: '100%'
+                },
+                a: {
+                    textDecoration: 'none'
                 }
             }
         }

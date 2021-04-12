@@ -1,12 +1,14 @@
 import axios from 'axios';
 import React, { ReactElement, useState, useContext } from 'react';
 import { Grid, Typography, Button, Box, Switch, FormControlLabel, Checkbox } from '@material-ui/core';
-import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import MeetingRoom from '@material-ui/icons/MeetingRoom';
 import { useHistory } from 'react-router-dom';
 import ProfileInputFields from './ProfileInputFields';
 import FormGroup from '@material-ui/core/FormGroup';
 import { SettingsContext, ISettingsContext } from '../../views/ProfileView';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import SaveIcon from '@material-ui/icons/Save';
 
 const SettingsComponent = (): ReactElement => {
     const url = '/api/settings';
@@ -55,6 +57,8 @@ const SettingsComponent = (): ReactElement => {
         }
     ]);
 
+    const [open, setOpen] = React.useState(false);
+
     const handleNotificationSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNotificationIsActive(event.target.checked);
         settingsContext.isActive = event.target.checked;
@@ -82,14 +86,16 @@ const SettingsComponent = (): ReactElement => {
             }
         });
         settingsContext.sessionHarmonogram = sessionHarmonogram;
-        axios.put(`${url}/harmonogram`, { harmonogram: sessionHarmonogram });
+        axios.put(`${url}/harmonogram`, { harmonogram: sessionHarmonogram }).then(() => {
+            setOpen(true);
+        });
     };
 
     const handleLogout = () => {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         document.cookie = `jwt= ; expires= ${date.getUTCDate()}; path=/`;
-        history.push('/');
+        history.push('/start');
     };
 
     return (
@@ -113,7 +119,7 @@ const SettingsComponent = (): ReactElement => {
                                                 checked={day.checked}
                                                 onChange={handleChange}
                                                 name={day.dayNumber.toString()}
-                                                color="secondary"
+                                                color="primary"
                                             />
                                         }
                                         label={day.label}
@@ -126,16 +132,16 @@ const SettingsComponent = (): ReactElement => {
                                 color="primary"
                                 size="medium"
                                 type="submit"
-                                endIcon={<DoneOutlineIcon />}
+                                endIcon={<SaveIcon />}
                                 onClick={handleSaveClicked}
                             >
-                                Zapisz
+                                Zapisz harmonogram
                             </Button>
                         </Box>
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
+            <Grid container direction="row" justify="center" alignItems="center" spacing={3}>
                 <Grid item xs={9} sm={3}>
                     <Typography variant="subtitle1" color="textPrimary" align="left">
                         Powiadomienia e-mail
@@ -149,7 +155,7 @@ const SettingsComponent = (): ReactElement => {
                                 checked={notificationIsActive}
                                 onChange={handleNotificationSwitch}
                                 size="small"
-                                color="secondary"
+                                color="primary"
                                 aria-label="Włącz"
                             />
                         }
@@ -165,10 +171,23 @@ const SettingsComponent = (): ReactElement => {
                 type="submit"
                 endIcon={<MeetingRoom />}
                 onClick={handleLogout}
-                style={{ margin: 'auto', display: 'flex' }}
+                style={{ margin: 'auto', display: 'flex', marginTop: '30px' }}
             >
                 Wyloguj się
             </Button>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center'
+                }}
+                open={open}
+                autoHideDuration={1500}
+                onClose={() => setOpen(false)}
+            >
+                <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => setOpen(false)}>
+                    Pomyślnie zapisano!
+                </MuiAlert>
+            </Snackbar>
         </>
     );
 };

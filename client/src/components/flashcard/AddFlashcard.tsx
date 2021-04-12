@@ -1,4 +1,4 @@
-import { Button, TextField, Box, Snackbar } from '@material-ui/core';
+import { Button, TextField, Box, Snackbar, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, useState } from 'react';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import Container from '@material-ui/core/Container';
@@ -80,7 +80,7 @@ const AddFlashcard: FC = (): ReactElement => {
         <>
             <Container maxWidth="sm">
                 <Box m={4} textAlign="center">
-                    <h1>Tworzenie Fiszki</h1>
+                    <Typography variant="h2">TWORZENIE FISZKI</Typography>
                 </Box>
                 <Box m={4}>
                     <TextField

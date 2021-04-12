@@ -9,12 +9,12 @@ import MessageIcon from '@material-ui/icons/Message';
 import { Link } from 'react-router-dom';
 
 const StyledBottomNavigation = styled(BottomNavigation)`
-&& {
-    background-color: #f9f9f9;
-    bottom: 0;
-    position: fixed;
-    width: 100%;
-  },
+    && {
+        background-color: #f9f9f9;
+        bottom: 0;
+        position: fixed;
+        width: 100%;
+    }
 `;
 
 export const BottomNavBar = (): ReactElement => {

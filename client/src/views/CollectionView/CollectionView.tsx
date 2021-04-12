@@ -1,9 +1,9 @@
-import { Box, Button, Card, CircularProgress, Container, IconButton } from '@material-ui/core';
+import { Box, Button, Card, CircularProgress, Container, IconButton, Typography } from '@material-ui/core';
 import { AddCircle } from '@material-ui/icons';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { Delete } from '@material-ui/icons';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
@@ -12,7 +12,7 @@ interface flashCard {
     prompt: string;
 }
 
-export const CollectionView = (): JSX.Element => {
+export const CollectionView = (): ReactElement => {
     const [data, setData] = useState<{ name?: string; flashcards?: flashCard[] }>({});
     const [error, setError] = useState<boolean>(false);
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -65,22 +65,23 @@ export const CollectionView = (): JSX.Element => {
         }
         return (
             <div style={{ textAlign: 'center' }}>
-                <h1>Edytuj kolekcję {data.name} </h1>
+                <Typography variant="h5">Edytuj kolekcję "{data.name}"</Typography>
                 <Button
                     component={Link}
                     to={`/stworz-fiszke/${id}`}
-                    style={{ marginBottom: '10px' }}
+                    style={{ marginBottom: '10px', marginTop: '10px' }}
                     variant="contained"
                     color="default"
                     endIcon={<AddCircle />}
                 >
                     Dodaj nową fiszkę
                 </Button>
-                {data.flashcards?.map((flashcard, index) => (
-                    <Card key={index} style={{ margin: '15px 0' }}>
+
+                {data.flashcards?.map((flashcard) => (
+                    <Card key={flashcard._id} style={{ margin: '15px 0' }}>
                         <Box
                             paddingX={2}
-                            paddingY={0.2}
+                            paddingY={1.4}
                             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                         >
                             {flashcard.prompt}

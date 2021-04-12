@@ -1,7 +1,7 @@
 import { IconButton, Typography, Grid, Box } from '@material-ui/core';
 import axios from 'axios';
 import React, { useState, useEffect, ReactElement } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import ChatIcon from '@material-ui/icons/Chat';
 import GradeIcon from '@material-ui/icons/Grade';
 import ArrowForward from '@material-ui/icons/ArrowForward';
@@ -10,8 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import FeaturedPlayListOutlined from '@material-ui/icons/FeaturedPlayListOutlined';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { StyledGrid, CollectionHeader } from '../FlashcardCollectionComponents/styles';
-import { IconRow, AvatarRow, CollectionDetails, NoResults } from './styles';
+import { IconRow, AvatarRow, CollectionDetails, NoResults, Header, SearchStyledGrid } from './styles';
 
 interface ICollection {
     name: string;
@@ -63,40 +62,41 @@ const SearchResultsComponent = (): ReactElement => {
         <Grid container direction="column" justify="center" alignItems="center" alignContent="center" spacing={2}>
             {state.length ? (
                 state.map((collection: ICollection, index: number) => (
-                    <StyledGrid key={index}>
-                        <CollectionHeader>{collection.name}</CollectionHeader>
-                        <Grid container direction="row" justify="space-around" spacing={0}>
+                    <SearchStyledGrid key={index}>
+                        <Header>{collection.name}</Header>
+                        <Grid container direction="column" justify="center" alignItems="center">
                             <CollectionDetails>
-                                <FeaturedPlayListOutlined />
-                                <Typography variant="body1">Fiszki: {collection.flashcards.length}</Typography>
+                                <FeaturedPlayListOutlined color="primary" />
+                                <Typography variant="body1">Liczba fiszek: {collection.flashcards.length}</Typography>
                             </CollectionDetails>
-                            <IconButton>
-                                <ArrowForward color="secondary" />
-                            </IconButton>
+                            <AvatarRow>
+                                <AccountCircleIcon color="primary" />
+                                <Typography variant="body1">{collection.owner}</Typography>
+                            </AvatarRow>
                         </Grid>
-                        <AvatarRow>
-                            <AccountCircleIcon />
-                            <Typography variant="body1">{collection.owner}</Typography>
-                        </AvatarRow>
                         <IconRow>
                             <IconButton>
-                                {collection.isSubscribed ? <GradeIcon /> : <StarBorderIcon />}
+                                {collection.isSubscribed ? (
+                                    <GradeIcon style={{ fontSize: 30 }} />
+                                ) : (
+                                    <StarBorderIcon style={{ fontSize: 30 }} />
+                                )}
                                 <Typography variant="body1">{collection.subscribedUsers.length}</Typography>
-                            </IconButton>
-                            <IconButton>
-                                <ChatIcon />
                             </IconButton>
                             {collection.isSubscribed ? (
                                 <IconButton onClick={handleUnsubscribeClick(collection._id)}>
-                                    <DeleteIcon />
+                                    <DeleteIcon style={{ fontSize: 30 }} />
                                 </IconButton>
                             ) : (
                                 <IconButton onClick={handleSubscribeClick(collection._id)}>
                                     <SaveIcon />
                                 </IconButton>
                             )}
+                            <IconButton>
+                                <ArrowForward style={{ fontSize: 30 }} />
+                            </IconButton>
                         </IconRow>
-                    </StyledGrid>
+                    </SearchStyledGrid>
                 ))
             ) : (
                 <>

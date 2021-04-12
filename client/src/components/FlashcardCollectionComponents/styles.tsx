@@ -8,7 +8,7 @@ export const StyledGrid = styled(Grid)`
         flex-direction: column;
         background-color: #f2f2f2;
         margin: 30px;
-        font-family: righteous;
+        font-family: Open Sans;
         align-items: center;
         box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
         justify-content: center;
@@ -24,11 +24,12 @@ export const StyledGrid = styled(Grid)`
 
 export const CollectionHeader = styled.div`
     display: flex;
-    font-weight: 700;
-    font-size: 16px;
+    font-weight: bold;
+    font-size: 20px;
     line-height: 150%;
     text-transform: uppercase;
     justify-content: center;
+    padding-bottom: 10px;
 `;
 
 export const Settings = styled.div`
@@ -52,7 +53,7 @@ export const CreateCollection = styled.div`
     text-align: center;
     letter-spacing: 0.46px;
     padding: 8px 22px;
-    font-family: righteous;
+    font-family: Open Sans;
     text-transform: uppercase;
     min-width: 282px;
     height: 45px;
@@ -66,5 +67,7 @@ export const CreateCollection = styled.div`
 export const RowDiv = styled.div`
     display: flex;
     flex-direction: row;
+    align-items: center;
     margin: 10px;
+    margin-bottom: 10px;
 `;
