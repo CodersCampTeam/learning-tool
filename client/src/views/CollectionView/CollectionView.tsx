@@ -78,7 +78,7 @@ export const CollectionView = (): JSX.Element => {
                     <Card key={flashcard._id} style={{ margin: '15px 0' }}>
                         <Box
                             paddingX={2}
-                            paddingY={0.2}
+                            paddingY={1.4}
                             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                         >
                             {flashcard.prompt}

@@ -17,37 +17,33 @@ import { FlashcardRepetition } from '../../components/FlashcardRepetition/Flashc
 const App = (): ReactElement => {
     return (
         <div>
-            <header>
-                <BrowserRouter>
-                    <Route
-                        path="/"
-                        render={(routeProps) => (
-                            <TopNavBar displaySearch={checkPrivateRoute(routeProps.location.pathname)} />
-                        )}
-                    />
-                    <div style={{ paddingBottom: '70px' }}>
-                        <Switch>
-                            <PrivateRoute exact path="/" component={HomeView} />
-                            <Route exact path="/start" component={Home} />
-                            <PrivateRoute exact path="/stworz-kolekcje" component={CreateCollection} />
-                            <PrivateRoute exact path="/profil" component={ProfileView} />
-                            <PrivateRoute exact path="/kolekcje" component={HomeView} />
-                            <PrivateRoute exact path="/kolekcje/:id" component={CollectionView} />
-                            <PrivateRoute exact path="/powtorka/:id?" component={FlashcardRepetition} />
-                            <PrivateRoute path="/szukaj/:search?" component={SearchResultsComponent} />
-                            <Route exact path="/rejestracja" component={LoginRegistration} />
-                            <Route exact path="/logowanie" component={LoginRegistration} />
-                            <Route component={NotFound} />
-                        </Switch>
-                    </div>
-                    <Route
-                        path="/"
-                        render={(routeProps) =>
-                            checkPrivateRoute(routeProps.location.pathname) ? <BottomNavBar /> : null
-                        }
-                    />
-                </BrowserRouter>
-            </header>
+            <BrowserRouter>
+                <Route
+                    path="/"
+                    render={(routeProps) => (
+                        <TopNavBar displaySearch={checkPrivateRoute(routeProps.location.pathname)} />
+                    )}
+                />
+                <div style={{ paddingBottom: '70px' }}>
+                    <Switch>
+                        <PrivateRoute exact path="/" component={HomeView} />
+                        <Route exact path="/start" component={Home} />
+                        <PrivateRoute exact path="/stworz-kolekcje" component={CreateCollection} />
+                        <PrivateRoute exact path="/profil" component={ProfileView} />
+                        <PrivateRoute exact path="/kolekcje" component={HomeView} />
+                        <PrivateRoute exact path="/kolekcje/:id" component={CollectionView} />
+                        <PrivateRoute exact path="/powtorka/:id?" component={FlashcardRepetition} />
+                        <PrivateRoute path="/szukaj/:search?" component={SearchResultsComponent} />
+                        <Route exact path="/rejestracja" component={LoginRegistration} />
+                        <Route exact path="/logowanie" component={LoginRegistration} />
+                        <Route component={NotFound} />
+                    </Switch>
+                </div>
+                <Route
+                    path="/"
+                    render={(routeProps) => (checkPrivateRoute(routeProps.location.pathname) ? <BottomNavBar /> : null)}
+                />
+            </BrowserRouter>
         </div>
     );
 };

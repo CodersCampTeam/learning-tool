@@ -46,7 +46,7 @@ const CollectionView = (): ReactElement => {
         <Container maxWidth="xs" justify-content="center">
             <Link to="/stworz-kolekcje">
                 <CreateCollection>
-                    <Typography color="textPrimary" align="center" variant="subtitle1">
+                    <Typography style={{ margin: '0 auto' }} color="textPrimary" align="center" variant="subtitle1">
                         Stwórz nową kolekcję
                     </Typography>
                     <IconButton>
