@@ -19,11 +19,11 @@ const StatisticCollection = (): ReactElement => {
         <Container maxWidth="xs" justify-content="center">
             <CollectionHeader> Statystyki dla kolekcji</CollectionHeader>
             {data.length > 0 ? (
-                data.map((collection) => (
-                    <StyledGrid>
+                data.map((collection, index) => (
+                    <StyledGrid key={index}>
                         <CollectionHeader>{collection['CollectionName']}</CollectionHeader>
                         <RowDiv>
-                            <FeaturedPlayListOutlined style={{ fontSize: 25, color: grey[800], marginRight: 10 }} />
+                            <FeaturedPlayListOutlined color="secondary" style={{ fontSize: 25, marginRight: 10 }} />
                             <Typography display="inline" variant="body2">
                                 Fiszki: {collection['flashcards']}
                             </Typography>
@@ -31,7 +31,7 @@ const StatisticCollection = (): ReactElement => {
                                 <ArrowForward style={{ fontSize: 30, color: grey[700], marginLeft: 85, padding: 0 }} />
                             </IconButton>
                         </RowDiv>
-                        <Typography variant="body2" display="inline" color="secondary">
+                        <Typography variant="body2" display="inline" color="primary">
                             Historia odpowiedzi
                         </Typography>
                         <Typography variant="body2" display="inline">

@@ -1,4 +1,4 @@
-import { Box, Button, Card, CircularProgress, Container, IconButton } from '@material-ui/core';
+import { Box, Button, Card, CircularProgress, Container, IconButton, Typography } from '@material-ui/core';
 import { AddCircle } from '@material-ui/icons';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { Delete } from '@material-ui/icons';
@@ -64,17 +64,21 @@ export const CollectionView = (): JSX.Element => {
         }
         return (
             <div style={{ textAlign: 'center' }}>
-                <h1>Edytuj kolekcję {data.name} </h1>
-
-                <Button style={{ marginBottom: '10px' }} variant="contained" color="default" endIcon={<AddCircle />}>
+                <Typography variant="h5">Edytuj kolekcję "{data.name}"</Typography>
+                <Button
+                    style={{ marginBottom: '10px', marginTop: '10px' }}
+                    variant="contained"
+                    color="default"
+                    endIcon={<AddCircle />}
+                >
                     Dodaj nową fiszkę
                 </Button>
 
-                {data.flashcards?.map((flashcard, index) => (
-                    <Card key={index} style={{ margin: '15px 0' }}>
+                {data.flashcards?.map((flashcard) => (
+                    <Card key={flashcard._id} style={{ margin: '15px 0' }}>
                         <Box
                             paddingX={2}
-                            paddingY={0.2}
+                            paddingY={1.4}
                             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                         >
                             {flashcard.prompt}

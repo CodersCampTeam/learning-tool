@@ -7,6 +7,7 @@ import { AddCircle, ArrowForward, Assessment, BuildOutlined, FeaturedPlayListOut
 import { StyledGrid, CollectionHeader, Settings, AssessmentStyle, CreateCollection, RowDiv } from './styles';
 import { grey } from '@material-ui/core/colors';
 import GradeIcon from '@material-ui/icons/Grade';
+import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router';
 
 interface ICollection {
@@ -43,18 +44,22 @@ const CollectionView = (): ReactElement => {
 
     return (
         <Container maxWidth="xs" justify-content="center">
-            <CreateCollection>
-                <div>Stwórz nową kolekcję</div>
-                <IconButton>
-                    <AddCircle style={{ fontSize: 30, color: grey[800] }} />
-                </IconButton>
-            </CreateCollection>
+            <Link to="/stworz-kolekcje">
+                <CreateCollection>
+                    <Typography style={{ margin: '0 auto' }} color="textPrimary" align="center" variant="subtitle1">
+                        Stwórz nową kolekcję
+                    </Typography>
+                    <IconButton>
+                        <AddCircle style={{ fontSize: 30, color: grey[800], marginLeft: '5px' }} />
+                    </IconButton>
+                </CreateCollection>
+            </Link>
             {data.map((collection: ICollection) => (
-                <StyledGrid>
+                <StyledGrid key={collection._id}>
                     <CollectionHeader>{collection.name}</CollectionHeader>
                     <Grid container direction="row" justify="center" alignItems="baseline">
                         <RowDiv>
-                            <FeaturedPlayListOutlined style={{ fontSize: 20, color: grey[800] }} />
+                            <FeaturedPlayListOutlined style={{ fontSize: 20, color: grey[800], marginRight: '5px' }} />
                             <Typography variant="body1" display="inline">
                                 Fiszki: {collection.flashcards}
                             </Typography>
@@ -72,18 +77,22 @@ const CollectionView = (): ReactElement => {
                     </Grid>
                     <Settings>
                         {collection.isOwned ? (
-                            <IconButton>
-                                <BuildOutlined fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
-                            </IconButton>
+                            <Link to={`/kolekcje/${collection._id}`}>
+                                <IconButton>
+                                    <BuildOutlined fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
+                                </IconButton>
+                            </Link>
                         ) : (
                             <IconButton onClick={handleUnsubscribeClick(collection._id)}>
                                 <DeleteIcon fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
                             </IconButton>
                         )}
                         <AssessmentStyle>
-                            <IconButton>
-                                <Assessment fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
-                            </IconButton>
+                            <Link to="/profil">
+                                <IconButton>
+                                    <Assessment fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
+                                </IconButton>
+                            </Link>
                         </AssessmentStyle>
                         <IconButton onClick={handleLearn(collection._id)}>
                             <ArrowForward style={{ fontSize: 42, color: grey[700] }} />

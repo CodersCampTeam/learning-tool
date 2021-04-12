@@ -1,24 +1,28 @@
 import { createMuiTheme } from '@material-ui/core';
-import { grey, blue } from '@material-ui/core/colors';
+import { deepPurple, grey } from '@material-ui/core/colors';
 
 const theme = createMuiTheme({
     palette: {
-        primary: grey,
-        secondary: blue
+        primary: deepPurple,
+        secondary: grey
     },
     typography: {
         body1: {
+            fontFamily: 'Open Sans',
             fontWeight: 600,
-            height: '100%',
-            fontFamily: 'righteous'
+            height: '100%'
         },
         subtitle1: {
             fontWeight: 600
         },
+        h2: {
+            fontWeight: 600,
+            fontSize: '26px'
+        },
         body2: {
             height: '100%',
-            fontFamily: 'righteous',
-            fontSize: 17
+            fontFamily: 'Open Sans',
+            fontSize: 19
         }
     },
     props: {
@@ -41,8 +45,15 @@ const theme = createMuiTheme({
                 html: {
                     height: '100%'
                 },
+                body: {
+                    height: '100%',
+                    overflowX: 'hidden'
+                },
                 'body > div': {
                     height: '100%'
+                },
+                a: {
+                    textDecoration: 'none'
                 }
             }
         }

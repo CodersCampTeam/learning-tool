@@ -95,7 +95,7 @@ const SettingsComponent = (): ReactElement => {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         document.cookie = `jwt= ; expires= ${date.getUTCDate()}; path=/`;
-        history.push('/');
+        history.push('/start');
     };
 
     return (
@@ -119,7 +119,7 @@ const SettingsComponent = (): ReactElement => {
                                                 checked={day.checked}
                                                 onChange={handleChange}
                                                 name={day.dayNumber.toString()}
-                                                color="secondary"
+                                                color="primary"
                                             />
                                         }
                                         label={day.label}
@@ -141,7 +141,7 @@ const SettingsComponent = (): ReactElement => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
+            <Grid container direction="row" justify="center" alignItems="center" spacing={3}>
                 <Grid item xs={9} sm={3}>
                     <Typography variant="subtitle1" color="textPrimary" align="left">
                         Powiadomienia e-mail
@@ -155,7 +155,7 @@ const SettingsComponent = (): ReactElement => {
                                 checked={notificationIsActive}
                                 onChange={handleNotificationSwitch}
                                 size="small"
-                                color="secondary"
+                                color="primary"
                                 aria-label="Włącz"
                             />
                         }
@@ -171,7 +171,7 @@ const SettingsComponent = (): ReactElement => {
                 type="submit"
                 endIcon={<MeetingRoom />}
                 onClick={handleLogout}
-                style={{ margin: 'auto', display: 'flex' }}
+                style={{ margin: 'auto', display: 'flex', marginTop: '30px' }}
             >
                 Wyloguj się
             </Button>
@@ -188,7 +188,6 @@ const SettingsComponent = (): ReactElement => {
                     Pomyślnie zapisano!
                 </MuiAlert>
             </Snackbar>
-            ;
         </>
     );
 };

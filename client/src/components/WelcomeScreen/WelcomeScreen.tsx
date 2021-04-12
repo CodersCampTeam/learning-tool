@@ -11,12 +11,12 @@ const WelcomeScreen = (): ReactElement => {
 
     return (
         <>
-            <Grid container direction="column" justify="center" alignItems="center" alignContent="center" spacing={1}>
-                <Grid item xs={12}>
-                    <Typography variant="h3" color="textPrimary" align="center" mt={6}>
+            <Grid container direction="column" justify="center" alignItems="center" alignContent="center">
+                <Grid item xs={12} style={{ minHeight: '100px' }}>
+                    <Typography variant="h2" color="textPrimary" align="center" mt={2}>
                         <Typed strings={['BUDUJEMY WIEDZĘ.']} typeSpeed={40} showCursor={false} />
                     </Typography>
-                    <Typography variant="h3" color="textSecondary">
+                    <Typography variant="h2" color="textSecondary">
                         <Typed strings={['TWORZYMY RELACJE']} typeSpeed={40} startDelay={1500} showCursor={false} />
                     </Typography>
                 </Grid>
@@ -25,7 +25,7 @@ const WelcomeScreen = (): ReactElement => {
                         <img alt="Rysunek dwóch osób dzielących się fiszkami" src="welcome_screen_image.svg" />
                     </Box>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} spacing={0}>
                     <AppName>
                         Fisz<SwappedQ>Q</SwappedQ>
                         <SwappedI>I</SwappedI>
@@ -36,14 +36,22 @@ const WelcomeScreen = (): ReactElement => {
                         {benefits.map((item, index) => (
                             <ListItem key={index}>
                                 <ListItemIcon>
-                                    <CheckIcon />
+                                    <CheckIcon color="primary" />
                                 </ListItemIcon>
-                                <ListItemText primary={<div style={{ margin: -25, marginTop: -10 }}>{item}</div>} />
+                                <ListItemText
+                                    primary={
+                                        <div style={{ margin: -25, marginTop: -10 }}>
+                                            <Typography variant="body2" color="textPrimary">
+                                                {item}
+                                            </Typography>
+                                        </div>
+                                    }
+                                />
                             </ListItem>
                         ))}
                     </List>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ margin: '20px auto 0' }}>
                     <Link to="/logowanie">
                         <Button variant="contained" size="medium" color="primary" startIcon={<HowToRegIcon />}>
                             ROZPOCZNIJ NAUKĘ
