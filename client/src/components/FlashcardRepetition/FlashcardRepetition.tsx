@@ -65,14 +65,16 @@ export const FlashcardRepetition = () => {
             .get(`/api/flashcard-collection/${id}`, { withCredentials: true })
             .then((res) => {
                 setFlashcards(res.data.flashcards);
-                setQuestion({
-                    question: res.data.flashcards[0].prompt,
-                    questionNumber: 1,
-                    questionAnswer: res.data.flashcards[0].answers[res.data.flashcards[0].correctAnswer],
-                    answers: [],
-                    extraInfo: res.data.flashcards[0].extraInfo,
-                    isQuizQuestion: res.data.flashcards[0].isQuizQuestion
-                });
+                if (res.data.flashcards.length > 0) {
+                    setQuestion({
+                        question: res.data.flashcards[0].prompt,
+                        questionNumber: 1,
+                        questionAnswer: res.data.flashcards[0].answers[res.data.flashcards[0].correctAnswer],
+                        answers: [],
+                        extraInfo: res.data.flashcards[0].extraInfo,
+                        isQuizQuestion: res.data.flashcards[0].isQuizQuestion
+                    });
+                }
             })
             .catch();
     }, []);
@@ -86,7 +88,7 @@ export const FlashcardRepetition = () => {
 
     const loadNextFlashcard = () => {
         const currQuestionNumber = question.questionNumber; // Already + 1
-        if (currQuestionNumber < flashcards.length) {
+        if (currQuestionNumber < flashcards.length && flashcards.length > 0) {
             setShowAnswer(false);
             setQuestion({
                 question: flashcards[currQuestionNumber].prompt,
