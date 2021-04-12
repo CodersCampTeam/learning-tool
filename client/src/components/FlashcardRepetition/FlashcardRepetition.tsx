@@ -115,6 +115,9 @@ export const FlashcardRepetition = () => {
             case 'w':
                 setShowExtraInfo((showExtraInfo) => !showExtraInfo);
                 break;
+            case 'q':
+                setQuizMode((quizMode) => !quizMode);
+                break;
             default:
                 break;
         }
