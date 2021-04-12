@@ -67,6 +67,7 @@ export const CreateCollection = styled.div`
 export const RowDiv = styled.div`
     display: flex;
     flex-direction: row;
+    align-items: center;
     margin: 10px;
     margin-bottom: 10px;
 `;

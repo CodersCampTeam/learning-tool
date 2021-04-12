@@ -3,15 +3,16 @@ import { AddCircle } from '@material-ui/icons';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { Delete } from '@material-ui/icons';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 
 interface flashCard {
     _id: string;
     prompt: string;
 }
 
-export const CollectionView = (): JSX.Element => {
+export const CollectionView = (): ReactElement => {
     const [data, setData] = useState<{ name?: string; flashcards?: flashCard[] }>({});
     const [error, setError] = useState<boolean>(false);
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -66,6 +67,8 @@ export const CollectionView = (): JSX.Element => {
             <div style={{ textAlign: 'center' }}>
                 <Typography variant="h5">Edytuj kolekcję "{data.name}"</Typography>
                 <Button
+                    component={Link}
+                    to={`/stworz-fiszke/${id}`}
                     style={{ marginBottom: '10px', marginTop: '10px' }}
                     variant="contained"
                     color="default"

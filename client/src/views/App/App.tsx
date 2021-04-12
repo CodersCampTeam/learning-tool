@@ -12,6 +12,7 @@ import { css } from '@emotion/react';
 import { CreateCollection } from '../../components/CreateCollection/CreateCollection';
 import PrivateRoute, { checkPrivateRoute } from '../../PrivateRoute';
 import { CollectionView } from '../CollectionView/CollectionView';
+import AddFlashcard from '../../components/flashcard/AddFlashcard';
 import { FlashcardRepetition } from '../../components/FlashcardRepetition/FlashcardRepetition';
 
 const App = (): ReactElement => {
@@ -29,6 +30,7 @@ const App = (): ReactElement => {
                         <PrivateRoute exact path="/" component={HomeView} />
                         <Route exact path="/start" component={Home} />
                         <PrivateRoute exact path="/stworz-kolekcje" component={CreateCollection} />
+                        <PrivateRoute exact path="/stworz-fiszke/:collectionId" component={AddFlashcard} />
                         <PrivateRoute exact path="/profil" component={ProfileView} />
                         <PrivateRoute exact path="/kolekcje" component={HomeView} />
                         <PrivateRoute exact path="/kolekcje/:id" component={CollectionView} />

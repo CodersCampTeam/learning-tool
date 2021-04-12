@@ -59,16 +59,16 @@ const CollectionView = (): ReactElement => {
                     <CollectionHeader>{collection.name}</CollectionHeader>
                     <Grid container direction="row" justify="center" alignItems="baseline">
                         <RowDiv>
-                            <FeaturedPlayListOutlined style={{ fontSize: 20, color: grey[800], marginRight: '5px' }} />
+                            <FeaturedPlayListOutlined color="primary" style={{ fontSize: 20, marginRight: '5px' }} />
                             <Typography variant="body1" display="inline">
                                 Fiszki: {collection.flashcards}
                             </Typography>
                         </RowDiv>
                         <RowDiv>
                             {collection.isOwned ? (
-                                <StarBorderIcon style={{ fontSize: 20, color: grey[800] }} />
+                                <StarBorderIcon color="primary" style={{ fontSize: 20 }} />
                             ) : (
-                                <GradeIcon style={{ fontSize: 20, color: grey[800] }} />
+                                <GradeIcon color="primary" style={{ fontSize: 20 }} />
                             )}
                             <Typography variant="body1" display="inline">
                                 {collection.subscribedUsers}

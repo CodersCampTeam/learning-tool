@@ -23,7 +23,7 @@ const StatisticCollection = (): ReactElement => {
                     <StyledGrid key={index}>
                         <CollectionHeader>{collection['CollectionName']}</CollectionHeader>
                         <RowDiv>
-                            <FeaturedPlayListOutlined color="secondary" style={{ fontSize: 25, marginRight: 10 }} />
+                            <FeaturedPlayListOutlined color="primary" style={{ fontSize: 25, marginRight: 10 }} />
                             <Typography display="inline" variant="body2">
                                 Fiszki: {collection['flashcards']}
                             </Typography>
