@@ -170,13 +170,13 @@ export const FlashcardRepetition = () => {
             <Grid item xs={12} style={{ margin: '1em' }}>
                 <Grid container justify="center" alignItems="center" style={{ gridGap: '3em' }}>
                     <IconButton onClick={handleNotKnown}>
-                        <CancelOutlined style={{ fontSize: 42, color: green[500] }} />
+                        <CancelOutlined style={{ fontSize: 42, color: red[500] }} />
                     </IconButton>
                     <IconButton onClick={() => setShowAnswer(true)}>
                         <ContactSupportOutlined style={{ fontSize: 42, color: lightBlue[500] }} />
                     </IconButton>
                     <IconButton onClick={handleKnown}>
-                        <CheckCircleOutline style={{ fontSize: 42, color: red[500] }} />
+                        <CheckCircleOutline style={{ fontSize: 42, color: green[500] }} />
                     </IconButton>
                 </Grid>
             </Grid>
