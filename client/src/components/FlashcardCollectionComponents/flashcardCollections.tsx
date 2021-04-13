@@ -1,9 +1,11 @@
 import { Container, IconButton, Typography, Grid } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
+import AssessmentIcon from '@material-ui/icons/Assessment';
+import BuildOutlinedIcon from '@material-ui/icons/BuildOutlined';
 import axios from 'axios';
-import React, { useState, useEffect, ReactElement } from 'react';
-import { AddCircle, ArrowForward, Assessment, BuildOutlined, FeaturedPlayListOutlined } from '@material-ui/icons';
+import { useState, useEffect, ReactElement } from 'react';
+import { AddCircle, ArrowForward, FeaturedPlayListOutlined } from '@material-ui/icons';
 import { StyledGrid, CollectionHeader, Settings, AssessmentStyle, CreateCollection, RowDiv } from './styles';
 import { grey } from '@material-ui/core/colors';
 import GradeIcon from '@material-ui/icons/Grade';
@@ -58,13 +60,13 @@ const CollectionView = (): ReactElement => {
                 <StyledGrid key={collection._id}>
                     <CollectionHeader>{collection.name}</CollectionHeader>
                     <Grid container direction="row" justify="center" alignItems="baseline">
-                        <RowDiv>
-                            <FeaturedPlayListOutlined color="primary" style={{ fontSize: 20, marginRight: '5px' }} />
+                        <RowDiv style={{ alignItems: 'center' }}>
+                            <FeaturedPlayListOutlined style={{ fontSize: 20, color: grey[800], marginRight: '5px' }} />
                             <Typography variant="body1" display="inline">
                                 Fiszki: {collection.flashcards}
                             </Typography>
                         </RowDiv>
-                        <RowDiv>
+                        <RowDiv style={{ alignItems: 'center' }}>
                             {collection.isOwned ? (
                                 <StarBorderIcon color="primary" style={{ fontSize: 20 }} />
                             ) : (
@@ -78,24 +80,20 @@ const CollectionView = (): ReactElement => {
                     <Settings>
                         {collection.isOwned ? (
                             <Link to={`/kolekcje/${collection._id}`}>
-                                <IconButton>
-                                    <BuildOutlined fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
-                                </IconButton>
+                                <BuildOutlinedIcon style={{ color: grey[700], fontSize: 42 }} />
                             </Link>
                         ) : (
                             <IconButton onClick={handleUnsubscribeClick(collection._id)}>
-                                <DeleteIcon fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
+                                <DeleteIcon style={{ color: grey[700], fontSize: 42 }} />
                             </IconButton>
                         )}
                         <AssessmentStyle>
                             <Link to="/profil">
-                                <IconButton>
-                                    <Assessment fontSize="large" style={{ color: grey[700], fontSize: 42 }} />
-                                </IconButton>
+                                <AssessmentIcon style={{ color: grey[700], fontSize: 42 }} />
                             </Link>
                         </AssessmentStyle>
                         <IconButton onClick={handleLearn(collection._id)}>
-                            <ArrowForward style={{ fontSize: 42, color: grey[700] }} />
+                            <ArrowForward style={{ color: grey[700], fontSize: 42 }} />
                         </IconButton>
                     </Settings>
                 </StyledGrid>

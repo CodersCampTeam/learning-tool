@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import styled from '@emotion/styled';
-import { IconButton } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
 import { CancelOutlined, ContactSupportOutlined, CheckCircleOutline } from '@material-ui/icons';
 import { Grid } from '@material-ui/core';
 import Switch from '@material-ui/core/Switch';
@@ -48,13 +48,15 @@ export const FlashcardRepetition = () => {
         question: 'Loading...',
         questionNumber: 0,
         questionAnswer: 'Loading...',
-        extraInfo: ''
+        answers: [''],
+        extraInfo: '',
+        isQuizQuestion: false
     });
     const [showAnswer, setShowAnswer] = useState(false);
 
     //Switches
     const [showExtraInfo, setShowExtraInfo] = useState(false);
-    // const [quizMode, setQuizMode] = useState(false);
+    const [quizMode, setQuizMode] = useState(false);
 
     const [flashcards, setFlashcards] = useState<IFlashcard[]>([]);
 
@@ -63,12 +65,16 @@ export const FlashcardRepetition = () => {
             .get(`/api/flashcard-collection/${id}`, { withCredentials: true })
             .then((res) => {
                 setFlashcards(res.data.flashcards);
-                setQuestion({
-                    question: res.data.flashcards[0].prompt,
-                    questionNumber: 1,
-                    questionAnswer: res.data.flashcards[0].answers[res.data.flashcards[0].correctAnswer],
-                    extraInfo: res.data.flashcards[0].extraInfo
-                });
+                if (res.data.flashcards.length > 0) {
+                    setQuestion({
+                        question: res.data.flashcards[0].prompt,
+                        questionNumber: 1,
+                        questionAnswer: res.data.flashcards[0].answers[res.data.flashcards[0].correctAnswer],
+                        answers: res.data.flashcards[0].answers,
+                        extraInfo: res.data.flashcards[0].extraInfo,
+                        isQuizQuestion: res.data.flashcards[0].isQuizQuestion
+                    });
+                }
             })
             .catch();
     }, []);
@@ -82,24 +88,27 @@ export const FlashcardRepetition = () => {
 
     const loadNextFlashcard = () => {
         const currQuestionNumber = question.questionNumber; // Already + 1
-        if (currQuestionNumber < flashcards.length) {
+        if (currQuestionNumber < flashcards.length && flashcards.length > 0) {
             setShowAnswer(false);
             setQuestion({
                 question: flashcards[currQuestionNumber].prompt,
                 questionNumber: currQuestionNumber + 1,
                 questionAnswer: flashcards[currQuestionNumber].answers[flashcards[currQuestionNumber].correctAnswer],
-                extraInfo: flashcards[currQuestionNumber].extraInfo
+                answers: flashcards[currQuestionNumber].answers,
+                extraInfo: flashcards[currQuestionNumber].extraInfo,
+                isQuizQuestion: flashcards[currQuestionNumber].isQuizQuestion
             });
         }
     };
 
-    function handleKeyboardNavigation(event: { key: any }) {
+    function handleKeyboardNavigation(event: { key: string }) {
         switch (event.key) {
             case 'a':
                 handleNotKnown();
                 break;
             case 's':
-                setShowAnswer(true);
+                console.log(quizMode, question.answers.length);
+                if (quizMode === false || (quizMode === true && question.answers.length === 1)) setShowAnswer(true);
                 break;
             case 'd':
                 handleKnown();
@@ -107,16 +116,27 @@ export const FlashcardRepetition = () => {
             case 'w':
                 setShowExtraInfo((showExtraInfo) => !showExtraInfo);
                 break;
+            case 'q':
+                setQuizMode((quizMode) => !quizMode);
+                break;
             default:
                 break;
         }
     }
 
+    const handleQuizAnswer = (answer: string) => {
+        if (answer === question.questionAnswer) {
+            handleKnown();
+        } else {
+            handleNotKnown();
+        }
+    };
+
     return (
         <div tabIndex={0} id="example" onKeyUp={handleKeyboardNavigation}>
             <Grid item xs={12} style={{ margin: '1em' }}>
-                <Grid container justify="flex-end" alignItems="center" style={{ gridGap: '3em' }}>
-                    {/* <FormControlLabel
+                <Grid container justify="flex-end" alignItems="center">
+                    <FormControlLabel
                         value="bottom"
                         control={
                             <Switch
@@ -128,7 +148,7 @@ export const FlashcardRepetition = () => {
                         }
                         label="tryb quizu"
                         labelPlacement="end"
-                    /> */}
+                    />
                     <FormControlLabel
                         value="bottom"
                         control={
@@ -155,7 +175,7 @@ export const FlashcardRepetition = () => {
                             {question.question}
                         </Typography>
                         {showExtraInfo && question.extraInfo.length > 0 && (
-                            <Typography variant="caption" component="p" align="center">
+                            <Typography variant="subtitle2" component="p" align="center">
                                 {question.extraInfo}
                             </Typography>
                         )}
@@ -167,7 +187,11 @@ export const FlashcardRepetition = () => {
                     </CardContent>
                 </StyledCard>
             </div>
-            <Grid item xs={12} style={{ margin: '1em' }}>
+            <Grid
+                item
+                xs={12}
+                style={{ margin: '1em', display: quizMode && question.isQuizQuestion ? 'none' : 'block' }}
+            >
                 <Grid container justify="center" alignItems="center" style={{ gridGap: '3em' }}>
                     <IconButton onClick={handleNotKnown}>
                         <CancelOutlined style={{ fontSize: 42, color: red[500] }} />
@@ -178,6 +202,21 @@ export const FlashcardRepetition = () => {
                     <IconButton onClick={handleKnown}>
                         <CheckCircleOutline style={{ fontSize: 42, color: green[500] }} />
                     </IconButton>
+                </Grid>
+            </Grid>
+            <Grid
+                item
+                xs={12}
+                style={{ margin: '1em', display: quizMode && question.isQuizQuestion ? 'block' : 'none' }}
+            >
+                <Grid container direction="column" justify="center" alignItems="center" style={{ gridGap: '1em' }}>
+                    {question.answers.map((answer) => {
+                        return (
+                            <Button variant="outlined" id={answer} onClick={() => handleQuizAnswer(answer)}>
+                                {answer}
+                            </Button>
+                        );
+                    })}
                 </Grid>
             </Grid>
         </div>
