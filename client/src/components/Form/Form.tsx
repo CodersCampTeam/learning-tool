@@ -1,4 +1,3 @@
-import { Checkbox } from '@material-ui/core';
 import {
     StyledButtonGoogle,
     StyledForm,
@@ -7,7 +6,8 @@ import {
     StyledButton,
     StyledParagraph,
     StyledFormControlLabel,
-    StyledError
+    StyledError,
+    StyledCheckbox
 } from './styles';
 import React, { FormEvent, useEffect, ReactElement } from 'react';
 import { css } from '@emotion/react';
@@ -32,7 +32,14 @@ interface IFormInput {
     termsInput: string;
 }
 
-const Form = ({ error, isregister, onUsernameChange, onEmailChange, onPasswordChange, onSubmit }: FormProps) => {
+const Form = ({
+    error,
+    isregister,
+    onUsernameChange,
+    onEmailChange,
+    onPasswordChange,
+    onSubmit
+}: FormProps): ReactElement => {
     const { handleSubmit, control, errors, watch } = useForm<IFormInput>();
     const emailWatch: string = watch(`emailInput`);
     const usernameWatch: string = watch(`usernameInput`);
@@ -89,7 +96,6 @@ const Form = ({ error, isregister, onUsernameChange, onEmailChange, onPasswordCh
                                     isdisplay={isregister?.toString()}
                                     className="test"
                                     size="small"
-                                    id="outlined-basic"
                                     variant="outlined"
                                     placeholder="Nazwa użytkownika/użytkowniczki *"
                                 />
@@ -115,13 +121,7 @@ const Form = ({ error, isregister, onUsernameChange, onEmailChange, onPasswordCh
                         {errors.usernameInput && <StyledError>{errors.usernameInput.message}</StyledError>}
                         <Controller
                             render={(props) => (
-                                <StyledTextField
-                                    {...props}
-                                    size="small"
-                                    placeholder="Email *"
-                                    id="outlined-basic"
-                                    variant="outlined"
-                                />
+                                <StyledTextField {...props} size="small" placeholder="Email *" variant="outlined" />
                             )}
                             control={control}
                             name="emailInput"
@@ -143,7 +143,6 @@ const Form = ({ error, isregister, onUsernameChange, onEmailChange, onPasswordCh
                                 <StyledTextField
                                     {...props}
                                     size="small"
-                                    id="outlined-basic"
                                     variant="outlined"
                                     placeholder="Hasło *"
                                     type="password"
@@ -163,7 +162,7 @@ const Form = ({ error, isregister, onUsernameChange, onEmailChange, onPasswordCh
                         {errors.passwordInput && <StyledError>{errors.passwordInput.message}</StyledError>}
                         {errors.passwordInput && errors.passwordInput.type === 'validate' && (
                             <StyledError>
-                                Hasło powinno składać się z min. 8 znaków zawierać duże i małe litery, liczbę oraz znak
+                                Hasło powinno składać się z min. 8 znaków, zawierać duże i małe litery, liczbę oraz znak
                                 specjalny
                             </StyledError>
                         )}
@@ -179,14 +178,7 @@ const Form = ({ error, isregister, onUsernameChange, onEmailChange, onPasswordCh
                                             message: 'Akceptacja warunków jest wymagana'
                                         }
                                     }}
-                                    render={(props) => (
-                                        <Checkbox
-                                            {...props}
-                                            style={{
-                                                color: ' #2f2e41'
-                                            }}
-                                        />
-                                    )}
+                                    render={(props) => <StyledCheckbox {...props} color="primary" />}
                                 />
                             }
                             isdisplay={isregister?.toString()}
@@ -194,7 +186,7 @@ const Form = ({ error, isregister, onUsernameChange, onEmailChange, onPasswordCh
                         />
                         {errors.termsInput && <StyledError>{errors.termsInput.message}</StyledError>}
                         {error?.server && <StyledError>{error?.server.message}</StyledError>}
-                        <StyledButton type="submit" variant="contained">
+                        <StyledButton type="submit" variant="contained" color="primary">
                             {isregister ? `ZAREJESTRUJ` : 'ZALOGUJ SIĘ'}
                         </StyledButton>
                     </StyledForm>

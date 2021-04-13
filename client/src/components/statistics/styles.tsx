@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Grid } from '@material-ui/core';
+import { CollectionHeader } from '../FlashcardCollectionComponents/styles';
 
 export const StatsHeader = styled.div`
     display: flex;
@@ -34,4 +35,8 @@ export const RowDiv = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+`;
+
+export const StatsCollectionHeader = styled(CollectionHeader)`
+    padding: 10px 0 -20;
 `;

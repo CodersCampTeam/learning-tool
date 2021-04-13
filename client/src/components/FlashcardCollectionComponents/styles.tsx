@@ -13,7 +13,7 @@ export const StyledGrid = styled(Grid)`
         box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
         justify-content: center;
         border-radius: 4px;
-        padding-top: 18px;
+        padding-top: 14px;
         min-width: 282px;
         min-height: 162px;
         @media (max-width: 320px) {
@@ -29,7 +29,9 @@ export const CollectionHeader = styled.div`
     line-height: 150%;
     text-transform: uppercase;
     justify-content: center;
-    padding-bottom: 10px;
+    padding: 0 0 10px;
+    color: #673ab7;
+    width: 100%;
 `;
 
 export const Settings = styled.div`

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ReactElement } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
@@ -42,7 +42,7 @@ interface IFlashcard {
     correctAnswer: number;
 }
 
-export const FlashcardRepetition = () => {
+export const FlashcardRepetition = (): ReactElement => {
     const { id } = useParams<{ id: string }>();
     const [question, setQuestion] = useState({
         question: 'Loading...',

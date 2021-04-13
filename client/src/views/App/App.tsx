@@ -8,7 +8,6 @@ import NotFound from '../../components/NotFound';
 import ProfileView from '../ProfileView';
 import LoginRegistration from '../LoginRegistration';
 import SearchResultsComponent from '../../components/SearchResults/SearchResultsComponent';
-import { css } from '@emotion/react';
 import { CreateCollection } from '../../components/CreateCollection/CreateCollection';
 import PrivateRoute, { checkPrivateRoute } from '../../PrivateRoute';
 import { CollectionView } from '../CollectionView/CollectionView';
@@ -36,8 +35,16 @@ const App = (): ReactElement => {
                         <PrivateRoute exact path="/kolekcje/:id" component={CollectionView} />
                         <PrivateRoute exact path="/powtorka/:id?" component={FlashcardRepetition} />
                         <PrivateRoute path="/szukaj/:search?" component={SearchResultsComponent} />
-                        <Route exact path="/rejestracja" component={LoginRegistration} />
-                        <Route exact path="/logowanie" component={LoginRegistration} />
+                        <Route
+                            exact
+                            path="/rejestracja"
+                            render={() => <LoginRegistration isLogin={false} key={new Date().toString()} />}
+                        />
+                        <Route
+                            exact
+                            path="/logowanie"
+                            render={() => <LoginRegistration isLogin={true} key={new Date().toString()} />}
+                        />
                         <Route component={NotFound} />
                     </Switch>
                 </div>

@@ -5,6 +5,7 @@ import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
 import MuiAlert from '@material-ui/lab/Alert';
+import { Link } from 'react-router-dom';
 
 const AddFlashcard: FC = (): ReactElement => {
     const [prompt, setPrompt] = useState('');
@@ -12,12 +13,12 @@ const AddFlashcard: FC = (): ReactElement => {
     const [answerError, setAnswerError] = useState(false);
     const [correctAnswer, setCorrectAnswer] = useState(0);
     const [answer, setAnswer] = useState('');
-    const [hint, setHint] = useState('');
     const [extraInfo, setExtraInfo] = useState('');
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const { collectionId } = useParams<{ collectionId: string }>();
     const history = useHistory();
+
     interface Flashcard {
         prompt: string;
         answers: string[];
@@ -50,7 +51,9 @@ const AddFlashcard: FC = (): ReactElement => {
             .put(`/api/flashcard/${flashcard.collectionId}`, flashcard, { withCredentials: true })
             .then((response) => {
                 setOpenSuccessAlert(true);
-                setTimeout(() => history.push('/kolekcje/' + collectionId), 1000);
+                setPrompt('');
+                setAnswer('');
+                setExtraInfo('');
             })
             .catch((error) => {
                 setOpenErrorAlert(true);
@@ -84,6 +87,7 @@ const AddFlashcard: FC = (): ReactElement => {
                 </Box>
                 <Box m={4}>
                     <TextField
+                        value={prompt}
                         error={promptError}
                         fullWidth
                         label="Pytanie"
@@ -93,6 +97,7 @@ const AddFlashcard: FC = (): ReactElement => {
                 </Box>
                 <Box m={4}>
                     <TextField
+                        value={answer}
                         error={answerError}
                         fullWidth
                         label="Odpowiedź"
@@ -101,14 +106,28 @@ const AddFlashcard: FC = (): ReactElement => {
                     />
                 </Box>
                 <Box m={4}>
-                    <TextField fullWidth label="Podpowiedź" onChange={(e) => setHint(e.target.value)} />
+                    <TextField
+                        fullWidth
+                        value={extraInfo}
+                        label="Dodatkowe informacje"
+                        onChange={(e) => setExtraInfo(e.target.value)}
+                    />
                 </Box>
-                <Box m={4}>
-                    <TextField fullWidth label="Dodatkowe informacje" onChange={(e) => setExtraInfo(e.target.value)} />
-                </Box>
-
                 <br />
                 <Box textAlign="center">
+                    <Button
+                        component={Link}
+                        to={`/kolekcje/${collectionId}`}
+                        onClick={saveFlashcard}
+                        variant="contained"
+                        color="primary"
+                        endIcon={<DoneOutlineIcon />}
+                        style={{
+                            marginBottom: 15
+                        }}
+                    >
+                        Zapisz i zakończ
+                    </Button>
                     <Button
                         onClick={saveFlashcard}
                         variant="contained"
@@ -118,8 +137,9 @@ const AddFlashcard: FC = (): ReactElement => {
                             marginBottom: 15
                         }}
                     >
-                        Zapisz
+                        Dodaj kolejną fiszkę
                     </Button>
+
                     <Snackbar
                         open={openSuccessAlert}
                         autoHideDuration={1000}

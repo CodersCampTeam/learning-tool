@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { TextField, IconButton, Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import { useForm } from 'react-hook-form';
-import { StyledError } from '../Form/styles';
+import { SettingsError } from '../Form/styles';
 import SaveIcon from '@material-ui/icons/Save';
 import axios from 'axios';
 
@@ -61,11 +61,11 @@ const FormField = (props: IInputProps): ReactElement => {
             />
             {!props.requireConfirmation && (
                 <IconButton edge="end" aria-label="zapisz" color="primary" type="submit">
-                    <SaveIcon style={{ marginLeft: '20px' }} />
+                    <SaveIcon style={{ marginLeft: '30px' }} />
                 </IconButton>
             )}
-            {errors[props.name] && <StyledError>{props.message}</StyledError>}
-            {errors?.server && <StyledError>{errors?.server.message}</StyledError>}
+            {errors[props.name] && <SettingsError>{props.message}</SettingsError>}
+            {errors?.server && <SettingsError>{errors?.server.message}</SettingsError>}
             {props.requireConfirmation && (
                 <>
                     <TextField
@@ -81,12 +81,12 @@ const FormField = (props: IInputProps): ReactElement => {
                         })}
                     />
                     <IconButton edge="end" aria-label="zapisz" color="primary" type="submit">
-                        <SaveIcon style={{ marginLeft: '20px' }} />
+                        <SaveIcon style={{ marginLeft: '30px' }} />
                     </IconButton>
                 </>
             )}
             {props.requireConfirmation && errors.confirmation && (
-                <StyledError>Wartości do siebie nie pasują.</StyledError>
+                <SettingsError>Wartości do siebie nie pasują.</SettingsError>
             )}
             <Snackbar open={openSuccessAlert} autoHideDuration={5000} onClose={() => setOpenSuccessAlert(false)}>
                 <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => setOpenSuccessAlert(false)}>

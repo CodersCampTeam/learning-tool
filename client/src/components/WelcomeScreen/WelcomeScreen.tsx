@@ -12,7 +12,7 @@ const WelcomeScreen = (): ReactElement => {
     return (
         <>
             <Grid container direction="column" justify="center" alignItems="center" alignContent="center">
-                <Grid item xs={12} style={{ minHeight: '100px' }}>
+                <Grid item xs={12} style={{ minHeight: '90px' }}>
                     <Typography variant="h2" color="textPrimary" align="center" mt={2}>
                         <Typed strings={['BUDUJEMY WIEDZĘ.']} typeSpeed={40} showCursor={false} />
                     </Typography>
@@ -25,7 +25,7 @@ const WelcomeScreen = (): ReactElement => {
                         <img alt="Rysunek dwóch osób dzielących się fiszkami" src="welcome_screen_image.svg" />
                     </Box>
                 </Grid>
-                <Grid item xs={12} spacing={0}>
+                <Grid item xs={12}>
                     <AppName>
                         Fisz<SwappedQ>Q</SwappedQ>
                         <SwappedI>I</SwappedI>
@@ -51,7 +51,7 @@ const WelcomeScreen = (): ReactElement => {
                         ))}
                     </List>
                 </Grid>
-                <Grid item xs={12} style={{ margin: '20px auto 0' }}>
+                <Grid item xs={12} style={{ margin: '10px auto 0' }}>
                     <Link to="/logowanie">
                         <Button variant="contained" size="medium" color="primary" startIcon={<HowToRegIcon />}>
                             ROZPOCZNIJ NAUKĘ
