@@ -1,22 +1,22 @@
 import { Button, TextField, Box, Snackbar, Typography } from '@material-ui/core';
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
 import MuiAlert from '@material-ui/lab/Alert';
 
-const AddFlashcard: FC = (): ReactElement => {
+const AddFlashcard = (): ReactElement => {
     const [prompt, setPrompt] = useState('');
     const [promptError, setPromptError] = useState(false);
     const [answerError, setAnswerError] = useState(false);
     const [correctAnswer, setCorrectAnswer] = useState(0);
     const [answer, setAnswer] = useState('');
-    const [hint, setHint] = useState('');
     const [extraInfo, setExtraInfo] = useState('');
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const { collectionId } = useParams<{ collectionId: string }>();
+    const { flashcardId } = useParams<{ flashcardId: string }>();
     const history = useHistory();
     interface Flashcard {
         prompt: string;
@@ -27,7 +27,18 @@ const AddFlashcard: FC = (): ReactElement => {
         correctAnswer: number;
     }
 
-    const saveFlashcard = () => {
+    useEffect(() => {
+        const url = '/api/flashcard/';
+        if (flashcardId) {
+            axios.get(url + flashcardId).then((json) => {
+                setPrompt(json.data.prompt);
+                setAnswer(json.data.answers[0]);
+                setExtraInfo(json.data.extraInfo);
+            });
+        }
+    }, []);
+
+    const saveFlashcard = async () => {
         if (!prompt) {
             setPromptError(true);
             return;
@@ -46,16 +57,22 @@ const AddFlashcard: FC = (): ReactElement => {
             extraInfo: extraInfo || undefined
         };
 
-        axios
-            .put(`/api/flashcard/${flashcard.collectionId}`, flashcard, { withCredentials: true })
-            .then((response) => {
-                setOpenSuccessAlert(true);
-                setTimeout(() => history.push('/kolekcje/' + collectionId), 1000);
-            })
-            .catch((error) => {
-                setOpenErrorAlert(true);
-                throw error;
-            });
+        try {
+            if (flashcardId) {
+                await axios.patch(`/api/flashcard/${flashcardId}`, flashcard, {
+                    withCredentials: true
+                });
+            } else {
+                await axios.put(`/api/flashcard/${flashcard.collectionId}`, flashcard, {
+                    withCredentials: true
+                });
+            }
+            setOpenSuccessAlert(true);
+            setTimeout(() => history.push('/kolekcje/' + collectionId), 1000);
+        } catch (error) {
+            setOpenErrorAlert(true);
+            throw error;
+        }
     };
 
     const handleSetPrompt = (value: string) => {
@@ -87,6 +104,7 @@ const AddFlashcard: FC = (): ReactElement => {
                         error={promptError}
                         fullWidth
                         label="Pytanie"
+                        value={prompt}
                         helperText="To pole jest wymagane"
                         onChange={(e) => handleSetPrompt(e.target.value)}
                     />
@@ -96,15 +114,18 @@ const AddFlashcard: FC = (): ReactElement => {
                         error={answerError}
                         fullWidth
                         label="Odpowiedź"
+                        value={answer}
                         helperText="To pole jest wymagane"
                         onChange={(e) => handleSetAnswer(e.target.value)}
                     />
                 </Box>
                 <Box m={4}>
-                    <TextField fullWidth label="Podpowiedź" onChange={(e) => setHint(e.target.value)} />
-                </Box>
-                <Box m={4}>
-                    <TextField fullWidth label="Dodatkowe informacje" onChange={(e) => setExtraInfo(e.target.value)} />
+                    <TextField
+                        value={extraInfo}
+                        fullWidth
+                        label="Dodatkowe informacje"
+                        onChange={(e) => setExtraInfo(e.target.value)}
+                    />
                 </Box>
 
                 <br />
