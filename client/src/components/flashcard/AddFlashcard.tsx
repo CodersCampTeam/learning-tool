@@ -1,9 +1,9 @@
-import { Button, TextField, Box, Snackbar, Typography } from '@material-ui/core';
+import { Button, TextField, Box, Snackbar, Typography, IconButton, Grid } from '@material-ui/core';
 import React, { FC, ReactElement, useState } from 'react';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
-import Container from '@material-ui/core/Container';
+import AddCircle from '@material-ui/icons/AddCircle';
 import axios from 'axios';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Link } from 'react-router-dom';
 
@@ -11,13 +11,13 @@ const AddFlashcard: FC = (): ReactElement => {
     const [prompt, setPrompt] = useState('');
     const [promptError, setPromptError] = useState(false);
     const [answerError, setAnswerError] = useState(false);
-    const [correctAnswer, setCorrectAnswer] = useState(0);
-    const [answer, setAnswer] = useState('');
+    const [correctAnswer, setCorrectAnswer] = useState('');
+    const [incorrectAnswer, setIncorrectAnswer] = useState('');
+    const [answers, setAnswers] = useState<string[]>([]);
     const [extraInfo, setExtraInfo] = useState('');
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const { collectionId } = useParams<{ collectionId: string }>();
-    const history = useHistory();
 
     interface Flashcard {
         prompt: string;
@@ -33,17 +33,22 @@ const AddFlashcard: FC = (): ReactElement => {
             setPromptError(true);
             return;
         }
-        if (!answer) {
+        if (!answers) {
             setAnswerError(true);
             return;
         }
-
+        let allAnswers = [];
+        if (incorrectAnswer) {
+            allAnswers = [correctAnswer, ...answers, incorrectAnswer];
+        } else {
+            allAnswers = [correctAnswer, ...answers];
+        }
         const flashcard: Flashcard = {
             prompt: prompt,
-            correctAnswer: correctAnswer,
-            isQuizQuestion: false,
+            answers: allAnswers,
+            correctAnswer: 0,
+            isQuizQuestion: answers.length > 0 ? true : false,
             collectionId: collectionId,
-            answers: [answer],
             extraInfo: extraInfo || undefined
         };
 
@@ -52,15 +57,16 @@ const AddFlashcard: FC = (): ReactElement => {
             .then((response) => {
                 setOpenSuccessAlert(true);
                 setPrompt('');
-                setAnswer('');
+                setCorrectAnswer('');
+                setAnswers([]);
                 setExtraInfo('');
+                setIncorrectAnswer('');
             })
             .catch((error) => {
                 setOpenErrorAlert(true);
                 throw error;
             });
     };
-
     const handleSetPrompt = (value: string) => {
         if (value.length < 1) {
             setPromptError(true);
@@ -76,96 +82,103 @@ const AddFlashcard: FC = (): ReactElement => {
         } else {
             setAnswerError(false);
         }
-        setAnswer(value);
+        setCorrectAnswer(value);
+    };
+
+    const handleIncorrectAnswer = () => {
+        if (!incorrectAnswer) return;
+        setAnswers([...answers, incorrectAnswer]);
+        setIncorrectAnswer('');
     };
 
     return (
         <>
-            <Container maxWidth="sm">
-                <Box m={4} textAlign="center">
-                    <Typography variant="h2">TWORZENIE FISZKI</Typography>
-                </Box>
-                <Box m={4}>
-                    <TextField
-                        value={prompt}
-                        error={promptError}
-                        fullWidth
-                        label="Pytanie"
-                        helperText="To pole jest wymagane"
-                        onChange={(e) => handleSetPrompt(e.target.value)}
-                    />
-                </Box>
-                <Box m={4}>
-                    <TextField
-                        value={answer}
-                        error={answerError}
-                        fullWidth
-                        label="Odpowiedź"
-                        helperText="To pole jest wymagane"
-                        onChange={(e) => handleSetAnswer(e.target.value)}
-                    />
-                </Box>
-                <Box m={4}>
-                    <TextField
-                        fullWidth
-                        value={extraInfo}
-                        label="Dodatkowe informacje"
-                        onChange={(e) => setExtraInfo(e.target.value)}
-                    />
-                </Box>
-                <br />
-                <Box textAlign="center">
-                    <Button
-                        component={Link}
-                        to={`/kolekcje/${collectionId}`}
-                        onClick={saveFlashcard}
-                        variant="contained"
-                        color="primary"
-                        endIcon={<DoneOutlineIcon />}
-                        style={{
-                            marginBottom: 15
-                        }}
-                    >
-                        Zapisz i zakończ
-                    </Button>
-                    <Button
-                        onClick={saveFlashcard}
-                        variant="contained"
-                        color="primary"
-                        endIcon={<DoneOutlineIcon />}
-                        style={{
-                            marginBottom: 15
-                        }}
-                    >
-                        Dodaj kolejną fiszkę
-                    </Button>
-
-                    <Snackbar
-                        open={openSuccessAlert}
-                        autoHideDuration={1000}
+            <Grid container direction="column" justify="center" alignItems="center">
+                <Grid item xs={12}>
+                    <Box m={4} textAlign="center">
+                        <Typography variant="h2">TWORZENIE FISZKI</Typography>
+                    </Box>
+                    <Box m={4}>
+                        <TextField
+                            value={prompt}
+                            error={promptError}
+                            fullWidth
+                            label="Pytanie"
+                            helperText="To pole jest wymagane"
+                            onChange={(e) => handleSetPrompt(e.target.value)}
+                        />
+                    </Box>
+                    <Box m={4}>
+                        <TextField
+                            value={correctAnswer}
+                            error={answerError}
+                            fullWidth
+                            label="Odpowiedź"
+                            helperText="To pole jest wymagane"
+                            onChange={(e) => handleSetAnswer(e.target.value)}
+                        />
+                    </Box>
+                    <Grid container direction="row" justify="space-around" alignItems="center">
+                        <TextField
+                            value={incorrectAnswer}
+                            label="Odpowiedź błędna"
+                            onChange={(e) => setIncorrectAnswer(e.target.value)}
+                        />
+                        <IconButton onClick={handleIncorrectAnswer}>
+                            <AddCircle color="primary" style={{ fontSize: 30, marginLeft: '5px' }} />
+                        </IconButton>
+                    </Grid>
+                    <Box m={4}>
+                        <TextField
+                            fullWidth
+                            value={extraInfo}
+                            label="Dodatkowe informacje"
+                            onChange={(e) => setExtraInfo(e.target.value)}
+                        />
+                    </Box>
+                    <Box textAlign="center">
+                        <Button
+                            component={Link}
+                            to={`/kolekcje/${collectionId}`}
+                            onClick={saveFlashcard}
+                            variant="contained"
+                            color="primary"
+                            endIcon={<DoneOutlineIcon />}
+                            style={{
+                                marginBottom: 15
+                            }}
+                        >
+                            Zapisz i zakończ
+                        </Button>
+                        <Button
+                            onClick={saveFlashcard}
+                            variant="contained"
+                            color="primary"
+                            endIcon={<DoneOutlineIcon />}
+                            style={{
+                                marginBottom: 15
+                            }}
+                        >
+                            Dodaj kolejną fiszkę
+                        </Button>
+                    </Box>
+                </Grid>
+                <Snackbar open={openSuccessAlert} autoHideDuration={1000} onClose={() => setOpenSuccessAlert(false)}>
+                    <MuiAlert
+                        elevation={6}
+                        variant="filled"
+                        severity="success"
                         onClose={() => setOpenSuccessAlert(false)}
                     >
-                        <MuiAlert
-                            elevation={6}
-                            variant="filled"
-                            severity="success"
-                            onClose={() => setOpenSuccessAlert(false)}
-                        >
-                            Pomyślnie zapisano fiszkę!
-                        </MuiAlert>
-                    </Snackbar>
-                    <Snackbar open={openErrorAlert} autoHideDuration={5000} onClose={() => setOpenErrorAlert(false)}>
-                        <MuiAlert
-                            elevation={6}
-                            variant="filled"
-                            severity="error"
-                            onClose={() => setOpenErrorAlert(false)}
-                        >
-                            Wystąpił błąd!
-                        </MuiAlert>
-                    </Snackbar>
-                </Box>
-            </Container>
+                        Pomyślnie zapisano fiszkę!
+                    </MuiAlert>
+                </Snackbar>
+                <Snackbar open={openErrorAlert} autoHideDuration={5000} onClose={() => setOpenErrorAlert(false)}>
+                    <MuiAlert elevation={6} variant="filled" severity="error" onClose={() => setOpenErrorAlert(false)}>
+                        Wystąpił błąd!
+                    </MuiAlert>
+                </Snackbar>
+            </Grid>
         </>
     );
 };
