@@ -17,6 +17,7 @@ export const CollectionView = (): ReactElement => {
     const [data, setData] = useState<{ name?: string; flashcards?: flashCard[] }>({});
     const [error, setError] = useState<boolean>(false);
     const [loaded, setLoaded] = useState<boolean>(false);
+    const [editMode, setEditMode] = useState<boolean>(false);
     const { id } = useParams<{ id: string }>();
     const history = useHistory();
 
@@ -24,18 +25,20 @@ export const CollectionView = (): ReactElement => {
         getFlashCardList();
     }, []);
 
-    const getFlashCardList = () => {
-        axios
-            .get(`/api/flashcard-collection/${id}`)
-            .then((res) => {
-                setData(res.data);
-            })
-            .catch(() => {
-                setError(true);
-            })
-            .finally(() => {
-                setLoaded(true);
-            });
+    const getFlashCardList = async () => {
+        try {
+            const res = await axios.get(`/api/flashcard-collection/${id}`);
+            const userResponse = await axios.get('/api/me');
+
+            if (res.data.owner === userResponse.data._id) {
+                setEditMode(true);
+            }
+            setData(res.data);
+        } catch (err) {
+            setError(true);
+        }
+
+        setLoaded(true);
     };
 
     const removeFlashCard = (id: string) => {
@@ -64,17 +67,21 @@ export const CollectionView = (): ReactElement => {
         }
         return (
             <div style={{ textAlign: 'center' }}>
-                <Typography variant="h5">Edytuj kolekcję "{data.name}"</Typography>
-                <Button
-                    component={Link}
-                    to={`/stworz-fiszke/${id}`}
-                    style={{ marginBottom: '10px', marginTop: '10px' }}
-                    variant="contained"
-                    color="primary"
-                    endIcon={<AddCircle />}
-                >
-                    Dodaj nową fiszkę
-                </Button>
+                {editMode && (
+                    <>
+                        <Typography variant="h5">Edytuj kolekcję "{data.name}"</Typography>
+                        <Button
+                            component={Link}
+                            to={`/stworz-fiszke/${id}`}
+                            style={{ marginBottom: '10px', marginTop: '10px' }}
+                            variant="contained"
+                            color="primary"
+                            endIcon={<AddCircle />}
+                        >
+                            Dodaj nową fiszkę
+                        </Button>
+                    </>
+                )}
                 <Button
                     component={Link}
                     to={`/powtorka/${id}`}
@@ -96,17 +103,21 @@ export const CollectionView = (): ReactElement => {
                             {flashcard.prompt}
 
                             <div>
-                                <IconButton onClick={() => removeFlashCard(flashcard._id)} aria-label="delete">
-                                    <Delete color="primary" />
-                                </IconButton>
-                                <IconButton
-                                    color="primary"
-                                    style={{ marginLeft: '7px' }}
-                                    onClick={() => editFlashCard(flashcard._id)}
-                                    aria-label="edit"
-                                >
-                                    <SettingsIcon />
-                                </IconButton>
+                                {editMode && (
+                                    <>
+                                        <IconButton onClick={() => removeFlashCard(flashcard._id)} aria-label="delete">
+                                            <Delete color="primary" />
+                                        </IconButton>
+                                        <IconButton
+                                            color="primary"
+                                            style={{ marginLeft: '7px' }}
+                                            onClick={() => editFlashCard(flashcard._id)}
+                                            aria-label="edit"
+                                        >
+                                            <SettingsIcon />
+                                        </IconButton>
+                                    </>
+                                )}
                             </div>
                         </Box>
                     </Card>

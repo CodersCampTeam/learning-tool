@@ -3,7 +3,7 @@ const router = express.Router();
 
 router.get('/', async (req: Request, res: Response, next) => {
     try {
-        res.send(200);
+        res.send(req.user);
     } catch (error) {
         next(error);
     }
