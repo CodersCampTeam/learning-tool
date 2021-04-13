@@ -1,5 +1,5 @@
 import { Button, TextField, Box, Snackbar, Typography, IconButton, Grid } from '@material-ui/core';
-import React, { FC, ReactElement, useState } from 'react';
+import React, { ReactElement, useState, useEffect } from 'react';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import AddCircle from '@material-ui/icons/AddCircle';
 import axios from 'axios';
@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Link } from 'react-router-dom';
 
-const AddFlashcard: FC = (): ReactElement => {
+const AddFlashcard = (): ReactElement => {
     const [prompt, setPrompt] = useState('');
     const [promptError, setPromptError] = useState(false);
     const [answerError, setAnswerError] = useState(false);
@@ -18,6 +18,7 @@ const AddFlashcard: FC = (): ReactElement => {
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const { collectionId } = useParams<{ collectionId: string }>();
+    const { flashcardId } = useParams<{ flashcardId: string }>();
 
     interface Flashcard {
         prompt: string;
@@ -28,7 +29,18 @@ const AddFlashcard: FC = (): ReactElement => {
         correctAnswer: number;
     }
 
-    const saveFlashcard = () => {
+    useEffect(() => {
+        const url = '/api/flashcard/';
+        if (flashcardId) {
+            axios.get(url + flashcardId).then((json) => {
+                setPrompt(json.data.prompt);
+                setAnswers(json.data.answers[0]);
+                setExtraInfo(json.data.extraInfo);
+            });
+        }
+    }, []);
+
+    const saveFlashcard = async () => {
         if (!prompt) {
             setPromptError(true);
             return;
@@ -52,20 +64,24 @@ const AddFlashcard: FC = (): ReactElement => {
             extraInfo: extraInfo || undefined
         };
 
-        axios
-            .put(`/api/flashcard/${flashcard.collectionId}`, flashcard, { withCredentials: true })
-            .then((response) => {
-                setOpenSuccessAlert(true);
-                setPrompt('');
-                setCorrectAnswer('');
-                setAnswers([]);
-                setExtraInfo('');
-                setIncorrectAnswer('');
-            })
-            .catch((error) => {
-                setOpenErrorAlert(true);
-                throw error;
-            });
+        try {
+            if (flashcardId) {
+                await axios.patch(`/api/flashcard/${flashcardId}`, flashcard, {
+                    withCredentials: true
+                });
+            } else {
+                await axios.put(`/api/flashcard/${flashcard.collectionId}`, flashcard, { withCredentials: true });
+            }
+            setOpenSuccessAlert(true);
+            setPrompt('');
+            setCorrectAnswer('');
+            setAnswers([]);
+            setExtraInfo('');
+            setIncorrectAnswer('');
+        } catch (error) {
+            setOpenErrorAlert(true);
+            throw error;
+        }
     };
     const handleSetPrompt = (value: string) => {
         if (value.length < 1) {

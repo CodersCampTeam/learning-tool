@@ -6,7 +6,7 @@ import { Delete } from '@material-ui/icons';
 import axios from 'axios';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 interface flashCard {
     _id: string;
@@ -18,6 +18,7 @@ export const CollectionView = (): ReactElement => {
     const [error, setError] = useState<boolean>(false);
     const [loaded, setLoaded] = useState<boolean>(false);
     const { id } = useParams<{ id: string }>();
+    const history = useHistory();
 
     useEffect(() => {
         getFlashCardList();
@@ -44,14 +45,11 @@ export const CollectionView = (): ReactElement => {
             .then(() => {
                 getFlashCardList();
             })
-            .catch((err) => setError(true))
-            .finally(() => {
-                setLoaded(true);
-            });
+            .catch((err) => setError(true));
     };
 
-    const editFlashCard = (id: string) => {
-        //tutaj zrobić redirect na edycje
+    const editFlashCard = (flashcardId: string) => {
+        history.push(`/edytuj-fiszke/${id}/${flashcardId}`);
     };
 
     const generateDataView = () => {
@@ -101,8 +99,13 @@ export const CollectionView = (): ReactElement => {
                                 <IconButton onClick={() => removeFlashCard(flashcard._id)} aria-label="delete">
                                     <Delete color="primary" />
                                 </IconButton>
-                                <IconButton onClick={() => editFlashCard(flashcard._id)} aria-label="edit">
-                                    <SettingsIcon color="primary" />
+                                <IconButton
+                                    color="primary"
+                                    style={{ marginLeft: '7px' }}
+                                    onClick={() => editFlashCard(flashcard._id)}
+                                    aria-label="edit"
+                                >
+                                    <SettingsIcon />
                                 </IconButton>
                             </div>
                         </Box>

@@ -30,6 +30,7 @@ const App = (): ReactElement => {
                         <Route exact path="/start" component={Home} />
                         <PrivateRoute exact path="/stworz-kolekcje" component={CreateCollection} />
                         <PrivateRoute exact path="/stworz-fiszke/:collectionId" component={AddFlashcard} />
+                        <PrivateRoute exact path="/edytuj-fiszke/:collectionId/:flashcardId" component={AddFlashcard} />
                         <PrivateRoute exact path="/profil" component={ProfileView} />
                         <PrivateRoute exact path="/kolekcje" component={HomeView} />
                         <PrivateRoute exact path="/kolekcje/:id" component={CollectionView} />

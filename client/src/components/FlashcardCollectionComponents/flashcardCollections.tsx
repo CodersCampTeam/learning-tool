@@ -1,9 +1,11 @@
 import { Container, IconButton, Typography, Grid, CircularProgress } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
+import Assessment from '@material-ui/icons/Assessment';
+import BuildOutlined from '@material-ui/icons/BuildOutlined';
 import axios from 'axios';
-import React, { useState, useEffect, ReactElement } from 'react';
-import { AddCircle, ArrowForward, Assessment, BuildOutlined, FeaturedPlayListOutlined } from '@material-ui/icons';
+import { useState, useEffect, ReactElement } from 'react';
+import { AddCircle, ArrowForward, FeaturedPlayListOutlined } from '@material-ui/icons';
 import { StyledGrid, CollectionHeader, Settings, AssessmentStyle, CreateCollection, RowDiv } from './styles';
 import { grey } from '@material-ui/core/colors';
 import GradeIcon from '@material-ui/icons/Grade';
