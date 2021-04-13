@@ -1,6 +1,7 @@
 import { Button, TextField, Box, Snackbar, Typography, IconButton, Grid } from '@material-ui/core';
 import React, { ReactElement, useState, useEffect } from 'react';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import CloseIcon from '@material-ui/icons/Close';
 import AddCircle from '@material-ui/icons/AddCircle';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -34,7 +35,11 @@ const AddFlashcard = (): ReactElement => {
         if (flashcardId) {
             axios.get(url + flashcardId).then((json) => {
                 setPrompt(json.data.prompt);
-                setAnswers(json.data.answers[0]);
+                setCorrectAnswer(json.data.answers[0]);
+                if (json.data.answers.length > 1) {
+                    setIncorrectAnswer(json.data.answers[json.data.answers.length - 1]);
+                    setAnswers(json.data.answers.slice(1, json.data.answers.length - 1));
+                }
                 setExtraInfo(json.data.extraInfo);
             });
         }
@@ -59,7 +64,7 @@ const AddFlashcard = (): ReactElement => {
             prompt: prompt,
             answers: allAnswers,
             correctAnswer: 0,
-            isQuizQuestion: answers.length > 0 ? true : false,
+            isQuizQuestion: allAnswers.length > 1 ? true : false,
             collectionId: collectionId,
             extraInfo: extraInfo || undefined
         };
@@ -107,18 +112,32 @@ const AddFlashcard = (): ReactElement => {
         setIncorrectAnswer('');
     };
 
+    const handleDeleteAnswer = (index: number) => () => {
+        setAnswers(answers.filter((el, ind) => ind !== index));
+    };
+
+    const handleIncorrectAnswerChange = (answer: string, index: number) => {
+        setAnswers(
+            answers.map((el, ind) => {
+                if (ind !== index) return el;
+                return answer;
+            })
+        );
+    };
+
     return (
         <>
-            <Grid container direction="column" justify="center" alignItems="center">
+            <Grid container direction="column" justify="center" alignItems="center" sm={12}>
                 <Grid item xs={12}>
                     <Box m={4} textAlign="center">
-                        <Typography variant="h2">TWORZENIE FISZKI</Typography>
+                        <Typography variant="h2">{flashcardId ? 'EDYCJA FISZKI' : 'TWORZENIE FISZKI'}</Typography>
                     </Box>
                     <Box m={4}>
                         <TextField
                             value={prompt}
                             error={promptError}
                             fullWidth
+                            multiline={true}
                             label="Pytanie"
                             helperText="To pole jest wymagane"
                             onChange={(e) => handleSetPrompt(e.target.value)}
@@ -129,14 +148,30 @@ const AddFlashcard = (): ReactElement => {
                             value={correctAnswer}
                             error={answerError}
                             fullWidth
+                            multiline={true}
                             label="Odpowiedź"
                             helperText="To pole jest wymagane"
                             onChange={(e) => handleSetAnswer(e.target.value)}
                         />
                     </Box>
+
+                    {answers.map((answer: string, index: number) => (
+                        <Grid container direction="row" justify="space-around" alignItems="center" key={index}>
+                            <TextField
+                                value={answer}
+                                multiline={true}
+                                label="Odpowiedź błędna"
+                                onChange={(e) => handleIncorrectAnswerChange(e.target.value, index)}
+                            />
+                            <IconButton onClick={handleDeleteAnswer(index)}>
+                                <CloseIcon color="primary" style={{ fontSize: 30, marginLeft: '5px' }} />
+                            </IconButton>
+                        </Grid>
+                    ))}
                     <Grid container direction="row" justify="space-around" alignItems="center">
                         <TextField
                             value={incorrectAnswer}
+                            multiline={true}
                             label="Odpowiedź błędna"
                             onChange={(e) => setIncorrectAnswer(e.target.value)}
                         />
@@ -148,6 +183,7 @@ const AddFlashcard = (): ReactElement => {
                         <TextField
                             fullWidth
                             value={extraInfo}
+                            multiline={true}
                             label="Dodatkowe informacje"
                             onChange={(e) => setExtraInfo(e.target.value)}
                         />
@@ -166,16 +202,30 @@ const AddFlashcard = (): ReactElement => {
                         >
                             Zapisz i zakończ
                         </Button>
+                        {!flashcardId && (
+                            <Button
+                                onClick={saveFlashcard}
+                                variant="contained"
+                                color="primary"
+                                endIcon={<AddCircle />}
+                                style={{
+                                    marginBottom: 15
+                                }}
+                            >
+                                Dodaj kolejną fiszkę
+                            </Button>
+                        )}
                         <Button
-                            onClick={saveFlashcard}
+                            component={Link}
+                            to={`/kolekcje/${collectionId}`}
                             variant="contained"
-                            color="primary"
-                            endIcon={<DoneOutlineIcon />}
+                            color="secondary"
+                            endIcon={<CloseIcon />}
                             style={{
                                 marginBottom: 15
                             }}
                         >
-                            Dodaj kolejną fiszkę
+                            Wróć do kolekcji
                         </Button>
                     </Box>
                 </Grid>

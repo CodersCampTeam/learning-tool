@@ -48,30 +48,33 @@ const StatisticCollection = (): ReactElement => {
                                   </IconButton>
                               </Link>
                           </RowDiv>
-                          <Typography variant="body2" display="inline" color="primary">
-                              Historia odpowiedzi
-                          </Typography>
-                          <Typography variant="body2" display="inline">
-                              Dobre odpowiedzi: {collection['maxDate'][0]['correctAnswers']}
-                              <RowDiv>
-                                  Umiesz:{' '}
-                                  {Math.round(
+                          <RowDiv>
+                              <Typography variant="body2" display="inline" color="primary">
+                                  Historia odpowiedzi
+                              </Typography>
+                          </RowDiv>
+                          <RowDiv>
+                              <Typography variant="body2" display="inline">
+                                  Dobre odpowiedzi: {collection['maxDate'][0]['correctAnswers']}{' '}
+                              </Typography>
+                          </RowDiv>
+
+                          <RowDiv>
+                              Umiesz:{' '}
+                              {Math.round(
+                                  (collection['maxDate'][0]['correctAnswers'] / collection['maxDate'][0]['total']) * 100
+                              )}
+                              %
+                              <CircularProgress
+                                  variant="determinate"
+                                  color="primary"
+                                  style={{ fontSize: 20, marginLeft: 80, marginBottom: 15, padding: 0 }}
+                                  value={Math.round(
                                       (collection['maxDate'][0]['correctAnswers'] / collection['maxDate'][0]['total']) *
                                           100
                                   )}
-                                  %
-                                  <CircularProgress
-                                      variant="determinate"
-                                      color="primary"
-                                      style={{ fontSize: 20, marginLeft: 80, marginBottom: 15, padding: 0 }}
-                                      value={Math.round(
-                                          (collection['maxDate'][0]['correctAnswers'] /
-                                              collection['maxDate'][0]['total']) *
-                                              100
-                                      )}
-                                  />
-                              </RowDiv>
-                          </Typography>
+                              />
+                          </RowDiv>
                       </StyledGrid>
                   ))
                 : !loading && (

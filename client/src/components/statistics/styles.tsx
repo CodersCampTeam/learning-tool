@@ -23,7 +23,6 @@ export const StyledGrid = styled(Grid)`
         box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
         justify-content: center;
         border-radius: 4px;
-        padding-left: 20px;
         min-width: 282px;
         min-height: 192px;
         @media (max-width: 320px) {
@@ -35,8 +34,9 @@ export const RowDiv = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+    padding-left: 20px;
 `;
 
 export const StatsCollectionHeader = styled(CollectionHeader)`
-    padding: 10px 0 -20;
+    padding: 15px 0;
 `;
