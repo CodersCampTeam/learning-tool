@@ -9,18 +9,28 @@ export const CreateCollection = () => {
     const [name, setName] = useState<string>('');
     const [tags, setTags] = useState<string[]>([]);
     const [isPublic, setIsPublic] = useState(false);
-    const [error, setError] = useState(false);
+    const [nameError, setNameError] = useState(false);
+    const [tagError, setTagError] = useState(false);
     const [redirect, setRedirect] = useState(false);
 
     const updateTags = (value: string) => {
         value = value.replace(/\s/g, '');
         const tagsArray = value.split(',').filter((e) => e);
         setTags(tagsArray);
+        setTagError(false);
     };
 
     const addCollection = () => {
+        let error = false;
         if (!name) {
-            setError(true);
+            setNameError(true);
+            error = true;
+        }
+        if (tags.length < 1) {
+            setTagError(true);
+            error = true;
+        }
+        if (error) {
             return;
         }
         axios
@@ -39,7 +49,7 @@ export const CreateCollection = () => {
     };
 
     const onNameChange = (value: string) => {
-        setError(false);
+        setNameError(false);
         setName(value);
     };
 
@@ -52,7 +62,7 @@ export const CreateCollection = () => {
                 </Box>
                 <Box m={4}>
                     <TextField
-                        error={error}
+                        error={nameError}
                         label="Nazwa kolekcji*"
                         helperText="To pole jest wymagane"
                         onChange={(e) => onNameChange(e.target.value)}
@@ -61,7 +71,9 @@ export const CreateCollection = () => {
                 </Box>
                 <Box m={4}>
                     <TextField
+                        error={tagError}
                         onChange={(e) => updateTags(e.target.value)}
+                        helperText="min. 1 tag jest wymagany"
                         label="Tagi (rozdzielone po przecinku)"
                         fullWidth={true}
                     />

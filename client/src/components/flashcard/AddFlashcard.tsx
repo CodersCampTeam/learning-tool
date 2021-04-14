@@ -127,7 +127,7 @@ const AddFlashcard = (): ReactElement => {
 
     return (
         <>
-            <Grid container direction="column" justify="center" alignItems="center" sm={12}>
+            <Grid container direction="column" justify="center" alignItems="center">
                 <Grid item xs={12}>
                     <Box m={4} textAlign="center">
                         <Typography variant="h2">{flashcardId ? 'EDYCJA FISZKI' : 'TWORZENIE FISZKI'}</Typography>
