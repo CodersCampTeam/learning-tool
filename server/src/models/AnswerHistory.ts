@@ -16,6 +16,7 @@ const answerHistorySchema = new mongoose.Schema({
     },
     sessionDate: {
         type: Date,
+        default: Date.now,
         required: true
     },
     flashcardCollection: {
@@ -40,7 +41,6 @@ const AnswerHistory = mongoose.model<IAnswerHistory>('AnswerHistory', answerHist
 function validateAnswerHistory(answerHistory: typeof AnswerHistory): Joi.ValidationResult {
     const schema = Joi.object({
         user: Joi.string().required(),
-        sessionDate: Joi.date().required(),
         flashcardCollection: Joi.string().required(),
         answers: Joi.array().default([]).required()
     });

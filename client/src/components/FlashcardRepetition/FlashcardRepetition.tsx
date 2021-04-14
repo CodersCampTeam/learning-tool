@@ -33,6 +33,7 @@ const StyledCard = styled(Card)`
 `;
 
 interface IFlashcard {
+    _id: string,
     prompt: string;
     imageUrl: string;
     answers: string[];
@@ -45,6 +46,7 @@ interface IFlashcard {
 export const FlashcardRepetition = (): ReactElement => {
     const { id } = useParams<{ id: string }>();
     const [question, setQuestion] = useState({
+        _id: '',
         question: 'Loading...',
         questionNumber: 0,
         questionAnswer: 'Loading...',
@@ -67,6 +69,7 @@ export const FlashcardRepetition = (): ReactElement => {
                 setFlashcards(res.data.flashcards);
                 if (res.data.flashcards.length > 0) {
                     setQuestion({
+                        _id: res.data.flashcards[0]._id,
                         question: res.data.flashcards[0].prompt,
                         questionNumber: 1,
                         questionAnswer: res.data.flashcards[0].answers[res.data.flashcards[0].correctAnswer],
@@ -91,6 +94,7 @@ export const FlashcardRepetition = (): ReactElement => {
         if (currQuestionNumber < flashcards.length && flashcards.length > 0) {
             setShowAnswer(false);
             setQuestion({
+                _id: flashcards[currQuestionNumber]._id,
                 question: flashcards[currQuestionNumber].prompt,
                 questionNumber: currQuestionNumber + 1,
                 questionAnswer: flashcards[currQuestionNumber].answers[flashcards[currQuestionNumber].correctAnswer],
@@ -129,6 +133,46 @@ export const FlashcardRepetition = (): ReactElement => {
             handleKnown();
         } else {
             handleNotKnown();
+        }
+    };
+
+    const [histID, setHistID] = useState('');
+    const [user] = useState('');
+    const [answers] = useState([]);
+
+    const getHistID = async () => {
+        try {
+            await axios.post('/api/answer-history', {
+                user,
+                flashcardCollection: `${id}`,
+                answers
+            })
+            .then((res) => {
+                setHistID(res.data._id)
+                })
+        } catch (error) {
+            console.log('getHistID', error);
+        }
+    };
+    useEffect(() => {
+        getHistID();
+        console.log(histID)
+    }, []);
+
+    const saveAnswer = (answer: string, isCorrect?: boolean) => async () => {
+        try {
+            await axios.post('/api/answer', {
+                isCorrect: isCorrect,
+                flashcardId: answer
+
+            })
+            .then((res) => {
+                axios.put(`/api/answer-history/${histID}`, {
+                     answers: res.data._id
+                 })
+                });
+        } catch (error) {
+            console.log('saveAnswer', error);
         }
     };
 
@@ -194,13 +238,13 @@ export const FlashcardRepetition = (): ReactElement => {
             >
                 <Grid container justify="center" alignItems="center" style={{ gridGap: '3em' }}>
                     <IconButton onClick={handleNotKnown}>
-                        <CancelOutlined style={{ fontSize: 42, color: red[500] }} />
+                        <CancelOutlined style={{ fontSize: 42, color: red[500] }} onClick={saveAnswer(question._id, false)} />
                     </IconButton>
                     <IconButton onClick={() => setShowAnswer(true)}>
                         <ContactSupportOutlined style={{ fontSize: 42, color: lightBlue[500] }} />
                     </IconButton>
                     <IconButton onClick={handleKnown}>
-                        <CheckCircleOutline style={{ fontSize: 42, color: green[500] }} />
+                            <CheckCircleOutline style={{ fontSize: 42, color: green[500] }} onClick={saveAnswer(question._id, true)}/>
                     </IconButton>
                 </Grid>
             </Grid>
