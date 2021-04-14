@@ -1,12 +1,10 @@
 import styled from '@emotion/styled';
 
-import { StyledGrid } from '../FlashcardCollectionComponents/styles';
+import { StyledGrid, CollectionHeader } from '../FlashcardCollectionComponents/styles';
 
-export const Header = styled.div`
-    display: flex;
-    font-weight: bold;
-    text-transform: uppercase;
-    justify-content: center;
+export const Header = styled(CollectionHeader)`
+    line-height: 100%;
+    padding-bottom: 0px;
 `;
 
 export const IconRow = styled.div`
@@ -20,6 +18,7 @@ export const AvatarRow = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 1%;
     width: 100%;
     padding-bottom: 0.1em;
     & svg {
@@ -41,11 +40,14 @@ export const NoResults = styled.div`
     display: flex;
     justify-items: center;
     width: 100%;
+    margin-top: 20px;
 `;
 
 export const SearchStyledGrid = styled(StyledGrid)`
     && {
         justify-content: space-evenly;
         padding-top: 10px;
+        min-width: 282px;
+        min-height: 162px;
     }
 `;

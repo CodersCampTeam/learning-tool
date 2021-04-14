@@ -1,8 +1,8 @@
-import { Container, IconButton, Typography, Grid } from '@material-ui/core';
+import { Container, IconButton, Typography, Grid, CircularProgress } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-import AssessmentIcon from '@material-ui/icons/Assessment';
-import BuildOutlinedIcon from '@material-ui/icons/BuildOutlined';
+import Assessment from '@material-ui/icons/Assessment';
+import BuildOutlined from '@material-ui/icons/BuildOutlined';
 import axios from 'axios';
 import { useState, useEffect, ReactElement } from 'react';
 import { AddCircle, ArrowForward, FeaturedPlayListOutlined } from '@material-ui/icons';
@@ -24,11 +24,18 @@ const CollectionView = (): ReactElement => {
     const url = '/api/flashcard-collection';
 
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const history = useHistory();
 
     useEffect(() => {
-        axios.get(url).then((json) => setData(json.data || []));
+        setLoading(true);
+        axios
+            .get(url)
+            .then((json) => setData(json.data || []))
+            .finally(() => {
+                setLoading(false);
+            });
     }, []);
 
     const handleUnsubscribeClick = (id: string) => () => {
@@ -52,52 +59,65 @@ const CollectionView = (): ReactElement => {
                         Stwórz nową kolekcję
                     </Typography>
                     <IconButton>
-                        <AddCircle style={{ fontSize: 30, color: grey[800], marginLeft: '5px' }} />
+                        <AddCircle color="primary" style={{ fontSize: 30, marginLeft: '5px' }} />
                     </IconButton>
                 </CreateCollection>
             </Link>
-            {data.map((collection: ICollection) => (
-                <StyledGrid key={collection._id}>
-                    <CollectionHeader>{collection.name}</CollectionHeader>
-                    <Grid container direction="row" justify="center" alignItems="baseline">
-                        <RowDiv style={{ alignItems: 'center' }}>
-                            <FeaturedPlayListOutlined style={{ fontSize: 20, color: grey[800], marginRight: '5px' }} />
-                            <Typography variant="body1" display="inline">
-                                Fiszki: {collection.flashcards}
-                            </Typography>
-                        </RowDiv>
-                        <RowDiv style={{ alignItems: 'center' }}>
+            {loading && (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <CircularProgress />
+                </div>
+            )}
+            {!loading &&
+                data.map((collection: ICollection) => (
+                    <StyledGrid key={collection._id}>
+                        <CollectionHeader>{collection.name}</CollectionHeader>
+                        <Grid container direction="row" justify="center" alignItems="baseline">
+                            <RowDiv>
+                                <FeaturedPlayListOutlined
+                                    color="primary"
+                                    style={{ fontSize: 20, marginRight: '5px' }}
+                                />
+                                <Typography variant="body1" display="inline">
+                                    Fiszki: {collection.flashcards}
+                                </Typography>
+                            </RowDiv>
+                            <RowDiv>
+                                {collection.isOwned ? (
+                                    <StarBorderIcon color="primary" style={{ fontSize: 20 }} />
+                                ) : (
+                                    <GradeIcon color="primary" style={{ fontSize: 20 }} />
+                                )}
+                                <Typography variant="body1" display="inline">
+                                    {collection.subscribedUsers}
+                                </Typography>
+                            </RowDiv>
+                        </Grid>
+                        <Settings>
                             {collection.isOwned ? (
-                                <StarBorderIcon color="primary" style={{ fontSize: 20 }} />
+                                <Link to={`/kolekcje/${collection._id}`}>
+                                    <IconButton>
+                                        <BuildOutlined style={{ color: grey[700], fontSize: 42 }} />
+                                    </IconButton>
+                                </Link>
                             ) : (
-                                <GradeIcon color="primary" style={{ fontSize: 20 }} />
+                                <IconButton onClick={handleUnsubscribeClick(collection._id)}>
+                                    <DeleteIcon style={{ color: grey[700], fontSize: 42 }} />
+                                </IconButton>
                             )}
-                            <Typography variant="body1" display="inline">
-                                {collection.subscribedUsers}
-                            </Typography>
-                        </RowDiv>
-                    </Grid>
-                    <Settings>
-                        {collection.isOwned ? (
-                            <Link to={`/kolekcje/${collection._id}`}>
-                                <BuildOutlinedIcon style={{ color: grey[700], fontSize: 42 }} />
-                            </Link>
-                        ) : (
-                            <IconButton onClick={handleUnsubscribeClick(collection._id)}>
-                                <DeleteIcon style={{ color: grey[700], fontSize: 42 }} />
+                            <AssessmentStyle>
+                                <Link to="/profil">
+                                    <IconButton>
+                                        <Assessment style={{ color: grey[700], fontSize: 42 }} />
+                                    </IconButton>
+                                </Link>
+                            </AssessmentStyle>
+                            <IconButton onClick={handleLearn(collection._id)}>
+                                <ArrowForward color="primary" style={{ fontSize: 42 }} />
                             </IconButton>
-                        )}
-                        <AssessmentStyle>
-                            <Link to="/profil">
-                                <AssessmentIcon style={{ color: grey[700], fontSize: 42 }} />
-                            </Link>
-                        </AssessmentStyle>
-                        <IconButton onClick={handleLearn(collection._id)}>
-                            <ArrowForward style={{ color: grey[700], fontSize: 42 }} />
-                        </IconButton>
-                    </Settings>
-                </StyledGrid>
-            ))}
+                        </Settings>
+                    </StyledGrid>
+                ))}
         </Container>
     );
 };

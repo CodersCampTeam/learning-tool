@@ -117,7 +117,7 @@ router.get('/collection', async (req: Request, res: Response, next) => {
                 },
                 {
                     $group: {
-                        _id: { coll: '$flashcardCollection._id', user: '$user' },
+                        _id: { coll: { $first: '$flashcardCollection._id' }, user: '$user' },
                         CollectionName: { $first: '$flashcardCollection.name' },
                         user: { $first: '$user' },
                         owner: { $first: '$flashcardCollection.owner' },
@@ -161,7 +161,7 @@ router.get('/collection', async (req: Request, res: Response, next) => {
                     $project: {
                         CollectionName: 1,
                         owner: 1,
-                        answerss: 1,
+                        answers: 1,
                         flashcards: { $sum: { $size: '$flashcards' } },
                         maxDate: {
                             $slice: ['$maxDate', -1]

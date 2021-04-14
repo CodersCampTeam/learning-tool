@@ -1,5 +1,6 @@
 import { Box, Button, Card, CircularProgress, Container, IconButton, Typography } from '@material-ui/core';
 import { AddCircle } from '@material-ui/icons';
+import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { Delete } from '@material-ui/icons';
 import axios from 'axios';
@@ -69,10 +70,20 @@ export const CollectionView = (): ReactElement => {
                     to={`/stworz-fiszke/${id}`}
                     style={{ marginBottom: '10px', marginTop: '10px' }}
                     variant="contained"
-                    color="default"
+                    color="primary"
                     endIcon={<AddCircle />}
                 >
                     Dodaj nową fiszkę
+                </Button>
+                <Button
+                    component={Link}
+                    to={`/powtorka/${id}`}
+                    style={{ marginBottom: '10px', marginTop: '10px' }}
+                    variant="contained"
+                    color="primary"
+                    endIcon={<EmojiObjectsIcon />}
+                >
+                    Zacznij powtórkę
                 </Button>
 
                 {data.flashcards?.map((flashcard) => (
@@ -86,9 +97,10 @@ export const CollectionView = (): ReactElement => {
 
                             <div>
                                 <IconButton onClick={() => removeFlashCard(flashcard._id)} aria-label="delete">
-                                    <Delete />
+                                    <Delete color="primary" />
                                 </IconButton>
                                 <IconButton
+                                    color="primary"
                                     style={{ marginLeft: '7px' }}
                                     onClick={() => editFlashCard(flashcard._id)}
                                     aria-label="edit"
