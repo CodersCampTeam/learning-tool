@@ -15,10 +15,11 @@ Check the endpoints here: [Click](https://learning-tool-prod-app.herokuapp.com/)
 
 ## Features
 
--   Login/registration also using Google
--   Creating, sharing and benefitting from public collections of flashcards in line with #openknowledge approach
+-   Login/registration, also using Google
+-   Creating, sharing and benefitting from public collections of flashcards in line with the #openknowledge approach
+-   Amazing chat for widening horizons and social cirles, as well as for a more effective learning process
 -   Email reminders about repetitions according to the schedule of user's choice
--   Statistics
+-   Statistics about your progress
 
 ### The following technologies were used :
 
@@ -29,4 +30,10 @@ Check the endpoints here: [Click](https://learning-tool-prod-app.herokuapp.com/)
 -   Passport.js
 -   Nodemailer
 -   node-cron
+-   Material UI
+-   Emotion
+-   Figma
+-   react-hook-forms
+-   react-router
+-   socket.io
 -   Documentation with Swagger [Click](https://damp-river-86373.herokuapp.com/api/docs)

@@ -7,6 +7,7 @@ const router = express.Router();
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = req['user'];
+        user.password = '';
         res.status(200).send(JSON.stringify(user));
     } catch (error) {
         next(error);
