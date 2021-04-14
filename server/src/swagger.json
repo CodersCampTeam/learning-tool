@@ -1099,6 +1099,73 @@
                         "description": "Ooops! Something went wrong."
                     }
                 }
+            },
+            "put": {
+                "summary": "Update a history of user's answers after repetition",
+                "tags": ["answer"],
+                "operationId": "getAnswerHistoryById",
+                "parameters": [
+                    {
+                        "name": "answerHistoryId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Please provide the ID of the answer history you wish to update",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Update an answer history by adding dates and answers to the answer history of a given flashcard collection",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AnswerHistory",
+                                "_id": {
+                                    "type": "string",
+                                    "description": "Ref to the ID of the answer history"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Session data successfully saved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AnswerHistory",
+                                    "_id": {
+                                        "type": "string",
+                                        "description": "mongoose.Schema.Types.ObjectId"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
+                    },
+                    "404": {
+                        "description": "The flashcard with the given ID was not found"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
             }
         },
         "/api/session/revision/{collectionId}": {
@@ -1344,8 +1411,11 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "No flashcards matching query."
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
                     },
                     "500": {
                         "description": "Ooops! Something went wrong."
@@ -1393,29 +1463,16 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/SessionSettings",
-                                    "sessionSettings": {
-                                        "hour": {
-                                            "type": "integer"
-                                        },
-                                        "isActive": {
-                                            "type": "boolean"
-                                        },
-                                        "_id": {
-                                            "type": "string",
-                                            "description": "mongoose.Schema.Types.ObjectId"
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        "description": "OK"
                     },
                     "400": {
-                        "description": "Bad request"
+                        "description": "User already registered or username already used."
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
                     },
                     "500": {
                         "description": "Ooops! Something went wrong."
@@ -1423,9 +1480,9 @@
                 }
             }
         },
-        "/api/subscribe/": {
+        "/api/subscribe": {
             "post": {
-                "tags": ["user"],
+                "tags": ["flashcard collection"],
                 "summary": "Subscribe to a public collection",
                 "security": [
                     {
@@ -1456,7 +1513,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/User"
+                                    "$ref": "#/components/schemas/FlashcardCollection"
                                 }
                             }
                         }
@@ -1464,34 +1521,38 @@
                     "400": {
                         "description": "Bad request"
                     },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
+                    },
+                    "404": {
+                        "description": "The flashcard collection with the given ID was not found"
+                    },
                     "500": {
                         "description": "Ooops! Something went wrong."
                     }
                 }
             },
             "delete": {
-                "summary": "Delete a flashcard collection",
+                "summary": "Remove a public collection from user's resources",
                 "tags": ["flashcard collection"],
-                "operationId": "getCollectiondById",
-                "parameters": [
-                    {
-                        "name": "collectionId",
-                        "in": "path",
-                        "required": true,
-                        "description": "Please provide the ID of the flashcard collection you wish to delete",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
                 "security": [
                     {
                         "cookieAuth": []
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "No content"
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FlashcardCollection"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Invalid ID or bad request"
@@ -1509,6 +1570,35 @@
                     "500": {
                         "description": "Ooops! Something went wrong.",
                         "content": {}
+                    }
+                }
+            }
+        },
+        "/api/me": {
+            "get": {
+                "tags": ["user"],
+                "summary": "Get user's ID",
+                "description": "Retrieve user's ID",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "description": "mongoose.Schema.Types.ObjectId"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
                     }
                 }
             }
