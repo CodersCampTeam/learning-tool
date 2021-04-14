@@ -73,8 +73,33 @@
                 "items": {
                     "properties": {
                         "flashcards": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "description": "Ref to flashcard's ID"
+                            }
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "name": {
                             "type": "string",
-                            "description": "Ref to flashcard's ID"
+                            "description": "Collection name"
+                        },
+                        "_id": {
+                            "type": "string",
+                            "description": "mongoose.Schema.Types.ObjectId"
+                        },
+                        "subscribedUsers": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "description": "Ref to IDs of users subscribing a collection"
+                            }
+                        },
+                        "isSubscribed": {
+                            "type": "boolean",
+                            "description": "Info indicating if a user has already subscribed a collection"
                         }
                     }
                 }
@@ -110,6 +135,13 @@
                     "isPublic": {
                         "type": "boolean",
                         "default": false
+                    },
+                    "subscribedUsers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "default": []
                     }
                 }
             },
@@ -167,6 +199,59 @@
                     "sessionSettings": {
                         "type": "string",
                         "description": "Ref to ID of sessions settings"
+                    }
+                }
+            },
+            "UsersProfile": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "mongoose.Schema.Types.ObjectId"
+                    },
+                    "googleId": {
+                        "type": "string"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Empty string"
+                    },
+                    "isActive": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "isBlocked": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "avatarImg": {
+                        "type": "string"
+                    },
+                    "sessionSettings": {
+                        "type": "object",
+                        "properties": {
+                            "notificationsType": {
+                                "type": "string",
+                                "format": "email"
+                            },
+                            "hour": {
+                                "type": "integer"
+                            },
+                            "isActive": {
+                                "type": "boolean"
+                            },
+                            "_id": {
+                                "type": "string",
+                                "description": "mongoose.Schema.Types.ObjectId"
+                            }
+                        }
                     }
                 }
             },
@@ -279,7 +364,6 @@
                                     },
                                     "isCorrect": {
                                         "type": "boolean",
-                                        "format": "date",
                                         "description": "Answer's status (correct or incorrect)"
                                     }
                                 }
@@ -1145,7 +1229,19 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/SessionSettings"
+                                    "$ref": "#/components/schemas/SessionSettings",
+                                    "sessionSettings": {
+                                        "hour": {
+                                            "type": "integer"
+                                        },
+                                        "isActive": {
+                                            "type": "boolean"
+                                        },
+                                        "_id": {
+                                            "type": "string",
+                                            "description": "mongoose.Schema.Types.ObjectId"
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1188,7 +1284,7 @@
                 }
             }
         },
-        "/api/search/": {
+        "/api/search/?search=${tag}": {
             "get": {
                 "tags": ["tags"],
                 "summary": "Find a flashcard collection by tags",
@@ -1226,6 +1322,193 @@
                     },
                     "500": {
                         "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/profile/": {
+            "get": {
+                "tags": ["user"],
+                "summary": "Get user's data",
+                "description": "Retrieve user's username and email for input fields in settings ",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/UsersProfile"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No flashcards matching query."
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            },
+            "post": {
+                "summary": "Provide updated username or email or password.",
+                "tags": ["user"],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "In settigs a user can change their chosen",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "Update your nickname"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "Update your email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "New password"
+                                    },
+                                    "passwordConfirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Repeat your new password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SessionSettings",
+                                    "sessionSettings": {
+                                        "hour": {
+                                            "type": "integer"
+                                        },
+                                        "isActive": {
+                                            "type": "boolean"
+                                        },
+                                        "_id": {
+                                            "type": "string",
+                                            "description": "mongoose.Schema.Types.ObjectId"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            }
+        },
+        "/api/subscribe/": {
+            "post": {
+                "tags": ["user"],
+                "summary": "Subscribe to a public collection",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Enable a user to display a public collection in their resources and to learn from it",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "properties": {
+                                        "subscribedUsers": {
+                                            "type": "string",
+                                            "description": "Ref to user's ID"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Ooops! Something went wrong."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a flashcard collection",
+                "tags": ["flashcard collection"],
+                "operationId": "getCollectiondById",
+                "parameters": [
+                    {
+                        "name": "collectionId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Please provide the ID of the flashcard collection you wish to delete",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    },
+                    "400": {
+                        "description": "Invalid ID or bad request"
+                    },
+                    "401": {
+                        "description": "User not logged in"
+                    },
+                    "403": {
+                        "description": "You do not have permission to access this resource"
+                    },
+                    "404": {
+                        "description": "The flashcard collection with the given ID was not found"
+                    },
+
+                    "500": {
+                        "description": "Ooops! Something went wrong.",
+                        "content": {}
                     }
                 }
             }
