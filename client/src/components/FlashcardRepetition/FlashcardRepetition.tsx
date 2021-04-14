@@ -15,7 +15,7 @@ import red from '@material-ui/core/colors/red';
 import lightBlue from '@material-ui/core/colors/lightBlue';
 
 const StyledCard = styled(Card)`
-    min-height: 20em;
+    min-height: 14em;
     max-width: 30em;
     margin: auto;
     display: flex;
@@ -111,7 +111,6 @@ export const FlashcardRepetition = (): ReactElement => {
                 handleNotKnown();
                 break;
             case 's':
-                console.log(quizMode, question.answers.length);
                 if (quizMode === false || (quizMode === true && question.answers.length === 1)) setShowAnswer(true);
                 break;
             case 'd':
@@ -226,7 +225,7 @@ export const FlashcardRepetition = (): ReactElement => {
                         <Typography variant="h5" component="h2" align="center">
                             {question.question}
                         </Typography>
-                        {showExtraInfo && question.extraInfo.length > 0 && (
+                        {showExtraInfo && question.extraInfo && question.extraInfo.length > 0 && (
                             <Typography variant="subtitle2" component="p" align="center">
                                 {question.extraInfo}
                             </Typography>
