@@ -15,6 +15,7 @@ const answerSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
+        default: Date.now,
         required: true
     },
     isCorrect: {
@@ -28,7 +29,6 @@ const Answer = mongoose.model<IAnswer>('Answer', answerSchema);
 function validateAnswer(flashcard: typeof Answer): Joi.ValidationResult {
     const schema = Joi.object({
         flashcardId: Joi.string().required(),
-        date: Joi.date().required(),
         isCorrect: Joi.boolean().required()
     });
 

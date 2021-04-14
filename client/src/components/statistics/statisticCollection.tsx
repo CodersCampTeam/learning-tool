@@ -50,7 +50,7 @@ const StatisticCollection = (): ReactElement => {
                           </RowDiv>
                           <RowDiv>
                               <Typography variant="body2" display="inline" color="primary">
-                                  Historia odpowiedzi
+                                  Wynik ostatniej sesji
                               </Typography>
                           </RowDiv>
                           <RowDiv>
@@ -61,9 +61,11 @@ const StatisticCollection = (): ReactElement => {
 
                           <RowDiv>
                               Umiesz:{' '}
-                              {Math.round(
-                                  (collection['maxDate'][0]['correctAnswers'] / collection['maxDate'][0]['total']) * 100
-                              )}
+                            {(collection['maxDate'][0]['total'] === 0) ? 0 :
+                                Math.round(
+                                    (collection['maxDate'][0]['correctAnswers'] / collection['maxDate'][0]['total']) *
+                                    100
+                                )}
                               %
                               <CircularProgress
                                   variant="determinate"
