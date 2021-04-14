@@ -13,6 +13,8 @@ import PrivateRoute, { checkPrivateRoute } from '../../PrivateRoute';
 import { CollectionView } from '../CollectionView/CollectionView';
 import AddFlashcard from '../../components/flashcard/AddFlashcard';
 import { FlashcardRepetition } from '../../components/FlashcardRepetition/FlashcardRepetition';
+import Chat from '../../components/Chat/Chat';
+import ChatRoom from '../../components/ChatRoom/ChatRoom';
 
 const App = (): ReactElement => {
     return (
@@ -46,6 +48,8 @@ const App = (): ReactElement => {
                             path="/logowanie"
                             render={() => <LoginRegistration isLogin={true} key={new Date().toString()} />}
                         />
+                        <PrivateRoute exact path="/czat" component={Chat} />
+                        <PrivateRoute exact path="/czat/:roomId" component={ChatRoom} />
                         <Route component={NotFound} />
                     </Switch>
                 </div>
