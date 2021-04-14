@@ -1,9 +1,8 @@
 import styled from '@emotion/styled';
-import { Button, Checkbox, TextField, Icon, FormControlLabel } from '@material-ui/core';
+import { Button, Checkbox, TextField, FormControlLabel } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import MuiGrid from '@material-ui/core/Grid';
 import { spacing } from '@material-ui/system';
-import React from 'react';
 import { css } from '@emotion/react';
 
 interface FormStylesProps {
@@ -11,9 +10,11 @@ interface FormStylesProps {
 }
 
 export const StyledError = styled.div`
-    width: 90%;
+    width: 95%;
     margin-left: 5%;
     color: red;
+    font-size: 15px;
+    text-align: left;
 `;
 
 export const StyledTextField = styled(TextField)`
@@ -22,7 +23,8 @@ export const StyledTextField = styled(TextField)`
         margin: 1vh;
 
         input {
-            font-size: 16px;
+            font-size: 17px;
+            font-weight: 600;
         }
 
         &.test {
@@ -35,9 +37,11 @@ export const StyledTextField = styled(TextField)`
 export const StyledFormControlLabel = styled(FormControlLabel)`
     && {
         ${(props: FormStylesProps) => (props.isdisplay === 'true' ? '' : 'display: none')};
-        width: 90%;
-        text-align: center;
-        padding: 5px;
+        width: 100%;
+        text-align: left;
+        padding: 5px 0;
+        font-size: 14px;
+        font-weight: 400;
     }
 `;
 
@@ -50,14 +54,10 @@ export const StyledButton = styled(Button)`
     && {
         width: 90%;
         margin: 1vh;
-        background-color: #2f2e41;
         text-transform: uppercase;
-        color: #ffff;
         padding: 6px;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 24px;
-        font-family: Roboto;
+        font-size: 16px;
+        font-weight: 600;
     }
 `;
 
@@ -65,16 +65,18 @@ export const StyledLink = styled(Link)`
     && {
         text-align: right;
         float: right;
-        margin-right: 10%;
+        margin-right: 5%;
         margin-top: 10px;
         color: #1976d2;
         text-decoration: none;
+        font-size: 17px;
+        width: 95%;
     }
 `;
 
 export const StyledCheckbox = styled(Checkbox)`
     && {
-        margin-left: 5%;
+        margin-left: 4%;
     }
 `;
 
@@ -95,9 +97,14 @@ export const StyledButtonGoogle = styled(Button)`
 export const StyledParagraph = css`
     text-transform: uppercase;
     margin: 2vh;
-    font-weight: 700;
-    font-weight: 16px;
+    font-weight: 600;
+    font-size: 18px;
     text-align: center;
+`;
+
+export const SettingsError = styled(StyledError)`
+    margin-left: 0;
+    width: 100%;
 `;
 
 export const Grid = styled(MuiGrid)(spacing);

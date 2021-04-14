@@ -1,61 +1,152 @@
 import express, { Request, Response } from 'express';
-import { Answer } from '../models/Answer';
 import Mongo from 'mongodb';
+import { AnswerHistory } from '../models/AnswerHistory';
+import { FlashcardCollection } from '../models/FlashcardCollection';
 
 const router = express.Router();
 
-router.get('/', async (req: Request, res: Response, next) => {
-    const user = new Mongo.ObjectID(req.user?._id);
+router.get('/header', async (req: Request, res: Response, next) => {
+    const user = new Mongo.ObjectID(req['user']._id);
     try {
-        Answer.aggregate(
+        FlashcardCollection.aggregate(
             [
+                { $unwind: { path: '$flashcards', preserveNullAndEmptyArrays: true } },
                 {
-                    $lookup: {
-                        from: 'answerhistories',
-                        localField: '_id',
-                        foreignField: 'answers',
-                        as: 'answershist'
+                    $group: {
+                        _id: '$owner',
+                        mycollections: { $addToSet: '$name' },
+                        user: { $first: '$owner' },
+                        myflashcards: { $addToSet: '$flashcards' }
                     }
                 },
                 {
-                    $lookup: {
-                        from: 'flashcards',
-                        localField: 'flashcardId',
-                        foreignField: '_id',
-                        as: 'flashcards'
+                    $match: {
+                        user: user
                     }
                 },
+                {
+                    $project: {
+                        mycollections: { $sum: { $size: '$mycollections' } },
+                        user: 1,
+                        myflashcards: { $sum: { $size: '$myflashcards' } }
+                    }
+                }
+            ],
+            (err, results) => {
+                res.send(JSON.stringify(results, null, 2));
+            }
+        );
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/headerHistory', async (req: Request, res: Response, next) => {
+    const user = new Mongo.ObjectID(req['user']._id);
+    try {
+        AnswerHistory.aggregate(
+            [
+                { $unwind: { path: '$answers', preserveNullAndEmptyArrays: true } },
+                {
+                    $group: {
+                        _id: '$user',
+                        user: { $first: '$user' },
+                        session: { $addToSet: '$_id' },
+                        answerSession: { $addToSet: '$answers' }
+                    }
+                },
+                {
+                    $match: {
+                        user: user
+                    }
+                },
+                {
+                    $project: {
+                        answers: { $sum: { $size: '$answerSession' } },
+                        session: { $sum: { $size: '$session' } }
+                    }
+                }
+            ],
+            (err, results) => {
+                res.send(JSON.stringify(results, null, 2));
+            }
+        );
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/collection', async (req: Request, res: Response, next) => {
+    const user = new Mongo.ObjectID(req['user']._id);
+    try {
+        AnswerHistory.aggregate(
+            [
+                { $sort: { max: -1 } },
                 {
                     $lookup: {
                         from: 'flashcardcollections',
-                        localField: 'flashcards.collectionId',
+                        localField: 'flashcardCollection',
                         foreignField: '_id',
-                        as: 'flashcardcollection'
+                        as: 'flashcardCollection'
                     }
                 },
                 {
+                    $lookup: {
+                        from: 'answers',
+                        localField: 'answers',
+                        foreignField: '_id',
+                        as: 'answers'
+                    }
+                },
+                {
+                    $sort: { maxDate: -1 }
+                },
+                {
+                    $sort: { answerss: -1 }
+                },
+                {
                     $addFields: {
-                        flashcardcollection: { $arrayElemAt: ['$flashcardcollection', 0] },
-                        flashcards: { $arrayElemAt: ['$flashcards', 0] },
-                        answershist: { $arrayElemAt: ['$answershist', 0] },
-                        users: { $toString: '$users' }
+                        countAnswers: {
+                            $reduce: {
+                                input: '$flashcardCollection.flashcards',
+                                initialValue: [],
+                                in: { $setUnion: ['$$value', '$$this'] }
+                            }
+                        }
                     }
                 },
                 {
                     $group: {
-                        _id: '$answershist._id',
-                        user: { $first: '$answershist.user' },
-                        sessionDate: { $first: '$answershist.sessionDate' },
-                        owner: { $first: '$flashcardcollection.owner' },
-                        collectionName: { $first: '$flashcardcollection.name' },
-                        isPublic: { $first: '$flashcardcollection.isPublic' },
-                        answersTotal: { $sum: 1 },
-                        correctAnswers: { $sum: { $cond: [{ $eq: ['$isCorrect', true] }, 1, 0] } },
-                        wrongAnswers: { $sum: { $cond: [{ $eq: ['$isCorrect', false] }, 1, 0] } },
-                        details: {
+                        _id: { coll: { $first: '$flashcardCollection._id' }, user: '$user' },
+                        CollectionName: { $first: '$flashcardCollection.name' },
+                        user: { $first: '$user' },
+                        owner: { $first: '$flashcardCollection.owner' },
+                        lastSession: { $max: '$sessionDate' },
+                        flashcards: { $addToSet: '$countAnswers' },
+                        maxDate: {
                             $push: {
-                                date: '$date',
-                                isCorrect: '$isCorrect'
+                                date: '$sessionDate',
+                                id: '$answers._id',
+                                isCorrect: '$answers.isCorrect',
+                                total: { $size: '$answers.isCorrect' },
+                                correctAnswers: {
+                                    $size: {
+                                        $filter: {
+                                            input: '$answers',
+                                            as: 'e',
+                                            cond: { $eq: ['$$e.isCorrect', true] }
+                                        }
+                                    }
+                                },
+                                wrongAnswers: {
+                                    $size: {
+                                        $filter: {
+                                            input: '$answers',
+                                            as: 'e',
+                                            cond: { $eq: ['$$e.isCorrect', false] }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -64,10 +155,22 @@ router.get('/', async (req: Request, res: Response, next) => {
                     $match: {
                         user: user
                     }
+                },
+                { $unwind: { path: '$flashcards', preserveNullAndEmptyArrays: true } },
+                {
+                    $project: {
+                        CollectionName: 1,
+                        owner: 1,
+                        answers: 1,
+                        flashcards: { $sum: { $size: '$flashcards' } },
+                        maxDate: {
+                            $slice: ['$maxDate', -1]
+                        }
+                    }
                 }
             ],
             (err, results) => {
-                res.status(200).send(JSON.stringify(results, null, 2));
+                res.send(JSON.stringify(results, null, 2));
             }
         );
     } catch (error) {

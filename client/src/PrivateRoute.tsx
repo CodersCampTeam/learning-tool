@@ -33,8 +33,22 @@ const PrivateRoute = ({ ...props }: any) => {
         if (isAuthenticated) {
             return <Route {...props} />;
         } else {
-            return <Redirect to={{ pathname: 'logowanie', state: { from: props.location } }} />;
+            return <Redirect to={{ pathname: '/start', state: { from: props.location } }} />;
         }
     }
 };
 export default PrivateRoute;
+
+export const checkPrivateRoute = (path: string): boolean => {
+    if (path === '/') return true;
+    return [
+        '/profil',
+        '/kolekcje',
+        '/stworz-kolekcje',
+        '/stworz-fiszke',
+        '/powtorka',
+        '/szukaj',
+        '/czat',
+        '/edytuj-fiszke'
+    ].some((el) => path.startsWith(el));
+};

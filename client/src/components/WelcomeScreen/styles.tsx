@@ -34,6 +34,7 @@ export const SwappedI = styled.div`
 export const AppName = styled.h1`
     font-family: righteous;
     text-align: center;
+    margin: 2px auto;
 `;
 
 export const Button = styled(MuiButton)(spacing);
