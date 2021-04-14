@@ -30,7 +30,8 @@ router.get('/', async function (req: Request, res: Response, next) {
                                 subscribedUsers: { $ifNull: ['$subscribedUsers', []] },
                                 isSubscribed: {
                                     $in: [req['user']._id, '$subscribedUsers']
-                                }
+                                },
+                                isOwned: { $eq: ['$owner', req['user']._id] }
                             }
                         },
                         {
@@ -68,7 +69,8 @@ router.get('/', async function (req: Request, res: Response, next) {
                             subscribedUsers: { $ifNull: ['$subscribedUsers', []] },
                             isSubscribed: {
                                 $in: [req['user']._id, '$subscribedUsers']
-                            }
+                            },
+                            isOwned: { $eq: ['$owner', req['user']._id] }
                         }
                     },
                     {
