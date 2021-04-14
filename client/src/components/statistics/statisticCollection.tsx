@@ -50,7 +50,7 @@ const StatisticCollection = (): ReactElement => {
                           </RowDiv>
                           <RowDiv>
                               <Typography variant="body2" display="inline" color="primary">
-                                  Historia odpowiedzi
+                                  Wynik ostatniej sesji
                               </Typography>
                           </RowDiv>
                           <RowDiv>

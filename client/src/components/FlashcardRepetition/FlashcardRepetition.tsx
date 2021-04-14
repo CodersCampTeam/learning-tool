@@ -1,8 +1,8 @@
-import { useEffect, useState, ReactElement } from 'react';
+import React, { useEffect, useState, ReactElement } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import axios from 'axios';
 import styled from '@emotion/styled';
 import { Button, IconButton } from '@material-ui/core';
@@ -139,6 +139,8 @@ export const FlashcardRepetition = (): ReactElement => {
     const [histID, setHistID] = useState('');
     const [user] = useState('');
     const [answers] = useState([]);
+    const [redirect, setRedirect] = useState(null);
+    const [showStatistics, setshowStatistics] = useState(false);
 
     const getHistID = async () => {
         try {
@@ -169,7 +171,12 @@ export const FlashcardRepetition = (): ReactElement => {
             .then((res) => {
                 axios.put(`/api/answer-history/${histID}`, {
                      answers: res.data._id
-                 })
+                }).then((res) => 
+                {
+                    setRedirect(res.data.answers.length)
+                    setshowStatistics(true)
+                })
+                 
                 });
         } catch (error) {
             console.log('saveAnswer', error);
@@ -178,6 +185,7 @@ export const FlashcardRepetition = (): ReactElement => {
 
     return (
         <div tabIndex={0} id="example" onKeyUp={handleKeyboardNavigation}>
+            {showStatistics && (redirect  === flashcards.length )  && <Redirect to="/profil" />}
             <Grid item xs={12} style={{ margin: '1em' }}>
                 <Grid container justify="flex-end" alignItems="center">
                     <FormControlLabel
