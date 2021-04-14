@@ -67,20 +67,20 @@ export const CollectionView = (): ReactElement => {
         }
         return (
             <div style={{ textAlign: 'center' }}>
+                <Typography variant="h5">
+                    {editMode && 'Edytuj kolekcję'} "{data.name}"
+                </Typography>
                 {editMode && (
-                    <>
-                        <Typography variant="h5">Edytuj kolekcję "{data.name}"</Typography>
-                        <Button
-                            component={Link}
-                            to={`/stworz-fiszke/${id}`}
-                            style={{ marginBottom: '10px', marginTop: '10px' }}
-                            variant="contained"
-                            color="primary"
-                            endIcon={<AddCircle />}
-                        >
-                            Dodaj nową fiszkę
-                        </Button>
-                    </>
+                    <Button
+                        component={Link}
+                        to={`/stworz-fiszke/${id}`}
+                        style={{ marginBottom: '10px', marginTop: '10px' }}
+                        variant="contained"
+                        color="primary"
+                        endIcon={<AddCircle />}
+                    >
+                        Dodaj nową fiszkę
+                    </Button>
                 )}
                 <Button
                     component={Link}
