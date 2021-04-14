@@ -1,4 +1,4 @@
-import { Box, Button, Card, CircularProgress, Container, IconButton, Typography } from '@material-ui/core';
+import { Box, Button, Card, CircularProgress, Container, IconButton, Typography, Grid } from '@material-ui/core';
 import { AddCircle } from '@material-ui/icons';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -96,14 +96,21 @@ export const CollectionView = (): ReactElement => {
 
                 {data.flashcards?.map((flashcard) => (
                     <Card key={flashcard._id} style={{ margin: '15px 0' }}>
+                        <Grid container  direction="row" justify="space-between"  alignItems="center">                            
                         <Box
-                            paddingX={2}
-                            paddingY={1.4}
-                            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                            py={1}
+                            pl={1}
+                            pr={0}
+                            style={{ display: 'flex', justifyItems: 'left', alignItems: 'center', textAlign: "left" }}
+                            width="80%"
                         >
                             {flashcard.prompt}
 
-                            <div>
+                               </Box>  
+                               <Box width="20%" py={1}
+                            pl={0}
+                            pr={0} 
+                            style={{ display: 'flex', justifyContent: 'right', alignItems: 'center' }}>
                                 {editMode && (
                                     <>
                                         <IconButton onClick={() => removeFlashCard(flashcard._id)} aria-label="delete">
@@ -119,8 +126,8 @@ export const CollectionView = (): ReactElement => {
                                         </IconButton>
                                     </>
                                 )}
-                            </div>
-                        </Box>
+                                </Box>                        
+                        </Grid>
                     </Card>
                 ))}
             </div>

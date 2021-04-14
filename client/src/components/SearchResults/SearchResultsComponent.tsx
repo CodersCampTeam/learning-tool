@@ -16,6 +16,7 @@ interface ICollection {
     flashcards: string[];
     owner: string;
     isSubscribed: boolean;
+    isOwned: boolean;
     subscribedUsers: string[];
     _id: string;
 }
@@ -93,7 +94,7 @@ const SearchResultsComponent = (): ReactElement => {
                                   )}
                                   <Typography variant="body1">{collection.subscribedUsers.length}</Typography>
                               </IconButton>
-                              {collection.isSubscribed ? (
+                              {!collection.isOwned && (collection.isSubscribed ? ( 
                                   <IconButton onClick={handleUnsubscribeClick(collection._id)}>
                                       <DeleteIcon style={{ fontSize: 30 }} />
                                   </IconButton>
@@ -101,7 +102,7 @@ const SearchResultsComponent = (): ReactElement => {
                                   <IconButton onClick={handleSubscribeClick(collection._id)}>
                                       <SaveIcon />
                                   </IconButton>
-                              )}
+                              ))}
                               <IconButton component={Link} to={`/kolekcje/${collection._id}`}>
                                   <ArrowForward color="primary" style={{ fontSize: 30 }} />
                               </IconButton>
