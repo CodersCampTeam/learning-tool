@@ -48,11 +48,75 @@ if (env === 'development') {
 
 app.use(express.json());
 app.use(cookieParser());
+app.get('/api/rooms', (req, res) => {
+    res.json(newRooms);
+});
 app.use(appRouter);
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const server = app.listen(port, function () {
     if (env === 'development') console.log('App listening on port: ' + port);
+});
+
+interface Rooms {
+    room: string;
+    messages: any[];
+}
+
+const rooms: Rooms[] = [
+    {
+        room: 'nauka',
+        messages: []
+    },
+    {
+        room: 'zabawa',
+        messages: []
+    },
+    {
+        room: 'relax',
+        messages: []
+    },
+    {
+        room: 'złote myśli',
+        messages: []
+    }
+];
+
+const newRooms = ['nauka', 'zabawa', 'relax', 'złote myśli'];
+
+const io = require('socket.io')(server, {
+    cors: {
+        origin: '*'
+    }
+});
+
+io.on('connection', (socket) => {
+    console.log(`Client ${socket.id} connected`);
+
+    const { roomId } = socket.handshake.query;
+    socket.join(roomId);
+
+    const correctRoom = rooms.find((r) => r.room === roomId || undefined);
+
+    if (correctRoom) {
+        correctRoom.messages.forEach((m) => io.in(roomId).emit('newChatMessage', m));
+    }
+
+    socket.on('newChatMessage', (data) => {
+        correctRoom.messages.push({ body: data.body });
+        io.in(roomId).emit('newChatMessage', data);
+    });
+
+    socket.on('newroomcreated', (data) => {
+        io.emit('newroomcreated', data.room);
+        rooms.push({ room: data.room, messages: [] });
+        newRooms.push(data.room);
+    });
+
+    socket.on('disconnect', () => {
+        console.log(`Client ${socket.id} disconnected`);
+        socket.leave(roomId);
+    });
 });
 
 runNotificationService();
