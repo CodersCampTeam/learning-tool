@@ -39,11 +39,11 @@ const StatisticCollection = (): ReactElement => {
                               <Typography display="inline" variant="body2">
                                   Fiszki: {collection['flashcards']}
                               </Typography>
-                              <Link to={`/kolekcje/${collection._id.coll}`}>
+                              <Link to={`/kolekcje/${collection._id.coll}`} style={{position: "relative", left: "4em"}}>
                                   <IconButton>
                                       <ArrowForward
                                           color="primary"
-                                          style={{ fontSize: 40, marginLeft: 90, padding: 0 }}
+                                          style={{ fontSize: 40, padding: 0 }}
                                       />
                                   </IconButton>
                               </Link>
