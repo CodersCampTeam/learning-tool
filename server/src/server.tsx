@@ -18,7 +18,6 @@ const env = process.env.NODE_ENV || 'development';
 let connection_uri = process.env.MONGODB_DEV_URI || 'mongodb://localhost/playground';
 
 if (env === 'production') {
-    productionSetup(app);
     connection_uri = process.env.MONGODB_PROD_URI || 'mongodb://localhost/learning-tool-database';
 }
 
@@ -38,7 +37,7 @@ mongoose.connect(
         if (env === 'development') console.log('connected to db');
     }
 );
-if (env === 'development') {
+if (env === 'development' || env === 'production') {
     app.use((req, res, next) => {
         res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4000');
         res.setHeader('Access-Control-Allow-Credentials', 'true');
