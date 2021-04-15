@@ -49,8 +49,8 @@ app.use(cookieParser());
 app.get('/api/rooms', (req, res) => {
     res.json(newRooms);
 });
-app.use(appRouter);
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(appRouter);
 
 const server = app.listen(port, function () {
     if (env === 'development') console.log('App listening on port: ' + port);
