@@ -2,7 +2,7 @@
 
 Let's learn! Learning has never been so easy. With this app, all the knowledge you've always wanted is at your fingertips. Don't waste your time and become the new Einstein 🍎
 
-Check the endpoints here: [Click](https://learning-tool-prod-app.herokuapp.com/)
+Check out the live demo here: [Click](https://damp-river-86373.herokuapp.com/start)
 
 ## Team Members :muscle:
 
